@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CB1A48">
+
+    <TextView
+        android:id="@+id/tv_header_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:text="直播"
+        android:textSize="18sp"
+        android:layout_centerInParent="true"/>
+
+    <ImageView
+        android:id="@+id/imgBtn_header_concern"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/drawable_imgbtn_header_live"
+        android:clickable="true"
+        android:layout_marginRight="10dp"/>
+
+</RelativeLayout>

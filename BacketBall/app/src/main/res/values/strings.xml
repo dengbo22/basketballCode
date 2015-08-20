@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">BacketBall</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="my_string_array">
+        <item>String1</item>
+        <item>String2</item>
+        <item>String3</item>
+        <item>String4</item>
+        <item>String5</item>
+        <item>String6</item>
+        <item>String7</item>
+    </string-array>
+</resources>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:elevation="5dp"
+    android:layout_height="150dp"
+    android:background="@drawable/list_item_shadow">
+
+    <TextView
+        android:id="@+id/tv_list_campus"
+        android:text="中山大学"
+        android:textSize="13sp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="7.5dp"
+        android:layout_marginBottom="7.5dp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_list_competition_type"
+        android:text="半决赛"
+        android:textSize="13sp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tv_list_campus"
+        android:layout_alignRight="@+id/line"
+        android:layout_alignEnd="@+id/line"
+        android:layout_alignBottom="@+id/tv_list_campus"
+        android:clickable="false"
+        android:editable="false"
+        android:enabled="false"
+        android:gravity="center" />
+
+    <ImageView
+        android:id="@+id/img_list_competition_typeicon"
+        android:layout_width="14.5dp"
+        android:layout_height="14.5dp"
+        android:src="@drawable/listitem_competitiontype_semifinal"
+        android:layout_marginRight="4.25dp"
+        android:layout_alignTop="@+id/tv_list_competition_type"
+        android:layout_toLeftOf="@+id/tv_list_competition_type"
+        android:layout_alignBottom="@+id/tv_list_competition_type" />
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#c9cfd8"
+        android:layout_below="@+id/tv_list_campus"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
+    />
+
+
+    <include
+        android:id="@+id/layout_team_left"
+        layout="@layout/include_team"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:layout_marginLeft="17dp"
+        android:layout_below="@+id/line"
+        android:layout_alignParentLeft="true"
+        />
+
+
+
+    <include
+        android:id="@+id/layout_team_right"
+        layout="@layout/include_team"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:layout_marginRight="17dp"
+        android:layout_below="@+id/line"
+        android:layout_alignParentRight="true"
+        />
+
+    <TextView
+        android:id="@+id/tv_list_game_name"
+        android:text="金球杯"
+        android:textSize="11sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20.4dp"
+        android:layout_below="@id/line"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/tv_list_score_center"
+        android:textSize="30sp"
+        android:text=":"
+        android:gravity="center"
+        android:padding="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tv_list_game_name"
+        />
+
+    <TextView
+        android:id="@+id/tv_list_teamA_score"
+        android:textSize="30sp"
+        android:text="189"
+        android:gravity="center"
+        android:padding="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_list_game_name"
+        android:layout_toLeftOf="@id/tv_list_score_center"
+        android:layout_marginRight="5dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_list_teamB_score"
+        android:textSize="30sp"
+        android:text="127"
+        android:gravity="center"
+        android:padding="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_list_game_name"
+        android:layout_toRightOf="@id/tv_list_score_center"
+        android:layout_marginLeft="5dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_list_competition_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="11sp"
+        android:textColor="#BFBFBF"
+        android:layout_below="@id/tv_list_score_center"
+        android:gravity="center"
+        android:text="进行中"
+        />
+
+
+</RelativeLayout>

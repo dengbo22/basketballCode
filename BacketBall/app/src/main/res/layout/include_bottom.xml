@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:imageRadioButton="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    >
+
+    <RadioGroup
+        android:id="@+id/rdoGrp_main_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+
+
+        <example.tiny.widget.ImageRadioButton
+            android:id="@+id/rdoBtn_main_live"
+            style="@style/ImageRadioButtonStyle"
+            android:text="直播"
+            android:checked="true"
+            imageRadioButton:drawableTop="@drawable/drawable_radbtn_live"
+            imageRadioButton:drawableImageSize="17dp"
+            />
+
+        <example.tiny.widget.ImageRadioButton
+            android:id="@+id/rdoBtn_main_competition"
+            style="@style/ImageRadioButtonStyle"
+            android:text="赛事"
+            android:checked="false"
+            imageRadioButton:drawableTop="@drawable/drawable_radbtn_competition"
+            imageRadioButton:drawableImageSize="17dp"
+            />
+
+
+        <example.tiny.widget.ImageRadioButton
+            android:id="@+id/rdoBtn_main_news"
+            style="@style/ImageRadioButtonStyle"
+            android:text="新闻"
+            android:checked="false"
+            imageRadioButton:drawableTop="@drawable/drawable_radbtn_news"
+            imageRadioButton:drawableImageSize="17dp"
+            />
+
+
+
+        <example.tiny.widget.ImageRadioButton
+            android:id="@+id/rdoBtn_main_me"
+            style="@style/ImageRadioButtonStyle"
+            android:text="个人"
+            android:checked="false"
+            imageRadioButton:drawableTop="@drawable/drawable_radbtn_me"
+            imageRadioButton:drawableImageSize="17dp"
+            />
+
+    </RadioGroup>
+
+</LinearLayout>
