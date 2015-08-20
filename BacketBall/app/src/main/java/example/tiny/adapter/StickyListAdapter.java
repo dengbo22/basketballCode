@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import example.tiny.backetball.R;
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+import example.tiny.pulltorefreshstickylistview.StickyListHeadersAdapter;
 
 /**
  * Created by tiny on 15-8-19.
