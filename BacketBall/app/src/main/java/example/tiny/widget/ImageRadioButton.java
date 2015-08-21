@@ -27,9 +27,7 @@ public class ImageRadioButton extends RadioButton {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.ImageRadioButton);
 
         mDrawableSize = array.getDimensionPixelSize(R.styleable.ImageRadioButton_drawableImageSize, 50);
-        Log.i("ImageRadioButton", mDrawableSize +"");
         drawableTop = array.getDrawable(R.styleable.ImageRadioButton_drawableTop);
-        Log.i("ImageRadioButton", drawableTop +"");
         drawableBottom = array.getDrawable(R.styleable.ImageRadioButton_drawableBottom);
         drawableLeft = array.getDrawable(R.styleable.ImageRadioButton_drawableLeft);
         drawableRight = array.getDrawable(R.styleable.ImageRadioButton_drawableRight);

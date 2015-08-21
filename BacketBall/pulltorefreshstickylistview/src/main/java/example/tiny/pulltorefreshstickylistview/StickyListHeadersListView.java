@@ -72,6 +72,10 @@ public class StickyListHeadersListView extends FrameLayout {
 
     }
 
+    public WrapperViewList getmList() {
+        return mList;
+    }
+
     /* --- Children --- */
     private WrapperViewList mList;
     private View mHeader;
@@ -1027,5 +1031,14 @@ public class StickyListHeadersListView extends FrameLayout {
     public void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(BaseSavedState.EMPTY_STATE);
         mList.onRestoreInstanceState(state);
+    }
+
+
+    public void setOnRefreshListener(PullToRefreshListView.OnRefreshListener freshListener){
+        mList.setOnRefreshListener(freshListener);
+    }
+
+    public void onRefreshComplete() {
+        mList.onRefreshComplete();
     }
 }

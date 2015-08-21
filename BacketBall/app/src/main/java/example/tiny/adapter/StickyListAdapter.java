@@ -2,7 +2,9 @@ package example.tiny.adapter;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import example.tiny.backetball.LiveItemData;
 import example.tiny.backetball.R;
 import example.tiny.pulltorefreshstickylistview.StickyListHeadersAdapter;
 
@@ -18,31 +31,51 @@ import example.tiny.pulltorefreshstickylistview.StickyListHeadersAdapter;
  * Created by tiny on 15-8-19.
  */
 public class StickyListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+
+    private static final String LOG_TAG = "StickyListAdapter";
     private Context mContext ;
-    private String[] dates;
+    private ImageLoader imageLoader;
+    DisplayImageOptions options ;
+    public ArrayList<LiveItemData> getCompetitionData() {
+        return mCompetitionData;
+    }
+
+    private ArrayList<LiveItemData> mCompetitionData = null;
     private LayoutInflater inflater;
 
     public StickyListAdapter(Context context) {
         inflater = LayoutInflater.from(context);
-        dates = context.getResources().getStringArray(R.array.my_string_array);
+        mCompetitionData = new ArrayList<LiveItemData>();
         mContext = context;
+        options = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.troop_a)
+                .showImageForEmptyUri(R.drawable.troop_a)
+                .showImageOnFail(R.drawable.troop_a)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .imageScaleType(ImageScaleType.NONE)
+                .bitmapConfig(Bitmap.Config.RGB_565)//设置为RGB565比起默认的ARGB_8888要节省大量的内存
+                .delayBeforeLoading(100)//载入图片前稍做延时可以提高整体滑动的流畅度
+                .build();
+        imageLoader = ImageLoader.getInstance();
     }
 
     @Override
     public int getCount() {
-        return dates.length;
+        return mCompetitionData.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return dates[position];
+        Log.d(LOG_TAG, "getItem:" +position);
+        return mCompetitionData.get(position);
     }
 
     @Override
     public long getItemId(int position) {
+        Log.d(LOG_TAG, "getItemId:" + position);
         return position;
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -74,10 +107,23 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
         }
 
         //具体操作
-        holder.mImgTeamAIcon.setImageResource(R.drawable.troop_a);
-        holder.mTvTeamAName.setText("11级A班");
-        holder.mImgTeamBIcon.setImageResource(R.drawable.troop_b);
-        holder.mTvTeamBName.setText("11级B班");
+        LiveItemData positionData = mCompetitionData.get(position);
+
+        holder.mTvCampus.setText(positionData.getCampusData());
+        holder.mTvCompetitionType.setText(positionData.getCompetitionTypeData());
+
+        holder.mTvTeamAName.setText(positionData.getTeamANameData());
+        holder.mTvTeamAScore.setText(positionData.getTeamAScoreData() + "");
+        holder.mTvTeamBName.setText(positionData.getTeamBNameData());
+        holder.mTvTeamBScore.setText(positionData.getTeamBScoreData() + "");
+
+        imageLoader.displayImage(positionData.getTeamAIconData(), holder.mImgTeamAIcon, options);
+        imageLoader.displayImage(positionData.getTeamBIconData(), holder.mImgTeamBIcon, options);
+
+
+
+        holder.mTvGameName.setText(positionData.getGameNameData());
+        holder.mTvCompetitionStatus.setText(positionData.getCompetitionStatusData());
 
         return convertView;
     }
@@ -94,13 +140,23 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
             holder = (HeaderViewHolder) convertView.getTag();
         }
         //具体操作
+        Date date = mCompetitionData.get(position).getBeginTime();
+
+        String dayOfTheWeek = (String) android.text.format.DateFormat.format("EE", date);
+        String month = (String) android.text.format.DateFormat.format("M", date);
+        String day = (String) android.text.format.DateFormat.format("dd", date);
+        holder.mHeaderText.setText( month +"月"+ day +"日 " +dayOfTheWeek);
 
         return convertView;
     }
 
     @Override
     public long getHeaderId(int position) {
-        return position / 2;
+        Date date = mCompetitionData.get(position).getBeginTime();
+
+        return date.getMonth() * 31 + date.getDay();
+
+
     }
 
     class ViewHolder {

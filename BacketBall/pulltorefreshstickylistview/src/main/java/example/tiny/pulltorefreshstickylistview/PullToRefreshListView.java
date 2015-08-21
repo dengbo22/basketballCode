@@ -350,6 +350,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         if (mOnRefreshListener != null) {
             mOnRefreshListener.onRefresh();
         }
+
     }
 
     /**
