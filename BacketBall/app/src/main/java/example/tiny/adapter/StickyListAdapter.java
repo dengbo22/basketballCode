@@ -131,7 +131,6 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
 
         String competitionState = positionData.getCompetitionStatusData();
         if(competitionState.equals("未开始") ){
-            Log.i(LOG_TAG,positionData.getBeginTime()+"" );
             String time = new SimpleDateFormat("HH:mm 开始").format(positionData.getBeginTime());
 //            String time = (String) android.text.format.DateFormat.format("HH:mm", positionData.getBeginTime());
             holder.mTvCompetitionStatus.setText(time);

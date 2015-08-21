@@ -1,12 +1,14 @@
 package example.tiny.backetball;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
@@ -43,10 +45,12 @@ public class LiveFragment extends Fragment {
         liveList = (StickyListHeadersListView) view.findViewById(R.id.list_live_competition);
         liveListAdapter = new StickyListAdapter(getActivity());
         liveList.setAdapter(liveListAdapter);
+        liveList.setOnItemClickListener(new ItemClickListener());
         if (freshListener == null)
             freshListener = new RequestRefreshListener();
         liveList.setOnRefreshListener(freshListener);
         dataList = liveListAdapter.getCompetitionData();
+
 
         return view;
     }
@@ -135,7 +139,7 @@ public class LiveFragment extends Fragment {
                                 if(list.size() == 0)
                                     Toast.makeText(getActivity(), "没有更多数据！", Toast.LENGTH_SHORT).show();
                                 else {
-                                    Toast.makeText(getActivity(), "加载成功", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "获取数据成功！", Toast.LENGTH_SHORT).show();
                                     insertDataIntoAdapter(list);
                                 }
                             } else {
@@ -151,20 +155,11 @@ public class LiveFragment extends Fragment {
         }
     }
 
-    class RequestDataTask extends AsyncTask<Void, Void, LiveItemData> {
+    class ItemClickListener implements AdapterView.OnItemClickListener {
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(LiveItemData liveItemData) {
-            super.onPostExecute(liveItemData);
-        }
-
-        @Override
-        protected LiveItemData doInBackground(Void... params) {
-            return null;
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(getActivity(), LiveDetailActivity.class);
+            startActivity(intent);
         }
     }
 }

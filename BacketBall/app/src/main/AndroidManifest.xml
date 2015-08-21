@@ -27,6 +27,10 @@
             </intent-filter>
 
         </activity>
+        <activity android:name=".LiveDetailActivity"
+            android:label="BacketBall">
+
+        </activity>
 
     </application>
 
