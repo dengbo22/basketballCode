@@ -132,8 +132,12 @@ public class LiveFragment extends Fragment {
                         @Override
                         public void done(List<AVObject> list, AVException e) {
                             if (e == null) {
-                                Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
-                                insertDataIntoAdapter(list);
+                                if(list.size() == 0)
+                                    Toast.makeText(getActivity(), "没有更多数据！", Toast.LENGTH_SHORT).show();
+                                else {
+                                    Toast.makeText(getActivity(), "加载成功", Toast.LENGTH_SHORT).show();
+                                    insertDataIntoAdapter(list);
+                                }
                             } else {
                                 Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                                 Log.i(LOG_TAG, e + "");

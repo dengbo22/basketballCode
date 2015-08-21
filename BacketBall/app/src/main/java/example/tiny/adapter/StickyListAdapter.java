@@ -3,6 +3,7 @@ package example.tiny.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,12 +16,10 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import example.tiny.backetball.LiveItemData;
@@ -110,7 +109,12 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
         LiveItemData positionData = mCompetitionData.get(position);
 
         holder.mTvCampus.setText(positionData.getCampusData());
-        holder.mTvCompetitionType.setText(positionData.getCompetitionTypeData());
+        String competitionType = positionData.getCompetitionTypeData();
+        holder.mTvCompetitionType.setText(competitionType);
+        if(competitionType.equals("半决赛"))
+            holder.mImgCompetitionTypeIcon.setImageResource(R.drawable.listitem_competitiontype_semifinal);
+        else if(competitionType.equals("小组赛"))
+            holder.mImgCompetitionTypeIcon.setImageResource(R.drawable.listitem_competitiontype_group);
 
         holder.mTvTeamAName.setText(positionData.getTeamANameData());
         holder.mTvTeamAScore.setText(positionData.getTeamAScoreData() + "");
@@ -123,7 +127,19 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
 
 
         holder.mTvGameName.setText(positionData.getGameNameData());
-        holder.mTvCompetitionStatus.setText(positionData.getCompetitionStatusData());
+
+
+        String competitionState = positionData.getCompetitionStatusData();
+        if(competitionState.equals("未开始") ){
+            Log.i(LOG_TAG,positionData.getBeginTime()+"" );
+            String time = new SimpleDateFormat("HH:mm 开始").format(positionData.getBeginTime());
+//            String time = (String) android.text.format.DateFormat.format("HH:mm", positionData.getBeginTime());
+            holder.mTvCompetitionStatus.setText(time);
+            holder.mTvCompetitionStatus.setTextColor(Color.rgb(246,177,57));
+        }else {
+            holder.mTvCompetitionStatus.setText(positionData.getCompetitionStatusData());
+            holder.mTvCompetitionStatus.setTextColor(Color.rgb(191, 191, 191));
+        }
 
         return convertView;
     }
@@ -144,8 +160,10 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
 
         String dayOfTheWeek = (String) android.text.format.DateFormat.format("EE", date);
         String month = (String) android.text.format.DateFormat.format("M", date);
-        String day = (String) android.text.format.DateFormat.format("dd", date);
-        holder.mHeaderText.setText( month +"月"+ day +"日 " +dayOfTheWeek);
+        String day = (String) android.text.format.DateFormat.format("d", date);
+
+        String whole = (String)android.text.format.DateFormat.format("M月d日 EE", date);
+        holder.mHeaderText.setText(whole);
 
         return convertView;
     }

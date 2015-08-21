@@ -36,7 +36,7 @@
         android:id="@+id/img_list_competition_typeicon"
         android:layout_width="14.5dp"
         android:layout_height="14.5dp"
-        android:src="@drawable/listitem_competitiontype_semifinal"
+        android:src="@drawable/listitem_competitiontype_final"
         android:layout_marginRight="4.25dp"
         android:layout_alignTop="@+id/tv_list_competition_type"
         android:layout_toLeftOf="@+id/tv_list_competition_type"
@@ -44,7 +44,7 @@
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="1px"
         android:background="#c9cfd8"
         android:layout_below="@+id/tv_list_campus"
         android:layout_marginLeft="17dp"
