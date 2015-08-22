@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:foreImg="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    >
+
+
+    <example.tiny.widget.ForegroundImageView
+        android:id="@+id/img_sndlist_cover"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        foreImg:foregroundimage="@drawable/nba_mask"
+        app:riv_corner_radius="4.25dip"
+        />
+
+
+
+    <ImageView
+        android:id="@+id/img_sndlist_type"
+        android:layout_width="68.27dp"
+        android:layout_height="21.5dp"
+        android:layout_marginRight="10.24dp"
+        android:layout_marginTop="10.24dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/stage_final_icon"
+        />
+
+
+    <include
+        android:id="@+id/layout_sndlist_locationwithfollow"
+        layout="@layout/include_competition_locationwithfollow"
+        android:layout_height="11dp"
+        android:layout_width="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="12.8dp"
+        android:layout_marginBottom="12.8dp"
+        android:layout_marginTop="8.5dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_sndlist_gamename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:text="软件学院-金秋杯"
+        android:layout_above="@+id/layout_sndlist_locationwithfollow"
+        android:layout_alignLeft="@+id/layout_sndlist_locationwithfollow"
+        />
+
+</RelativeLayout>
