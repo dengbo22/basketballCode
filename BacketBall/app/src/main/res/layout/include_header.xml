@@ -13,6 +13,19 @@
         android:textSize="18sp"
         android:layout_centerInParent="true"/>
 
+    <CheckBox
+        android:id="@+id/chk_header_finished"
+        android:button="@null"
+        android:background="@drawable/drawable_chkbox_header"
+        android:layout_centerInParent="true"
+        android:layout_width="179.2dp"
+        android:checked="false"
+        android:layout_height="25.6dp"
+        android:visibility="gone"
+        />
+
+
+
     <ImageView
         android:id="@+id/imgBtn_header_concern"
         android:layout_width="20dp"

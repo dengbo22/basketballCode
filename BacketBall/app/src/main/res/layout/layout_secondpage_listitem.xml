@@ -26,7 +26,7 @@
         android:layout_marginRight="10.24dp"
         android:layout_marginTop="10.24dp"
         android:layout_alignParentRight="true"
-        android:src="@drawable/stage_final_icon"
+        android:src="@drawable/sndlist_stage_konckout_icon"
         />
 
 

@@ -122,6 +122,15 @@ public class PullRefreshAdapter extends BaseAdapter {
 
             }
         });
+        if( currentData.getType().equals("总决赛") ){
+            holder.mImgGameType.setImageResource(R.drawable.sndlist_stage_final_icon);
+        } else if( currentData.getType().equals("半决赛")) {
+            holder.mImgGameType.setImageResource(R.drawable.sndlist_stage_half_icon);
+        } else if ( currentData.getType().equals("小组赛")) {
+            holder.mImgGameType.setImageResource(R.drawable.sndlist_stage_group_icon);
+        } else {
+            holder.mImgGameType.setImageResource(R.drawable.sndlist_stage_konckout_icon);
+        }
 
         return convertView;
     }

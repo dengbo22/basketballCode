@@ -29,6 +29,8 @@ public class CompetitionFragment extends Fragment {
     PullToRefreshListView competitionList = null;
     PullRefreshAdapter competitionListAdapter = null;
     private ArrayList<CompetitionItemData> dataList = null;
+    private CompetitionRequestRefreshListener listener;
+    boolean mIsFinishStatus = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,7 +39,9 @@ public class CompetitionFragment extends Fragment {
         competitionListAdapter = new PullRefreshAdapter(getActivity());
         competitionList.setAdapter(competitionListAdapter);
         dataList = competitionListAdapter.getGameData();
-        competitionList.setOnRefreshListener(new RequestRefreshListener());
+        if(listener == null)
+            listener = new CompetitionRequestRefreshListener();
+        competitionList.setOnRefreshListener( listener );
         return view;
     }
 
@@ -76,7 +80,7 @@ public class CompetitionFragment extends Fragment {
 
 
 
-    class RequestRefreshListener implements PullToRefreshBase.OnRefreshListener {
+    class CompetitionRequestRefreshListener implements PullToRefreshBase.OnRefreshListener {
         @Override
         public void onRefresh(PullToRefreshBase refreshView) {
             AVQuery<AVObject> query = new AVQuery<>("Game");
@@ -100,7 +104,6 @@ public class CompetitionFragment extends Fragment {
                     }
 
                     competitionList.onRefreshComplete();
-                    Log.i(LOG_TAG, dataList.size() + "size");
                 }
             });
         }

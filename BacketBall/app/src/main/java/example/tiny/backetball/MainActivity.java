@@ -10,9 +10,13 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -35,6 +39,7 @@ public class MainActivity extends Activity{
     private RadioGroup mRdoGrpMainBottom = null;
     private TextView mTvMainHeaderText = null;
     private ImageView mImgMainHeaderImage = null;
+    private CheckBox mChkMainHeaderFinished = null;
 
 
 
@@ -101,6 +106,8 @@ public class MainActivity extends Activity{
         //Header Layout
         mTvMainHeaderText = (TextView)findViewById(R.id.tv_header_text);
         mImgMainHeaderImage = (ImageView)findViewById(R.id.imgBtn_header_concern);
+        mChkMainHeaderFinished = (CheckBox)findViewById(R.id.chk_header_finished);
+        mChkMainHeaderFinished.setOnCheckedChangeListener(new CheckChangeListener());
 
     }
 
@@ -152,7 +159,7 @@ public class MainActivity extends Activity{
 
         @Override
         public int getCount() {
-            return NUM_PAGES;
+            return fragments.size();
         }
     }
 
@@ -196,27 +203,50 @@ public class MainActivity extends Activity{
             int currentPage = FRAGMENT_LIVE;
             switch (checkedId) {
                 case R.id.rdoBtn_main_live:
-                    mTvMainHeaderText.setText("直播");
+                    if(mTvMainHeaderText.getVisibility() == View.GONE){
+                        mTvMainHeaderText.setVisibility(View.VISIBLE);
+                        mTvMainHeaderText.setText("直播");
+                        mChkMainHeaderFinished.setVisibility(View.GONE);
+                    }
+
                     mImgMainHeaderImage.setImageResource(R.drawable.drawable_imgbtn_header_live);
                     break;
                 case R.id.rdoBtn_main_competition:
                     currentPage = FRAGMENT_COMPETITION;
-                    mTvMainHeaderText.setText("赛事");
+                    mTvMainHeaderText.setVisibility(View.GONE);
+                    mChkMainHeaderFinished.setVisibility(View.VISIBLE);
                     mImgMainHeaderImage.setImageResource(R.drawable.drawable_imgbtn_header_competition);
                     break;
                 case R.id.rdoBtn_main_news:
                     currentPage = FRAGMENT_NEWS;
-                    mTvMainHeaderText.setText("新闻");
+                    if(mTvMainHeaderText.getVisibility() == View.GONE){
+                        mTvMainHeaderText.setVisibility(View.VISIBLE);
+                        mTvMainHeaderText.setText("新闻");
+                        mChkMainHeaderFinished.setVisibility(View.GONE);
+                    }
+
+
                     break;
                 case R.id.rdoBtn_main_me:
-                    mTvMainHeaderText.setText("个人");
                     currentPage = FRAGMENT_ME;
+                    if(mTvMainHeaderText.getVisibility() == View.GONE){
+                        mTvMainHeaderText.setVisibility(View.VISIBLE);
+                        mChkMainHeaderFinished.setVisibility(View.GONE);
+                    }
+                    mTvMainHeaderText.setText("个人");
                     break;
             }
 
             if (mVpMainPager.getCurrentItem() != currentPage) {
                 mVpMainPager.setCurrentItem(currentPage);
             }
+        }
+    }
+
+    class CheckChangeListener implements CompoundButton.OnCheckedChangeListener {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            Toast.makeText(MainActivity.this, "isChecked->" + isChecked, Toast.LENGTH_SHORT).show();
         }
     }
 

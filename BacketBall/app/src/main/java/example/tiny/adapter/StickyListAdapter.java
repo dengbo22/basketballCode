@@ -47,9 +47,9 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
         mCompetitionData = new ArrayList<LiveItemData>();
         mContext = context;
         options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.troop_a)
-                .showImageForEmptyUri(R.drawable.troop_a)
-                .showImageOnFail(R.drawable.troop_a)
+                .showStubImage(R.drawable.default_team_logo)
+                .showImageForEmptyUri(R.drawable.default_team_logo)
+                .showImageOnFail(R.drawable.default_team_logo)
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
                 .imageScaleType(ImageScaleType.NONE)
