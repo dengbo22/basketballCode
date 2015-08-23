@@ -3,6 +3,9 @@ package example.tiny.backetball;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
@@ -40,7 +43,8 @@ public class MainActivity extends Activity{
     private TextView mTvMainHeaderText = null;
     private ImageView mImgMainHeaderImage = null;
     private CheckBox mChkMainHeaderFinished = null;
-
+    private CompetitionFragment mCompetition = null;
+    private int mCurrentPage = 0;
 
 
     @Override
@@ -111,7 +115,11 @@ public class MainActivity extends Activity{
 
     }
 
-
+    public boolean isOnline () {
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo net = cm.getActiveNetworkInfo();
+        return net != null && net.isConnectedOrConnecting();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -143,13 +151,16 @@ public class MainActivity extends Activity{
             super(fm);
             fragments = new ArrayList<Fragment>();
             fragments.add(FRAGMENT_LIVE, new LiveFragment());
-            fragments.add(FRAGMENT_COMPETITION, new CompetitionFragment());
+            if(mCompetition == null)
+                mCompetition = new CompetitionFragment();
+            fragments.add(FRAGMENT_COMPETITION, mCompetition );
             fragments.add(FRAGMENT_NEWS, new NewsFragment());
             fragments.add(FRAGMENT_ME, new MeFragment());
         }
 
         @Override
         public Fragment getItem(int position) {
+            Log.d(LOG_TAG, "getItem" + position);
             if (position >= NUM_PAGES) {
                 Log.e(LOG_TAG, "FragmentAdapter调用getItem时参数大于页面数");
                 return null;
@@ -169,8 +180,8 @@ public class MainActivity extends Activity{
 
         @Override
         public void onPageSelected(int position) {
-            int currentPage = mVpMainPager.getCurrentItem();
-            switch (currentPage) {
+            mCurrentPage = mVpMainPager.getCurrentItem();
+            switch (mCurrentPage) {
                 case FRAGMENT_LIVE:
                     mRdoGrpMainBottom.check(R.id.rdoBtn_main_live);
                     break;
@@ -200,45 +211,47 @@ public class MainActivity extends Activity{
     public class RadioChangeListener implements RadioGroup.OnCheckedChangeListener {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
-            int currentPage = FRAGMENT_LIVE;
             switch (checkedId) {
                 case R.id.rdoBtn_main_live:
+                    //修改Header的内容
                     if(mTvMainHeaderText.getVisibility() == View.GONE){
                         mTvMainHeaderText.setVisibility(View.VISIBLE);
                         mTvMainHeaderText.setText("直播");
                         mChkMainHeaderFinished.setVisibility(View.GONE);
                     }
-
                     mImgMainHeaderImage.setImageResource(R.drawable.drawable_imgbtn_header_live);
+
+                    mCurrentPage = FRAGMENT_LIVE;
                     break;
                 case R.id.rdoBtn_main_competition:
-                    currentPage = FRAGMENT_COMPETITION;
+                    //修改Header的内容
                     mTvMainHeaderText.setVisibility(View.GONE);
                     mChkMainHeaderFinished.setVisibility(View.VISIBLE);
                     mImgMainHeaderImage.setImageResource(R.drawable.drawable_imgbtn_header_competition);
+
+                    mCurrentPage = FRAGMENT_COMPETITION;
                     break;
                 case R.id.rdoBtn_main_news:
-                    currentPage = FRAGMENT_NEWS;
                     if(mTvMainHeaderText.getVisibility() == View.GONE){
                         mTvMainHeaderText.setVisibility(View.VISIBLE);
-                        mTvMainHeaderText.setText("新闻");
                         mChkMainHeaderFinished.setVisibility(View.GONE);
                     }
+                    mTvMainHeaderText.setText("新闻");
 
-
+                    mCurrentPage = FRAGMENT_NEWS;
                     break;
                 case R.id.rdoBtn_main_me:
-                    currentPage = FRAGMENT_ME;
                     if(mTvMainHeaderText.getVisibility() == View.GONE){
                         mTvMainHeaderText.setVisibility(View.VISIBLE);
                         mChkMainHeaderFinished.setVisibility(View.GONE);
                     }
                     mTvMainHeaderText.setText("个人");
+                    mCurrentPage = FRAGMENT_ME;
                     break;
             }
 
-            if (mVpMainPager.getCurrentItem() != currentPage) {
-                mVpMainPager.setCurrentItem(currentPage);
+            if (mVpMainPager.getCurrentItem() != mCurrentPage) {
+                mVpMainPager.setCurrentItem(mCurrentPage);
             }
         }
     }
@@ -246,7 +259,7 @@ public class MainActivity extends Activity{
     class CheckChangeListener implements CompoundButton.OnCheckedChangeListener {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            Toast.makeText(MainActivity.this, "isChecked->" + isChecked, Toast.LENGTH_SHORT).show();
+            mCompetition.changeState(isChecked);
         }
     }
 

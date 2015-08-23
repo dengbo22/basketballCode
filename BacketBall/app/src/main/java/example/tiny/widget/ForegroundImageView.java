@@ -15,7 +15,6 @@ import example.tiny.backetball.R;
  */
 public class ForegroundImageView extends RoundedImageView {
     private static final String LOG_TAG = "ForegroundImageView";
-    private boolean reDraw = false;
 
     private Drawable foreground;
 

@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +55,10 @@ public class LiveFragment extends Fragment {
 
         return view;
     }
+
+
+
+
 
     private boolean insertDataIntoAdapter(List<AVObject> list) {
         if (list == null || list.size() == 0)

@@ -35,12 +35,25 @@ public class PullRefreshAdapter extends BaseAdapter {
     private Context mContext ;
     private DisplayImageOptions options ;
 
-    private ArrayList<CompetitionItemData> mGameData;
+    private ArrayList<CompetitionItemData> mFinishedGameData;
+    private ArrayList<CompetitionItemData> mUnfinishedGameData;
+
+    public boolean getFinishState() {
+        return mFinishState;
+    }
+
+    public void setFinishState(boolean mFinishState) {
+        this.mFinishState = mFinishState;
+    }
+
+    private boolean mFinishState = false;
 
     private LayoutInflater inflater;
     public PullRefreshAdapter(Context context) {
         inflater = LayoutInflater.from(context);
-        mGameData = new ArrayList<CompetitionItemData>();
+        mFinishedGameData = new ArrayList<CompetitionItemData>();
+        mUnfinishedGameData = new ArrayList<CompetitionItemData>();
+
         mContext = context;
         options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.troop_a)
@@ -53,26 +66,34 @@ public class PullRefreshAdapter extends BaseAdapter {
                 .build();
     }
 
-    public ArrayList<CompetitionItemData> getGameData() {
-        return mGameData;
+    public ArrayList<CompetitionItemData> getFinishedGameData() {
+        return mFinishedGameData;
     }
 
-
+    public ArrayList<CompetitionItemData> getUnfinishedGameData() {
+        return mUnfinishedGameData;
+    }
 
 
     @Override
     public int getCount() {
-        return mGameData.size();
+        if(mFinishState)
+            return mFinishedGameData.size();
+        else
+            return mUnfinishedGameData.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mGameData.get(position);
+        if(mFinishState)
+            return mFinishedGameData.get(position);
+        else
+            return mUnfinishedGameData.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+            return position;
     }
 
     @Override
@@ -97,7 +118,12 @@ public class PullRefreshAdapter extends BaseAdapter {
         }
 
         //Holder操作
-        CompetitionItemData currentData = mGameData.get(position);
+        CompetitionItemData currentData ;
+        if(mFinishState)
+            currentData = mFinishedGameData.get(position);
+        else
+            currentData = mUnfinishedGameData.get(position);
+
         holder.mTvGameLocation.setText(currentData.getCampus());
         holder.mTvGameFollow.setText(currentData.getFollowNumber() +"");
         holder.mTvGameName.setText(currentData.getCollege() + "-" + currentData.getName());

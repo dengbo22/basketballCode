@@ -4,6 +4,9 @@ package example.tiny.backetball;
  * Created by tiny on 15-8-22.
  */
 public class CompetitionItemData  {
+
+
+    String ID;
     String mName;
     String mCollege;
     String mCampus;
@@ -62,11 +65,20 @@ public class CompetitionItemData  {
         this.mCoverUrl = mCoverUrl;
     }
 
-    public boolean ismIsFinished() {
+    public boolean getIsFinished() {
         return mIsFinished;
     }
 
     public void setIsFinished(boolean mIsFinished) {
         this.mIsFinished = mIsFinished;
     }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
 }
