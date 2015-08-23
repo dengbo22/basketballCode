@@ -1,4 +1,4 @@
-package example.tiny.backetball;
+package example.tiny.data;
 
 /**
  * Created by tiny on 15-8-22.
@@ -22,7 +22,6 @@ public class CompetitionItemData  {
     public void setType(String mType) {
         this.mType = mType;
     }
-
 
 
     public String getName() {
@@ -81,4 +80,16 @@ public class CompetitionItemData  {
         this.ID = ID;
     }
 
+    @Override
+    public String toString() {
+        String returnValue ;
+        returnValue = ID + "\t" + mName
+        +"\t" + mCollege
+         +"\t" + mCampus
+        +"\t" + mFollowNumber
+        +"\t" + mCoverUrl
+        +"\t"+ mType
+        + "\t" + mIsFinished;
+        return returnValue;
+    }
 }

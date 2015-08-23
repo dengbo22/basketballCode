@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import example.tiny.backetball.LiveItemData;
+import example.tiny.data.LiveItemData;
 import example.tiny.backetball.R;
 import example.tiny.pulltorefreshstickylistview.StickyListHeadersAdapter;
 

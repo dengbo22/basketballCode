@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import example.tiny.adapter.PullRefreshAdapter;
+import example.tiny.data.BasketSQLite;
+import example.tiny.data.CompetitionItemData;
 
 /**
  * Created by tiny on 15-8-19.
@@ -33,10 +35,26 @@ public class CompetitionFragment extends Fragment {
     boolean mIsFinishStatus = false;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //在这里进行Adapter的初始化
+        MainActivity father = (MainActivity) getActivity();
+        competitionListAdapter = new PullRefreshAdapter(father);
+        //读取数据库,加载数据库中的数据
+        ArrayList<CompetitionItemData> dataInSQL = father.getBasketSQLite().onGetAllInCompetition();
+        for (CompetitionItemData data : dataInSQL) {
+            if (data.getIsFinished())
+                competitionListAdapter.getFinishedGameData().add(data);
+            else
+                competitionListAdapter.getUnfinishedGameData().add(data);
+        }
+        //数据加载完毕
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_competition, container, false);
         competitionList = (PullToRefreshListView) view.findViewById(R.id.list_competition_allcompetition);
-        competitionListAdapter = new PullRefreshAdapter(getActivity());
         competitionList.setAdapter(competitionListAdapter);
         mIsFinishStatus = competitionListAdapter.getFinishState();
         if (mIsFinishStatus)
@@ -51,6 +69,18 @@ public class CompetitionFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        BasketSQLite sqlite = ((MainActivity) getActivity()).getBasketSQLite();
+        sqlite.onDeleteAllInCompetition();
+        if (competitionListAdapter.getUnfinishedGameData().size() >= LOAD_SIZE)
+            for (int i = 0; i < LOAD_SIZE; i++)
+                sqlite.onInsertCompetitionData(competitionListAdapter.getUnfinishedGameData().get(i));
+        if (competitionListAdapter.getFinishedGameData().size() >= LOAD_SIZE)
+            for (int i = 0; i < LOAD_SIZE; i++)
+                sqlite.onInsertCompetitionData(competitionListAdapter.getFinishedGameData().get(i));
+    }
 
     public void changeState(boolean newState) {
         if (competitionListAdapter != null) {
@@ -85,7 +115,7 @@ public class CompetitionFragment extends Fragment {
 //
 //                }
 
-                if(!shouldAddIn)
+                if (!shouldAddIn)
                     continue;
 //                Log.i(LOG_TAG, "1");
                 String name = item.getString("name");
@@ -127,21 +157,19 @@ public class CompetitionFragment extends Fragment {
         query.setSkip(dataList.size());
         query.include("campusId");
         query.whereEqualTo("isFinished", mIsFinishStatus);
-        query.findInBackground( new FindCallback<AVObject>() {
+        query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 Log.i(LOG_TAG, "Data Returned");
                 if (e == null) {
-                    if (dataList.size() > LOAD_SIZE)
-                        if (list.size() == 0)
-                            Toast.makeText(getActivity(), "没有更多数据！", Toast.LENGTH_SHORT).show();
-                        else {
-                            Toast.makeText(getActivity(), "获取数据成功！", Toast.LENGTH_SHORT).show();
-                        }
+                    if (list.size() == 0)
+                        Toast.makeText(getActivity(), "没有更多数据！", Toast.LENGTH_SHORT).show();
+                    else {
+                        Toast.makeText(getActivity(), "获取数据成功！", Toast.LENGTH_SHORT).show();
+                    }
                     addDataIntoCompetitionList(list);
                 } else {
-                    Toast.makeText(getActivity(), e+"", Toast.LENGTH_SHORT).show();
-                    Log.i(LOG_TAG, e + "");
+                    Toast.makeText(getActivity(), e + "", Toast.LENGTH_SHORT).show();
                 }
                 competitionList.onRefreshComplete();
             }
@@ -152,7 +180,7 @@ public class CompetitionFragment extends Fragment {
     class CompetitionRequestRefreshListener implements PullToRefreshBase.OnRefreshListener {
         @Override
         public void onRefresh(PullToRefreshBase refreshView) {
-            if( ((MainActivity)getActivity()).isOnline() ) {
+            if (((MainActivity) getActivity()).isOnline()) {
                 requestCompetitionData();
             } else {
                 Toast.makeText(getActivity(), "网络状态不可用", Toast.LENGTH_SHORT).show();

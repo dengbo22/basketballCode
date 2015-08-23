@@ -19,9 +19,11 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import example.tiny.data.BasketSQLite;
+import example.tiny.data.CompetitionItemData;
 
 
 /**
@@ -46,12 +48,19 @@ public class MainActivity extends Activity{
     private CompetitionFragment mCompetition = null;
     private int mCurrentPage = 0;
 
+    public BasketSQLite getBasketSQLite() {
+        return dbHelper;
+    }
+
+    private BasketSQLite dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         InitWidget();
+        dbHelper = new BasketSQLite(this, "BasketApp.db", null, 1);
+        ArrayList<CompetitionItemData> data = dbHelper.onGetAllInCompetition();
     }
 
 

@@ -1,4 +1,4 @@
-package example.tiny.backetball;
+package example.tiny.data;
 
 import android.graphics.Bitmap;
 

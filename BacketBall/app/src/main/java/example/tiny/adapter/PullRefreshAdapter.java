@@ -2,14 +2,12 @@ package example.tiny.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +20,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 
-import example.tiny.backetball.CompetitionItemData;
+import example.tiny.data.CompetitionItemData;
 import example.tiny.backetball.R;
 import example.tiny.widget.ForegroundImageView;
 

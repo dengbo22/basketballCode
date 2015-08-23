@@ -2,9 +2,7 @@ package example.tiny.backetball;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +15,12 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import example.tiny.adapter.StickyListAdapter;
+import example.tiny.data.LiveItemData;
 import example.tiny.pulltorefreshstickylistview.PullToRefreshListView;
 import example.tiny.pulltorefreshstickylistview.StickyListHeadersListView;
 
