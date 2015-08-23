@@ -183,8 +183,15 @@ public class CompetitionFragment extends Fragment {
             if (((MainActivity) getActivity()).isOnline()) {
                 requestCompetitionData();
             } else {
-                Toast.makeText(getActivity(), "网络状态不可用", Toast.LENGTH_SHORT).show();
-                competitionList.onRefreshComplete();
+                //如果网络状况异常，则在延迟1秒后提示并完成刷新
+                competitionList.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), "网络状态不可用", Toast.LENGTH_SHORT).show();
+                        competitionList.onRefreshComplete();
+                    }
+                }, 1000);
+
             }
         }
     }

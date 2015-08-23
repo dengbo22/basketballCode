@@ -10,4 +10,5 @@
 
 2015.8.23
 添加SQLite数据库用于缓存上一次最新的数据
+在无网络连接的情况下延迟一秒调用onRefreshComplete()修正了HeaderView不消失的BUG
 
