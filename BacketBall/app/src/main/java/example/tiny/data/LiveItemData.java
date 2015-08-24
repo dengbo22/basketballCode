@@ -9,8 +9,10 @@ import java.util.Date;
  */
 public class LiveItemData {
 
+
+    String mObjectId;
     String mCampusData;
-    String  mCompetitionTypeData;
+    String mCompetitionTypeData;
     String mCompetitionTypeIconData;
     String mTeamAIconData;
     String mTeamANameData;
@@ -19,6 +21,16 @@ public class LiveItemData {
     String mGameNameData;
     int mTeamAScoreData;
     int mTeamBScoreData;
+    Date mBeginTime;
+    String mCompetitionStatusData;
+
+    public String getObjectId() {
+        return mObjectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.mObjectId = objectId;
+    }
 
     public Date getBeginTime() {
         return mBeginTime;
@@ -27,8 +39,6 @@ public class LiveItemData {
     public void setBeginTime(Date mBeginTime) {
         this.mBeginTime = mBeginTime;
     }
-
-    Date mBeginTime;
 
     public String getCompetitionStatusData() {
         return mCompetitionStatusData;
@@ -118,7 +128,21 @@ public class LiveItemData {
         this.mCampusData = mCampusData;
     }
 
-    String mCompetitionStatusData;
 
-
+    @Override
+    public String toString() {
+        String str = mObjectId
+        +"\t"+ mCampusData
+        +"\t"+ mCompetitionTypeData
+        +"\t"+ mCompetitionTypeIconData
+        +"\t"+ mTeamAIconData
+        +"\t"+ mTeamANameData
+        +"\t"+ mTeamBIconData
+        +"\t"+ mTeamBNameData
+        +"\t"+ mGameNameData
+        +"\t"+ mTeamAScoreData
+        +"\t"+ mTeamBScoreData
+        +"\t"+ mBeginTime;
+        return str;
+    }
 }

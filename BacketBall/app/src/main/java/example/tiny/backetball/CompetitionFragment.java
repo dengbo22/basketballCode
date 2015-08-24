@@ -16,6 +16,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import example.tiny.adapter.PullRefreshAdapter;
@@ -64,14 +66,15 @@ public class CompetitionFragment extends Fragment {
         if (listener == null)
             listener = new CompetitionRequestRefreshListener();
         competitionList.setOnRefreshListener(listener);
-        if (dataList.size() == 0)
-            requestCompetitionData();
+
+
         return view;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //在Fragment结束的时候将已有数据存入数据库中
         BasketSQLite sqlite = ((MainActivity) getActivity()).getBasketSQLite();
         sqlite.onDeleteAllInCompetition();
         if (competitionListAdapter.getUnfinishedGameData().size() >= LOAD_SIZE)
@@ -104,33 +107,34 @@ public class CompetitionFragment extends Fragment {
             return false;
         else {
             for (AVObject item : list) {
-                boolean shouldAddIn = true;
-//                Log.e(LOG_TAG, item.toString());
-                String Id = item.getString("objectId");
-//                Log.i(LOG_TAG, "0");
-//                for(int i = 0; i < dataList.size() ; i++) {
-//                    if(dataList.get(i).getID().equals(Id)) {
-//                        shouldAddIn = false;
-//                    }
-//
-//                }
-
-                if (!shouldAddIn)
-                    continue;
-//                Log.i(LOG_TAG, "1");
+                boolean addFlag = true;
+                //获取全部的数据
+                String Id = item.getObjectId();
                 String name = item.getString("name");
                 String college = item.getString("college");
                 boolean isFinish = item.getBoolean("isFinished");
                 int follow = item.getInt("follows");
-//                Log.i(LOG_TAG, "2");
                 String type = item.getString("type");
                 AVObject campus = item.getAVObject("campusId");
                 String campusName = campus.getString("name");
-//                Log.i(LOG_TAG, "3");
                 String coverUrl = item.getString("coverUrl");
 
-                CompetitionItemData data = new CompetitionItemData();
-                data.setID(Id);
+                CompetitionItemData data = null;
+                //查找是否已经有这条数据
+                for(int i = 0; i < dataList.size() ; i++) {
+                    if(dataList.get(i).getID().equals(Id)) {
+                        //数据已经存在，此时直接更新该条数据：
+                        data = dataList.get(i);
+                        addFlag = false;
+                        break;
+                    }
+                }
+                //如果以上操作并未将data赋值，说明该条数据不存在
+                if(data == null) {
+                    data = new CompetitionItemData();
+                    data.setID(Id);
+                }
+
                 data.setName(name);
                 data.setCollege(college);
                 data.setCampus(campusName);
@@ -139,28 +143,31 @@ public class CompetitionFragment extends Fragment {
                 data.setIsFinished(isFinish);
                 data.setCoverUrl(coverUrl);
 
-
-                dataList.add(data);
+                if(addFlag)
+                    dataList.add(data);
 
             }
+            //所有数据加载完毕以后，进行数据排序
+            Collections.sort(dataList, new Comparator<CompetitionItemData>() {
+                @Override
+                public int compare(CompetitionItemData lhs, CompetitionItemData rhs) {
+                    return rhs.getFollowNumber() - lhs.getFollowNumber();
+                }
+            });
 
             competitionListAdapter.notifyDataSetChanged();
         }
-        Log.i(LOG_TAG, "Add Data Finished");
         return true;
     }
 
     private void requestCompetitionData() {
         AVQuery<AVObject> query = new AVQuery<>("Game");
         query.orderByDescending("follows");
-        query.setLimit(LOAD_SIZE);
-        query.setSkip(dataList.size());
         query.include("campusId");
         query.whereEqualTo("isFinished", mIsFinishStatus);
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
-                Log.i(LOG_TAG, "Data Returned");
                 if (e == null) {
                     if (list.size() == 0)
                         Toast.makeText(getActivity(), "没有更多数据！", Toast.LENGTH_SHORT).show();

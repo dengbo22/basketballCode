@@ -31,6 +31,7 @@ public class BasketBallApp extends Application {
     public void onCreate() {
         super.onCreate();
         AVOSCloud.setNetworkTimeout(TIME_OUT);
+        AVOSCloud.setDebugLogEnabled(true);
         AVOSCloud.initialize(this, AppId, AppKey);
         File cacheDir = StorageUtils.getOwnCacheDirectory(getApplicationContext(), "imageloader/Cache"); //缓存文件的存放地址
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
@@ -48,7 +49,6 @@ public class BasketBallApp extends Application {
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .imageDownloader(new BaseImageDownloader(getApplicationContext(), 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)
                 .build();
-
 
         ImageLoader.getInstance().init(config);
     }

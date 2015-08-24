@@ -60,7 +60,6 @@ public class MainActivity extends Activity{
         setContentView(R.layout.activity_main);
         InitWidget();
         dbHelper = new BasketSQLite(this, "BasketApp.db", null, 1);
-        ArrayList<CompetitionItemData> data = dbHelper.onGetAllInCompetition();
     }
 
 
@@ -124,6 +123,7 @@ public class MainActivity extends Activity{
 
     }
 
+    //检查当前网络连接状态
     public boolean isOnline () {
         ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo net = cm.getActiveNetworkInfo();
@@ -213,7 +213,7 @@ public class MainActivity extends Activity{
 
         @Override
         public void onPageScrollStateChanged(int state) {
-//            Log.i(LOG_TAG, "onPageScrollStateChanged() called!");
+//            Log.i(LOG_TAG, "onPageScrollStateChanged() called!\tstate:" + state);
         }
     }
 
