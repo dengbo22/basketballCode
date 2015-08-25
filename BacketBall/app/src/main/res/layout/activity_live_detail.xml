@@ -8,19 +8,9 @@
     android:orientation="vertical">
 
 
-    <RelativeLayout
-        android:id="@id/id_stickynavlayout_topview"
-        android:layout_width="match_parent"
-        android:layout_height="176.64dp"
-        android:background="#4400ff00">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="1111" />
-
-    </RelativeLayout>
+    <include
+        android:id="@+id/id_stickynavlayout_topview"
+        layout="@layout/include_detail_topview" />
 
     <example.tiny.widget.ViewPagerIndicator
         xmlns:tiny="http://schemas.android.com/apk/res-auto"

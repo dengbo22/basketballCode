@@ -214,10 +214,23 @@ public class LiveFragment extends Fragment {
                 return;
             }
             int realPosition = (int) id;
-            String obj = dataList.get(realPosition).getObjectId();
+            LiveItemData obj = dataList.get(realPosition);
 
             Intent intent = new Intent(getActivity(), LiveDetailActivity.class);
-            intent.putExtra("objectId", obj);
+            intent.putExtra("objectId",obj.getObjectId());
+            intent.putExtra("mGameNameData", obj.getGameNameData());
+            intent.putExtra("mTeamAIconData",obj.getTeamAIconData());
+            intent.putExtra("mTeamANameData",obj.getTeamANameData());
+            intent.putExtra("mTeamBIconData",obj.getTeamBIconData());
+            intent.putExtra("mTeamBNameData",obj.getTeamBNameData());
+            intent.putExtra("mCompetitionTypeData",obj.getCompetitionTypeData());
+            intent.putExtra("mTeamAScoreData",obj.getTeamAScoreData());
+            intent.putExtra("mTeamBScoreData",obj.getTeamBScoreData());
+            intent.putExtra("mCompetitionStatusData",obj.getCompetitionStatusData());
+
+
+
+
             startActivityForResult(intent, MainActivity.FRAGMENT_LIVE);
         }
     }

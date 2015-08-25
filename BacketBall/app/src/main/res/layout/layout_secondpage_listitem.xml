@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         foreImg:foregroundimage="@drawable/nba_mask"
-        app:riv_corner_radius="4.25dip"
+        app:riv_corner_radius="4.5dip"
         />
 
 
