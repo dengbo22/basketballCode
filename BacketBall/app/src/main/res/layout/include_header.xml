@@ -13,16 +13,36 @@
         android:textSize="18sp"
         android:layout_centerInParent="true"/>
 
-    <CheckBox
-        android:id="@+id/chk_header_finished"
-        android:button="@null"
-        android:background="@drawable/drawable_chkbox_header"
+
+    <RadioGroup
+        android:id="@+id/rdoGrp_header_finished"
         android:layout_centerInParent="true"
         android:layout_width="179.2dp"
-        android:checked="false"
         android:layout_height="25.6dp"
+        android:orientation="horizontal"
         android:visibility="gone"
-        />
+        >
+
+        <RadioButton
+            android:id="@+id/rdoBtn_header_unfinished"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@drawable/drawable_radbtn_unfinished"
+            android:button="@null"
+            android:checked="true"
+            />
+
+        <RadioButton
+            android:id="@+id/rdoBtn_header_finished"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@drawable/drawable_radbtn_finished"
+            android:button="@null"
+            />
+
+    </RadioGroup>
 
 
 

@@ -193,9 +193,14 @@ public class LiveFragment extends Fragment {
         public void onRefresh() {
             AVQuery<AVObject> query = new AVQuery<>("Competition");
             query.orderByDescending("beginTime");
-            dataList.get(0).getBeginTime();
+            Date begin;
+            if(dataList != null && dataList.size() != 0)
+                begin = dataList.get(0).getBeginTime();
+            else
+                begin = new java.util.Date();
+
             query.setLimit(LOAD_SIZE);
-            query.whereLessThanOrEqualTo("beginTime", dataList.get(0).getBeginTime());
+            query.whereLessThanOrEqualTo("beginTime", begin);
             query.include("scoreId");
             query.include("teamAId");
             query.include("teamBId");

@@ -44,7 +44,7 @@ public class MainActivity extends Activity{
     private RadioGroup mRdoGrpMainBottom = null;
     private TextView mTvMainHeaderText = null;
     private ImageView mImgMainHeaderImage = null;
-    private CheckBox mChkMainHeaderFinished = null;
+    private RadioGroup mChkMainHeaderFinished = null;
     private LiveFragment mLive = null;
     private CompetitionFragment mCompetition = null;
     private int mCurrentPage = 0;
@@ -119,7 +119,7 @@ public class MainActivity extends Activity{
         //Header Layout
         mTvMainHeaderText = (TextView)findViewById(R.id.tv_header_text);
         mImgMainHeaderImage = (ImageView)findViewById(R.id.imgBtn_header_concern);
-        mChkMainHeaderFinished = (CheckBox)findViewById(R.id.chk_header_finished);
+        mChkMainHeaderFinished = (RadioGroup)findViewById(R.id.rdoGrp_header_finished);
         mChkMainHeaderFinished.setOnCheckedChangeListener(new CheckChangeListener());
 
     }
@@ -270,10 +270,20 @@ public class MainActivity extends Activity{
         }
     }
 
-    class CheckChangeListener implements CompoundButton.OnCheckedChangeListener {
+    class CheckChangeListener implements RadioGroup.OnCheckedChangeListener {
         @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mCompetition.changeState(isChecked);
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            switch (checkedId) {
+                case R.id.rdoBtn_header_finished:
+                    mCompetition.changeState(true);
+                    break;
+                case R.id.rdoBtn_header_unfinished:
+                    mCompetition.changeState(false);
+                    break;
+
+                default:
+                    Log.e(LOG_TAG, "RadioButton选中出现异常！");
+            }
         }
     }
 

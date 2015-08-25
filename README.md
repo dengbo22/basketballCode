@@ -15,3 +15,8 @@
 2015.8.24
 直播、赛事页面SQLite数据添加完成
 修改直播页面的请求逻辑以及赛事页面的请求逻辑
+
+2015.8.25
+创建LiveDetailActivity，添加加载内容
+修改CompetitionFragment中的Header逻辑从CheckBox到RadioGroup
+

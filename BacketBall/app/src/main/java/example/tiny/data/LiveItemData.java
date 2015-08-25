@@ -1,6 +1,5 @@
 package example.tiny.data;
 
-import android.graphics.Bitmap;
 
 import java.util.Date;
 
