@@ -43,11 +43,16 @@ public class LiveFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity parent = (MainActivity)getActivity();
+        MainActivity parent = (MainActivity) getActivity();
         liveListAdapter = new StickyListAdapter(parent);
         ArrayList<LiveItemData> dataInSQL = parent.getBasketSQLite().onGetAllInLive();
-        for (LiveItemData data : dataInSQL) {
+        if (dataInSQL != null) {
+            for (LiveItemData data : dataInSQL) {
                 liveListAdapter.getCompetitionData().add(0, data);
+            }
+        } else {
+            Toast.makeText(getActivity(), "没有数据加载", Toast.LENGTH_SHORT).show();
+            //此处应该请求数据
         }
 
     }
@@ -73,11 +78,11 @@ public class LiveFragment extends Fragment {
         //获取数据库,删除过去数据并且当前最新的LOAD_SIZE条数据
         BasketSQLite sqlite = ((MainActivity) getActivity()).getBasketSQLite();
         sqlite.onDeleteAllInLive();
-        if(dataList != null) {
+        if (dataList != null) {
             //如果dataList中的数据条数少于LOAD_SIZE,则将dataList中的所有数据均保存
-            int len = dataList.size() < LOAD_SIZE ? dataList.size(): LOAD_SIZE;
+            int len = dataList.size() < LOAD_SIZE ? dataList.size() : LOAD_SIZE;
 
-            for(int i = 0; i < len; i++){
+            for (int i = 0; i < len; i++) {
                 LiveItemData data = dataList.get(dataList.size() - 1 - i);
                 sqlite.onInsertLiveData(data);
             }
@@ -107,25 +112,25 @@ public class LiveFragment extends Fragment {
                 String gameName = " ";
                 String campus = "";
                 //执行异常检测
-                if(game != null) {
+                if (game != null) {
                     gameName = game.getString("name");
                     AVObject c = game.getAVObject("campusId");
-                    if(c != null) {
+                    if (c != null) {
                         campus = c.getString("name");
-                    }else {
+                    } else {
                         Log.e(LOG_TAG, "Campus数据为NULL");
                     }
-                }else {
+                } else {
                     Log.e(LOG_TAG, "game = null");
                 }
 
                 AVObject score = i.getAVObject("scoreId");
                 int teamAScore = 0;
                 int teamBScore = 0;
-                if(score != null) {
+                if (score != null) {
                     teamAScore = score.getInt("scoreA");
                     teamBScore = score.getInt("scoreB");
-                }else {
+                } else {
                     Log.e(LOG_TAG, "Score:" + score);
                 }
                 String type = i.getString("type");
@@ -135,15 +140,15 @@ public class LiveFragment extends Fragment {
                 LiveItemData data = null;
 
                 //数据比对，查看dataList中是否已经含有该条数据，如果有则addFlag设为false表示该条数据不插入
-                for(LiveItemData j : dataList) {
-                    if(j.getObjectId().equals(objectId)) {
+                for (LiveItemData j : dataList) {
+                    if (j.getObjectId().equals(objectId)) {
                         data = j;
                         addFlag = false;
                         break;
                     }
                 }
 
-                if(data == null)
+                if (data == null)
                     data = new LiveItemData();
 
 
@@ -161,7 +166,7 @@ public class LiveFragment extends Fragment {
                 data.setTeamAScoreData(teamAScore);
                 data.setTeamBScoreData(teamBScore);
 
-                if(addFlag)
+                if (addFlag)
                     dataList.add(data);
 
 
@@ -190,13 +195,13 @@ public class LiveFragment extends Fragment {
             query.orderByDescending("beginTime");
             dataList.get(0).getBeginTime();
             query.setLimit(LOAD_SIZE);
-            query.whereLessThanOrEqualTo("beginTime", dataList.get(0).getBeginTime()) ;
+            query.whereLessThanOrEqualTo("beginTime", dataList.get(0).getBeginTime());
             query.include("scoreId");
             query.include("teamAId");
             query.include("teamBId");
             query.include("gameId");
             query.include("gameId.campusId");
-            query.findInBackground(new RequestCallBack() );
+            query.findInBackground(new RequestCallBack());
         }
     }
 
@@ -204,8 +209,16 @@ public class LiveFragment extends Fragment {
     class ItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (id == -1) {
+                Toast.makeText(getActivity(), "你点击了Header/Footer!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int realPosition = (int) id;
+            String obj = dataList.get(realPosition).getObjectId();
+
             Intent intent = new Intent(getActivity(), LiveDetailActivity.class);
-            startActivity(intent);
+            intent.putExtra("objectId", obj);
+            startActivityForResult(intent, MainActivity.FRAGMENT_LIVE);
         }
     }
 
@@ -214,7 +227,7 @@ public class LiveFragment extends Fragment {
         @Override
         public void done(List<AVObject> list, AVException e) {
             if (e == null) {
-                if(list.size() == 0)
+                if (list.size() == 0)
                     Toast.makeText(getActivity(), "没有更多数据！", Toast.LENGTH_SHORT).show();
                 else {
                     Toast.makeText(getActivity(), "获取数据成功！", Toast.LENGTH_SHORT).show();

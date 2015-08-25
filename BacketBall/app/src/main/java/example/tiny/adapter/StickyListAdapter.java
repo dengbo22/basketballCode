@@ -107,6 +107,7 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
 
         //具体操作
         LiveItemData positionData = mCompetitionData.get(position);
+        Log.i(LOG_TAG, "position:" + position);
 
         holder.mTvCampus.setText(positionData.getCampusData());
         String competitionType = positionData.getCompetitionTypeData();

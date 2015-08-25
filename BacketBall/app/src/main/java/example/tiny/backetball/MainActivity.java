@@ -34,10 +34,10 @@ public class MainActivity extends Activity{
 
     private final String LOG_TAG = "MainActivity";
 
-    private static final int FRAGMENT_LIVE = 0;
-    private static final int FRAGMENT_COMPETITION = 1;
-    private static final int FRAGMENT_NEWS = 2;
-    private static final int FRAGMENT_ME = 3;
+    static final int FRAGMENT_LIVE = 0;
+    static final int FRAGMENT_COMPETITION = 1;
+    static final int FRAGMENT_NEWS = 2;
+    static final int FRAGMENT_ME = 3;
 
     private final int NUM_PAGES = 4;
     private ViewPager mVpMainPager = null;
@@ -45,6 +45,7 @@ public class MainActivity extends Activity{
     private TextView mTvMainHeaderText = null;
     private ImageView mImgMainHeaderImage = null;
     private CheckBox mChkMainHeaderFinished = null;
+    private LiveFragment mLive = null;
     private CompetitionFragment mCompetition = null;
     private int mCurrentPage = 0;
 
@@ -159,10 +160,14 @@ public class MainActivity extends Activity{
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
             fragments = new ArrayList<Fragment>();
-            fragments.add(FRAGMENT_LIVE, new LiveFragment());
+            if(mLive == null)
+                mLive = new LiveFragment();
+            fragments.add(FRAGMENT_LIVE, mLive);
             if(mCompetition == null)
                 mCompetition = new CompetitionFragment();
             fragments.add(FRAGMENT_COMPETITION, mCompetition );
+
+
             fragments.add(FRAGMENT_NEWS, new NewsFragment());
             fragments.add(FRAGMENT_ME, new MeFragment());
         }
