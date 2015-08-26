@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,7 +30,7 @@ import example.tiny.widget.ViewPagerIndicator;
 /**
  * Created by tiny on 15-8-21.
  */
-public class LiveDetailActivity extends Activity {
+public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedChangeListener {
     private List<Fragment> mTabContents = new ArrayList<Fragment>();
     private FragmentPagerAdapter mAdapter;
     private ViewPager mViewPager;
@@ -44,7 +46,11 @@ public class LiveDetailActivity extends Activity {
     private TextView mTvTopTeamBScore;
     private TextView mTvTopCompetitionType;
     private TextView mTvTopStatus;
-    DisplayImageOptions options ;
+    private CheckBox mChkTopLeftUpvote;
+    private TextView mTvTopLeftFollowNumber;
+    private CheckBox mChkTopRightUpvote;
+    private TextView mTvTopRightFollowNumber;
+    DisplayImageOptions options;
 
 
     @Override
@@ -68,55 +74,60 @@ public class LiveDetailActivity extends Activity {
         //使用获取到的objectId来请求数据
 
 
-
         //加载Fragment
-        initView();;
+        initView();
+        ;
         initDatas();
         mViewPager.setAdapter(mAdapter);
         mIndicator.setInnerViewPager(mViewPager, 0);
     }
 
-    private void initDatas()
-    {
+    private void initDatas() {
         for (String data : mDatas) {
             CommentFragment fragment = new CommentFragment();
             mTabContents.add(fragment);
         }
 
 
-        mAdapter = new FragmentPagerAdapter(getFragmentManager())
-        {
+        mAdapter = new FragmentPagerAdapter(getFragmentManager()) {
             @Override
-            public int getCount()
-            {
+            public int getCount() {
                 return mTabContents.size();
             }
 
             @Override
-            public Fragment getItem(int position)
-            {
+            public Fragment getItem(int position) {
                 return mTabContents.get(position);
             }
         };
     }
 
-    private void initView()
-    {
+    private void initView() {
         //加载基本控件
         mTvTopGameName = (TextView) findViewById(R.id.tv_topview_gamename);
         mImgTopShare = (ImageView) findViewById(R.id.img_topview_share);
-        mTvTopTeamAScore = (TextView)findViewById(R.id.tv_topview_score_left);
-        mTvTopTeamBScore = (TextView)findViewById(R.id.tv_topview_score_right);
+        mTvTopTeamAScore = (TextView) findViewById(R.id.tv_topview_score_left);
+        mTvTopTeamBScore = (TextView) findViewById(R.id.tv_topview_score_right);
         LinearLayout lTeam = (LinearLayout) findViewById(R.id.layout_topview_leftteam);
         mImgTopTeamAIcon = (ImageView) lTeam.findViewById(R.id.img_list_team_icon);
         mTvTopTeamAName = (TextView) lTeam.findViewById(R.id.tv_list_team_name);
         LinearLayout rTeam = (LinearLayout) findViewById(R.id.layout_topview_rightteam);
         mImgTopTeamBIcon = (ImageView) rTeam.findViewById(R.id.img_list_team_icon);
         mTvTopTeamBName = (TextView) rTeam.findViewById(R.id.tv_list_team_name);
-        mTvTopCompetitionType = (TextView)findViewById(R.id.tv_topview_competitiontype);
-        mTvTopStatus = (TextView)findViewById(R.id.tv_topview_status);
+        mTvTopCompetitionType = (TextView) findViewById(R.id.tv_topview_competitiontype);
+        mTvTopStatus = (TextView) findViewById(R.id.tv_topview_status);
         mViewPager = (ViewPager) findViewById(R.id.id_stickynavlayout_viewpager);
         mIndicator = (ViewPagerIndicator) findViewById(R.id.id_stickynavlayout_indicator);
+        //几个无法从本地获取信息的控件初始化
+        LinearLayout lUpvote = (LinearLayout) findViewById(R.id.layout_topview_leftupvote);
+        mChkTopLeftUpvote = (CheckBox) lUpvote.findViewById(R.id.chk_follow_upvote);
+        mTvTopLeftFollowNumber = (TextView) lUpvote.findViewById(R.id.tv_follow_follownumber);
+        LinearLayout rUpvote = (LinearLayout) findViewById(R.id.layout_topview_rightupvote);
+        mChkTopRightUpvote = (CheckBox) rUpvote.findViewById(R.id.chk_follow_upvote);
+        mTvTopRightFollowNumber = (TextView) rUpvote.findViewById(R.id.tv_follow_follownumber);
+        mChkTopLeftUpvote.setOnCheckedChangeListener(this);
+        mChkTopRightUpvote.setOnCheckedChangeListener(this);
+
         //从Intent中获取信息并且加载内容：
         Intent intent = getIntent();
         mTvTopGameName.setText(intent.getStringExtra("mGameNameData"));
@@ -126,15 +137,54 @@ public class LiveDetailActivity extends Activity {
         mTvTopTeamBName.setTextColor(Color.WHITE);
         mTvTopTeamAName.setText(intent.getStringExtra("mTeamANameData"));
         mTvTopTeamBName.setText(intent.getStringExtra("mTeamBNameData"));
-        mTvTopTeamAScore.setText(intent.getIntExtra("mTeamAScoreData", -1) +"");
-        mTvTopTeamBScore.setText(intent.getIntExtra("mTeamBScoreData", -1) +"");
+        mTvTopTeamAScore.setText(intent.getIntExtra("mTeamAScoreData", -1) + "");
+        mTvTopTeamBScore.setText(intent.getIntExtra("mTeamBScoreData", -1) + "");
         String teamALogo = intent.getStringExtra("mTeamAIconData");
         String teamBLogo = intent.getStringExtra("mTeamBIconData");
         ImageLoader.getInstance().displayImage(teamALogo, mImgTopTeamAIcon, options);
         ImageLoader.getInstance().displayImage(teamBLogo, mImgTopTeamBIcon, options);
-
+        //底下几个内容
 
     }
 
+    private void ChangeVote(TextView text, boolean isAdd) {
+        String lText = (String) text.getText();
+        int textVote = Integer.parseInt(lText.trim());
+        if(isAdd)
+            ++ textVote;
+        else
+            -- textVote;
 
+        text.setText(textVote+"");
+    }
+
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+        if (isChecked) {
+            if (buttonView == mChkTopLeftUpvote) {
+                //选定左侧按钮，左侧数字增加
+                ChangeVote(mTvTopLeftFollowNumber, true);
+                if (mChkTopRightUpvote.isChecked()) {
+                    //如果此时右侧按钮是Check状态，则关闭并数字降低
+                    mChkTopRightUpvote.setChecked(false);
+                }
+            } else {
+                //选定的是右侧按钮，右侧数字增加
+                ChangeVote(mTvTopRightFollowNumber,true);
+                if (mChkTopLeftUpvote.isChecked()) {
+                    //此时左侧按钮是Check状态，则关闭并降低数字
+                    mChkTopLeftUpvote.setChecked(false);
+                }
+            }
+        } else {
+            //关闭的情况，点击左侧则降低左侧，点击右侧则降低右侧
+            if(buttonView == mChkTopLeftUpvote) {
+                ChangeVote(mTvTopLeftFollowNumber, false);
+            }else {
+                ChangeVote(mTvTopRightFollowNumber, false);
+            }
+        }
+    }
 }

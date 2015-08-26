@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <CheckBox
+        android:id="@+id/chk_follow_upvote"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:background="@drawable/drawable_chkbox_upvote"
+        android:button="@null"
+
+        />
+
+
+    <TextView
+        android:id="@+id/tv_follow_follownumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:textSize="11sp"
+        android:textColor="#FFFFFF"
+        android:text="100"
+        />
+
+</LinearLayout>
