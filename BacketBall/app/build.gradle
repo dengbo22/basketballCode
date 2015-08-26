@@ -52,5 +52,7 @@ dependencies {
     //avoscloud-search 为 LeanCloud 应用内搜索包
     compile 'cn.leancloud.android:avoscloud-search:v3.+@aar'
     compile files('libs/universal-image-loader-1.9.4.jar')
+    compile 'se.emilsjolander:stickylistheaders:2.7.0'
+
 
 }
