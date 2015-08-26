@@ -8,13 +8,21 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -31,6 +39,11 @@ import example.tiny.widget.ViewPagerIndicator;
  * Created by tiny on 15-8-21.
  */
 public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedChangeListener {
+    public static final int DETAIL_FRAGMENT_COMMENT = 0;
+    public static final int DETAIL_FRAGMENT_REPORT = 1;
+    public static final int DETAIL_FRAGMENT_STATISTICS = 2;
+    private static final String LOG_TAG = "LiveDetailActivity";
+
     private List<Fragment> mTabContents = new ArrayList<Fragment>();
     private FragmentPagerAdapter mAdapter;
     private ViewPager mViewPager;
@@ -50,8 +63,11 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
     private TextView mTvTopLeftFollowNumber;
     private CheckBox mChkTopRightUpvote;
     private TextView mTvTopRightFollowNumber;
+    private TextView mTvTopAward;
+    private LinearLayout mLlayoutComment;
     DisplayImageOptions options;
-
+    private ImageView mImgCommentEmotion;
+    private EditText mEdtTxtComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +88,12 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
 
         String objectId = getIntent().getStringExtra("objectId");
         //使用获取到的objectId来请求数据
-
-
+        RequestData(objectId);
         //加载Fragment
         initView();
-        ;
         initDatas();
         mViewPager.setAdapter(mAdapter);
+        mIndicator.setIndicatorChangeListener(new LiveDetailActivityDefaultViewPagerListener() );
         mIndicator.setInnerViewPager(mViewPager, 0);
     }
 
@@ -101,6 +116,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
             }
         };
     }
+
 
     private void initView() {
         //加载基本控件
@@ -125,6 +141,8 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         LinearLayout rUpvote = (LinearLayout) findViewById(R.id.layout_topview_rightupvote);
         mChkTopRightUpvote = (CheckBox) rUpvote.findViewById(R.id.chk_follow_upvote);
         mTvTopRightFollowNumber = (TextView) rUpvote.findViewById(R.id.tv_follow_follownumber);
+        LinearLayout awardLayout = (LinearLayout) findViewById(R.id.layout_topview_award);
+        mTvTopAward = (TextView)awardLayout.findViewById(R.id.tv_topview_award);
         mChkTopLeftUpvote.setOnCheckedChangeListener(this);
         mChkTopRightUpvote.setOnCheckedChangeListener(this);
 
@@ -143,10 +161,68 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         String teamBLogo = intent.getStringExtra("mTeamBIconData");
         ImageLoader.getInstance().displayImage(teamALogo, mImgTopTeamAIcon, options);
         ImageLoader.getInstance().displayImage(teamBLogo, mImgTopTeamBIcon, options);
-        //底下几个内容
+        //加载底部评论
+        mLlayoutComment = (LinearLayout)findViewById(R.id.layout_detail_comment);
+        mImgCommentEmotion = (ImageView) mLlayoutComment.findViewById(R.id.img_comment_emotion);
 
     }
 
+    //用于启动以后开始请求数据
+    private void RequestData(String objId) {
+        AVQuery<AVObject> query = new AVQuery<>("Competition");
+        query.whereEqualTo("objectId", objId);
+        query.include("reportId");
+        query.include("gameId");
+        query.include("scoreId");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    for (AVObject i : list) {
+                        UpdateData(list);
+                    }
+                }
+
+            }
+        });
+    }
+
+    //用于请求数据完成后将数据展示出来
+    private void UpdateData(List<AVObject> list) {
+        if (list.size() == 1) {
+            AVObject item = list.get(0);
+            String status = item.getString("status");
+            AVObject score = item.getAVObject("scoreId");
+            int scoreA = 0;
+            int scoreB = 0;
+            if (score != null) {
+                scoreA = score.getInt("scoreA");
+                scoreB = score.getInt("scoreB");
+            } else {
+                Log.w(LOG_TAG, "获取到Score为NULL");
+            }
+            String type = item.getString("type");
+            int likesA = item.getInt("likesA");
+            int likesB = item.getInt("likesB");
+            int award = item.getInt("award");
+            //设置控件
+            mTvTopStatus.setText(status+"");
+            mTvTopTeamAScore.setText(scoreA +"");
+            mTvTopTeamBScore.setText(scoreB +"");
+            mTvTopCompetitionType.setText(type);
+            mTvTopLeftFollowNumber.setText(likesA +"");
+            mTvTopRightFollowNumber.setText(likesB+"");
+            mTvTopAward.setText("￥ "+ award);
+            Toast.makeText(LiveDetailActivity.this, "数据请求完毕！", Toast.LENGTH_SHORT).show();
+
+        }else {
+            Log.e(LOG_TAG, "一个ObjectId有多个对象,返回超过1个内容！");
+        }
+
+
+    }
+
+    //修改投票情况
     private void ChangeVote(TextView text, boolean isAdd) {
         String lText = (String) text.getText();
         int textVote = Integer.parseInt(lText.trim());
@@ -158,6 +234,25 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         text.setText(textVote+"");
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+        Intent intent = new Intent();
+        intent.putExtra("scoreA", Integer.parseInt((String) mTvTopTeamAScore.getText()));
+        intent.putExtra("scoreB", Integer.parseInt((String) mTvTopTeamBScore.getText()));
+        intent.putExtra("status", (String)mTvTopStatus.getText());
+        intent.putExtra("type", (String)mTvTopCompetitionType.getText());
+        setResult(RESULT_OK, intent);
+
+        super.onBackPressed();
+    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -187,4 +282,33 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
             }
         }
     }
+
+    class LiveDetailActivityDefaultViewPagerListener implements ViewPagerIndicator.IndicatorChangeListener {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            switch (position) {
+                case DETAIL_FRAGMENT_COMMENT:
+                    mLlayoutComment.setVisibility(View.VISIBLE);
+                    break;
+                case DETAIL_FRAGMENT_REPORT:
+                    mLlayoutComment.setVisibility(View.GONE);
+                    break;
+                case DETAIL_FRAGMENT_STATISTICS:
+                    mLlayoutComment.setVisibility(View.GONE);
+                    break;
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    }
+
+
 }

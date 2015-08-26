@@ -210,7 +210,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
                 // Calculate the padding to apply, we divide by 1.7 to
                 // simulate a more resistant effect during pull.
                 int topPadding = (int) (((historicalY - mLastMotionY)
-                        - mRefreshViewHeight) / 1.7);
+                        - mRefreshViewHeight)/1.7);
 
                 mRefreshView.setPadding(
                         mRefreshView.getPaddingLeft(),

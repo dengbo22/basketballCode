@@ -219,16 +219,7 @@ public class StickyNavLayout extends LinearLayout {
                 return true;
             case MotionEvent.ACTION_MOVE:
                 float dy = y - mLastY;
-                //----------------
-                ViewGroup.LayoutParams lp = mViewPager.getLayoutParams();
-                lp.height += dy;
-                mViewPager.setLayoutParams(lp);
-
-                //-----------------
-
-
-
-                Log.e("TAG", "dy = " + dy + " , y = " + y + " , mLastY = " + mLastY);
+                Log.d("StickyNavLayout", "dy = " + dy + " , y = " + y + " , mLastY = " + mLastY);
 
                 if (!mDragging && Math.abs(dy) > mTouchSlop) {
                     mDragging = true;

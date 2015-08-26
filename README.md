@@ -20,3 +20,7 @@
 创建LiveDetailActivity，添加加载内容
 修改CompetitionFragment中的Header逻辑从CheckBox到RadioGroup
 
+2015.8.26
+修改LiveDetailActivity的TopView，创建CheckBox的响应逻辑
+添加从LiveFragment到LiveDetailFragment的数据请求以及Intent返回
+

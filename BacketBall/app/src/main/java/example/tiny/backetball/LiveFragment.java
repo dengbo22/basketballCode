@@ -1,5 +1,6 @@
 package example.tiny.backetball;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -194,7 +195,7 @@ public class LiveFragment extends Fragment {
             AVQuery<AVObject> query = new AVQuery<>("Competition");
             query.orderByDescending("beginTime");
             Date begin;
-            if(dataList != null && dataList.size() != 0)
+            if (dataList != null && dataList.size() != 0)
                 begin = dataList.get(0).getBeginTime();
             else
                 begin = new java.util.Date();
@@ -222,22 +223,34 @@ public class LiveFragment extends Fragment {
             LiveItemData obj = dataList.get(realPosition);
 
             Intent intent = new Intent(getActivity(), LiveDetailActivity.class);
-            intent.putExtra("objectId",obj.getObjectId());
+            intent.putExtra("objectId", obj.getObjectId());
             intent.putExtra("mGameNameData", obj.getGameNameData());
-            intent.putExtra("mTeamAIconData",obj.getTeamAIconData());
-            intent.putExtra("mTeamANameData",obj.getTeamANameData());
-            intent.putExtra("mTeamBIconData",obj.getTeamBIconData());
-            intent.putExtra("mTeamBNameData",obj.getTeamBNameData());
-            intent.putExtra("mCompetitionTypeData",obj.getCompetitionTypeData());
-            intent.putExtra("mTeamAScoreData",obj.getTeamAScoreData());
-            intent.putExtra("mTeamBScoreData",obj.getTeamBScoreData());
-            intent.putExtra("mCompetitionStatusData",obj.getCompetitionStatusData());
+            intent.putExtra("mTeamAIconData", obj.getTeamAIconData());
+            intent.putExtra("mTeamANameData", obj.getTeamANameData());
+            intent.putExtra("mTeamBIconData", obj.getTeamBIconData());
+            intent.putExtra("mTeamBNameData", obj.getTeamBNameData());
+            intent.putExtra("mCompetitionTypeData", obj.getCompetitionTypeData());
+            intent.putExtra("mTeamAScoreData", obj.getTeamAScoreData());
+            intent.putExtra("mTeamBScoreData", obj.getTeamBScoreData());
+            intent.putExtra("mCompetitionStatusData", obj.getCompetitionStatusData());
 
-
-
-
-            startActivityForResult(intent, MainActivity.FRAGMENT_LIVE);
+            startActivityForResult(intent, realPosition);
         }
+    }
+
+    //从Detail界面返回，更新对应列的数据
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        int scoreA = data.getIntExtra("scoreA", -1);
+        int scoreB = data.getIntExtra("scoreB", -1);
+        String status = data.getStringExtra("status");
+        String type = data.getStringExtra("type");
+        LiveItemData changeData = liveListAdapter.getCompetitionData().get(requestCode);
+        changeData.setTeamAScoreData(scoreA);
+        changeData.setTeamBScoreData(scoreB);
+        changeData.setCompetitionStatusData(status);
+        changeData.setCompetitionTypeData(type);
+        liveListAdapter.notifyDataSetChanged();
     }
 
     //数据获取完成以后的回调函数，用于进行数据插入和onRefreshComplete();
@@ -258,4 +271,6 @@ public class LiveFragment extends Fragment {
             liveList.onRefreshComplete();
         }
     }
+
+
 }
