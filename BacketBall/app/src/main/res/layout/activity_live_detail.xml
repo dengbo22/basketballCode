@@ -3,74 +3,64 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
 
-    <example.tiny.widget.StickyNavLayout
+    <include
+        android:id="@id/id_stickynavlayout_topview"
+        layout="@layout/include_detail_topview" />
 
+    <example.tiny.widget.ViewPagerIndicator xmlns:tiny="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/id_stickynavlayout_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_below="@id/id_stickynavlayout_topview"
+        android:background="@drawable/rectangle_shadow"
+        android:orientation="horizontal"
+        tiny:item_count="3">
+
+        <ImageView
+            android:id="@+id/img_indicator_comment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingBottom="9.39dp"
+            android:paddingLeft="29.8dp"
+            android:paddingRight="29.8dp"
+            android:paddingTop="9.39dp"
+            android:src="@drawable/btn_comment" />
+
+        <ImageView
+            android:id="@+id/img_indicator_report"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingBottom="9.39dp"
+            android:paddingLeft="29.8dp"
+            android:paddingRight="29.8dp"
+            android:paddingTop="9.39dp"
+            android:src="@drawable/btn_report" />
+
+        <ImageView
+            android:id="@+id/img_indicator_statistics"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingBottom="9.39dp"
+            android:paddingLeft="29.8dp"
+            android:paddingRight="29.8dp"
+            android:paddingTop="9.39dp"
+            android:src="@drawable/btn_statics" />
+
+    </example.tiny.widget.ViewPagerIndicator>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/id_stickynavlayout_viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_below="@id/id_stickynavlayout_indicator" />
 
-
-        <include
-            android:id="@+id/id_stickynavlayout_topview"
-            layout="@layout/include_detail_topview" />
-
-        <example.tiny.widget.ViewPagerIndicator xmlns:tiny="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/id_stickynavlayout_indicator"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_below="@id/id_stickynavlayout_topview"
-            android:background="@drawable/rectangle_shadow"
-            android:orientation="horizontal"
-            tiny:item_count="3">
-
-            <ImageView
-                android:id="@+id/img_indicator_comment"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:paddingBottom="9.39dp"
-                android:paddingLeft="29.8dp"
-                android:paddingRight="29.8dp"
-                android:paddingTop="9.39dp"
-                android:src="@drawable/btn_comment" />
-
-            <ImageView
-                android:id="@+id/img_indicator_report"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:paddingBottom="9.39dp"
-                android:paddingLeft="29.8dp"
-                android:paddingRight="29.8dp"
-                android:paddingTop="9.39dp"
-                android:src="@drawable/btn_report" />
-
-            <ImageView
-                android:id="@+id/img_indicator_statistics"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:paddingBottom="9.39dp"
-                android:paddingLeft="29.8dp"
-                android:paddingRight="29.8dp"
-                android:paddingTop="9.39dp"
-                android:src="@drawable/btn_statics" />
-
-        </example.tiny.widget.ViewPagerIndicator>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/id_stickynavlayout_viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/id_stickynavlayout_indicator" />
-
-    </example.tiny.widget.StickyNavLayout>
-    
 
     <include
         android:id="@+id/layout_detail_comment"

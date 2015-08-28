@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_comment_avator"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="8.52dp"
+        android:layout_marginTop="7.25dp"
+        android:layout_marginRight="9.4dp"
+        android:src="@drawable/avator"
+        android:layout_alignParentTop="true"
+        />
+
+    <TextView
+        android:id="@+id/tv_comment_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#404040"
+        android:text="GETVISION"
+        android:gravity="center"
+        android:layout_marginBottom="5dp"
+        android:layout_toRightOf="@id/img_comment_avator"
+        android:layout_alignTop="@id/img_comment_avator"
+        />
+
+    <TextView
+        android:id="@+id/tv_comment_time"
+        android:layout_toRightOf="@id/tv_comment_name"
+        android:layout_alignBottom="@id/tv_comment_name"
+        android:text="3分钟前"
+        android:textSize="9sp"
+        android:layout_marginLeft="5dp"
+        android:textColor="#BFBFBF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_comment_content"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_comment_name"
+        android:layout_below="@id/tv_comment_name"
+        android:textSize="14sp"
+        android:textColor="#808080"
+        android:text="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+        android:paddingBottom="3.4dp"
+        />
+
+    <CheckBox
+        android:id="@+id/chk_comment_upvote"
+        android:layout_width="42.6dp"
+        android:layout_marginTop="1dp"
+        android:layout_height="34.13dp"
+        android:background="@drawable/drawable_chkbox_likes"
+        android:button="@null"
+        android:layout_alignParentRight="true"
+        />
+
+    <TextView
+        android:id="@+id/tv_comment_upvote_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:textColor="#BFBFBF"
+        android:layout_marginRight="26.5dp"
+        android:layout_marginTop="7dp"
+        android:layout_alignParentRight="true"
+        android:text="1285"
+        />
+
+
+</RelativeLayout>

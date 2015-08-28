@@ -9,6 +9,9 @@ public class User {
     private String objectId;
     private String wechatId;
     private String nickname;
+
+
+
     private String avatorUrl;
     private boolean emailVerified;
     private int gender;
@@ -38,5 +41,22 @@ public class User {
                 "\temailVerified" +emailVerified +
                 "\tgender" + gender
         +"\tmobilePhoneVerified" +mobilePhoneVerified;
+    }
+
+    public String getAvatorUrl() {
+        return avatorUrl;
+    }
+
+    public void setAvatorUrl(String avatorUrl) {
+        this.avatorUrl = avatorUrl;
+    }
+
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

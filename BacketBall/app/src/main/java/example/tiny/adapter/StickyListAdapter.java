@@ -158,9 +158,9 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
         //具体操作
         Date date = mCompetitionData.get(position).getBeginTime();
 
-        String dayOfTheWeek = (String) android.text.format.DateFormat.format("EE", date);
-        String month = (String) android.text.format.DateFormat.format("M", date);
-        String day = (String) android.text.format.DateFormat.format("d", date);
+//        String dayOfTheWeek = (String) android.text.format.DateFormat.format("EE", date);
+//        String month = (String) android.text.format.DateFormat.format("M", date);
+//        String day = (String) android.text.format.DateFormat.format("d", date);
 
         String whole = (String)android.text.format.DateFormat.format("M月d日 EE", date);
         holder.mHeaderText.setText(whole);

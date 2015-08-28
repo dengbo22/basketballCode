@@ -2,6 +2,7 @@ package example.tiny.backetball;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -51,12 +53,12 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
     public static final int DETAIL_FRAGMENT_COMMENT = 0;
     public static final int DETAIL_FRAGMENT_REPORT = 1;
     public static final int DETAIL_FRAGMENT_STATISTICS = 2;
+    public static final int PAGE_NUMBER = 3;
     private static final String LOG_TAG = "LiveDetailActivity";
 
     private List<Fragment> mTabContents = new ArrayList<Fragment>();
     private FragmentPagerAdapter mAdapter;
     private ViewPager mViewPager;
-    private List<String> mDatas = Arrays.asList("Data1", "Data2", "Data3");
     private ViewPagerIndicator mIndicator;
     private TextView mTvTopGameName;
     private ImageView mImgTopShare;
@@ -102,18 +104,17 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         //加载Fragment
         initView();
         initDatas();
+
         mViewPager.setAdapter(mAdapter);
+        mViewPager.setOffscreenPageLimit(PAGE_NUMBER);
         mIndicator.setIndicatorChangeListener(new LiveDetailActivityDefaultViewPagerListener());
         mIndicator.setInnerViewPager(mViewPager, 0);
-        RequestCommentData();
     }
 
+
     private void initDatas() {
-        for (String data : mDatas) {
             CommentFragment fragment = new CommentFragment();
             mTabContents.add(fragment);
-        }
-
 
         mAdapter = new FragmentPagerAdapter(getFragmentManager()) {
             @Override
@@ -156,6 +157,9 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         mTvTopAward = (TextView) awardLayout.findViewById(R.id.tv_topview_award);
         mChkTopLeftUpvote.setOnCheckedChangeListener(this);
         mChkTopRightUpvote.setOnCheckedChangeListener(this);
+        //
+        mEdtTxtComment = (EditText) findViewById(R.id.edtTxt_comment_input);
+
 
         //从Intent中获取信息并且加载内容：
         Intent intent = getIntent();
@@ -175,7 +179,13 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         //加载底部评论
         mLlayoutComment = (LinearLayout) findViewById(R.id.layout_detail_comment);
         mImgCommentEmotion = (ImageView) mLlayoutComment.findViewById(R.id.img_comment_emotion);
+        mEdtTxtComment = (EditText)mLlayoutComment.findViewById(R.id.edtTxt_comment_input);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     //用于启动以后开始请求数据
@@ -198,27 +208,6 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         });
     }
 
-    private void RequestCommentData() {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("competitionId", objectId);
-        parameters.put("count", 2);
-        AVCloud.callFunctionInBackground("commentInit", parameters, new FunctionCallback<Object>() {
-            @Override
-            public void done(Object o, AVException e) {
-                JSONObject obj = (JSONObject) JSON.toJSON(o);
-                //获取最新评论以及最热评论数组
-                JSONArray recentArray = obj.getJSONArray("recent");
-                JSONArray hotArray = obj.getJSONArray("hot");
-                //获取每条具体评论内容
-                for(int i = 0 ; i < recentArray.size(); i++) {
-                    JSONObject commentObj = recentArray.getJSONObject(i);
-                    CommentGroup comment = CommentGroup.fromJson(commentObj);
-                }
-
-            }
-
-        });
-    }
 
     //用于请求数据完成后将数据展示出来
     private void UpdateData(List<AVObject> list) {
@@ -246,7 +235,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
             mTvTopLeftFollowNumber.setText(likesA + "");
             mTvTopRightFollowNumber.setText(likesB + "");
             mTvTopAward.setText("￥ " + award);
-            Toast.makeText(LiveDetailActivity.this, "数据请求完毕！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LiveDetailActivity.this, "TopView 更新完成！", Toast.LENGTH_SHORT).show();
 
         } else {
             Log.e(LOG_TAG, "一个ObjectId有多个对象,返回超过1个内容！");
@@ -272,6 +261,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
     protected void onDestroy() {
         super.onDestroy();
     }
+
 
 
     @Override

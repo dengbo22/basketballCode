@@ -28,6 +28,7 @@
 
         </activity>
         <activity android:name=".LiveDetailActivity"
+            android:windowSoftInputMode="stateHidden"
             android:label="BacketBall">
 
         </activity>

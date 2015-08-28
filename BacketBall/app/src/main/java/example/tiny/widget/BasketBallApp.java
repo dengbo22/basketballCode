@@ -3,8 +3,12 @@ package example.tiny.widget;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogInCallback;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -51,5 +55,16 @@ public class BasketBallApp extends Application {
                 .build();
 
         ImageLoader.getInstance().init(config);
+
+        AVUser.logInInBackground("o6YjBt4nRvNnI1_uSVfTsyphN_TY", "o6YjBt4nRvNnI1_uSVfTsyphN_TY", new LogInCallback() {
+            public void done(AVUser user, AVException e) {
+                if (user != null) {
+                    // 登录成功
+                } else {
+                    Toast.makeText(getApplicationContext(), "登陆失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 }
