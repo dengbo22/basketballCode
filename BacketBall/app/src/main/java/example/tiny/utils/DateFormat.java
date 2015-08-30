@@ -33,19 +33,23 @@ public class DateFormat {
         return date;
     }
 
+    public static String toLeanCloudDateString(Date date) {
+        return format.format(date);
+    }
+
     public static String TimeElapse(Date beforeDate) {
         Date date = new Date();
         int second = (int) (date.getTime()/1000);
         int beforeSecond = (int) (beforeDate.getTime()/1000);
         int timeElapse = second - beforeSecond;
-        if(timeElapse % SECOND_PER_DAY != 0)
+        if(timeElapse / SECOND_PER_DAY != 0)
             return timeElapse/SECOND_PER_DAY + "天前";
-        else if(timeElapse % SECOND_PER_HOUR != 0)
+        else if(timeElapse / SECOND_PER_HOUR != 0)
             return timeElapse/SECOND_PER_HOUR + "小时前";
-        else if(timeElapse % SECOND_PER_MIN != 0)
+        else if(timeElapse / SECOND_PER_MIN != 0)
             return timeElapse / SECOND_PER_MIN +"分钟前";
         else
-            return "异常" + timeElapse;
+            return timeElapse +"秒前";
     }
 
 }

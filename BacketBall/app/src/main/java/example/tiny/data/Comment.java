@@ -56,7 +56,10 @@ public class Comment {
     }
 
     public String getObjectId() {
-        return objectId;
+        if(objectId == null)
+            return "";
+        else
+            return objectId;
     }
 
     public void setObjectId(String objectId) {

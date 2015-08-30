@@ -22,6 +22,7 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 import java.io.File;
 
 import example.tiny.backetball.R;
+import example.tiny.data.User;
 
 /**
  * Created by tiny on 15-8-20.
@@ -29,13 +30,13 @@ import example.tiny.backetball.R;
 public class BasketBallApp extends Application {
     private String AppId = "n4ibkpr4z9d8tkdlg7k0j6xywwwb28k2jw8fzmj5vrxeve4c";
     private String AppKey = "ehsn3wgg56185yofd51sdh9ccifhb1cpa4m8s1stm4slrbef";
-    private final int TIME_OUT = 2000;
+    private final int TIME_OUT = 5000;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        AVOSCloud.setNetworkTimeout(TIME_OUT);
-        AVOSCloud.setDebugLogEnabled(true);
+//        AVOSCloud.setNetworkTimeout(TIME_OUT);
+//        AVOSCloud.setDebugLogEnabled(true);
         AVOSCloud.initialize(this, AppId, AppKey);
         File cacheDir = StorageUtils.getOwnCacheDirectory(getApplicationContext(), "imageloader/Cache"); //缓存文件的存放地址
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
@@ -67,4 +68,11 @@ public class BasketBallApp extends Application {
         });
 
     }
+
+    public User getUser() {
+        User user = new User();
+        return user;
+    }
+
+
 }

@@ -108,10 +108,10 @@ public class CommentGroup implements Comparable<CommentGroup> {
                     return 0;
             case 1:
                 //this所指向的数据是hot, another所指向的数据是recent
-                return -1;
+                return -1000;
             case 2:
                 //this所指向的数据是recent,another所指向的数据是hot
-                return 1;
+                return 1000;
 
             case 3:
                 //两条数据均为recent,根据时间先后来排名

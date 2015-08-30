@@ -46,14 +46,20 @@ public class LiveFragment extends Fragment {
         super.onCreate(savedInstanceState);
         MainActivity parent = (MainActivity) getActivity();
         liveListAdapter = new StickyListAdapter(parent);
-        ArrayList<LiveItemData> dataInSQL = parent.getBasketSQLite().onGetAllInLive();
-        if (dataInSQL != null) {
-            for (LiveItemData data : dataInSQL) {
-                liveListAdapter.getCompetitionData().add(0, data);
+        BasketSQLite sql = parent.getBasketSQLite();
+        ArrayList<LiveItemData> dataInSQL ;
+        if (sql != null) {
+            dataInSQL = sql.onGetAllInLive();
+            if (dataInSQL != null) {
+                for (LiveItemData data : dataInSQL) {
+                    liveListAdapter.getCompetitionData().add(0, data);
+                }
+            } else {
+                Toast.makeText(getActivity(), "没有数据加载", Toast.LENGTH_SHORT).show();
+                //此处应该请求数据
             }
         } else {
-            Toast.makeText(getActivity(), "没有数据加载", Toast.LENGTH_SHORT).show();
-            //此处应该请求数据
+            Log.e(LOG_TAG, "getBasketSQLite为null");
         }
 
     }

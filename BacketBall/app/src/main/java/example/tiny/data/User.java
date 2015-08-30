@@ -10,8 +10,6 @@ public class User {
     private String wechatId;
     private String nickname;
 
-
-
     private String avatorUrl;
     private boolean emailVerified;
     private int gender;
@@ -19,6 +17,15 @@ public class User {
     private String username;
     private String password;
     private String mobilePhoneVerified;
+
+
+    public User() {
+        super();
+        avatorUrl = "";
+        gender = 0;
+        nickname = "Tiny";
+
+    }
 
     public static User FromJSon(JSONObject obj) {
         User user = new User();

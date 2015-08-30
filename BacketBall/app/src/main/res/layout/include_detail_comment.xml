@@ -22,6 +22,7 @@
         />
     
     <TextView
+        android:id="@+id/tv_comment_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="12.8dp"

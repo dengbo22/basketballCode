@@ -79,7 +79,12 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
     DisplayImageOptions options;
     private ImageView mImgCommentEmotion;
     private EditText mEdtTxtComment;
+    private TextView mTvCommentSend;
     String objectId;
+
+    public EditText getEdtTxtComment() {
+        return mEdtTxtComment;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +118,10 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
 
 
     private void initDatas() {
-            CommentFragment fragment = new CommentFragment();
-            mTabContents.add(fragment);
+        CommentFragment fragment = new CommentFragment();
+        mTabContents.add(fragment);
+        mTabContents.add(new ReportFragment());
+        mTabContents.add(new StatisticsFragment());
 
         mAdapter = new FragmentPagerAdapter(getFragmentManager()) {
             @Override
@@ -129,6 +136,10 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         };
     }
 
+
+    public TextView getTvCommentSend() {
+        return mTvCommentSend;
+    }
 
     private void initView() {
         //加载基本控件
@@ -159,7 +170,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         mChkTopRightUpvote.setOnCheckedChangeListener(this);
         //
         mEdtTxtComment = (EditText) findViewById(R.id.edtTxt_comment_input);
-
+        mTvCommentSend = (TextView)findViewById(R.id.tv_comment_send);
 
         //从Intent中获取信息并且加载内容：
         Intent intent = getIntent();
@@ -179,7 +190,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         //加载底部评论
         mLlayoutComment = (LinearLayout) findViewById(R.id.layout_detail_comment);
         mImgCommentEmotion = (ImageView) mLlayoutComment.findViewById(R.id.img_comment_emotion);
-        mEdtTxtComment = (EditText)mLlayoutComment.findViewById(R.id.edtTxt_comment_input);
+        mEdtTxtComment = (EditText) mLlayoutComment.findViewById(R.id.edtTxt_comment_input);
 
     }
 
@@ -261,7 +272,6 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
     protected void onDestroy() {
         super.onDestroy();
     }
-
 
 
     @Override
