@@ -1,6 +1,5 @@
 package example.tiny.backetball;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,8 +24,10 @@ import java.util.List;
 import example.tiny.adapter.StickyListAdapter;
 import example.tiny.data.BasketSQLite;
 import example.tiny.data.LiveItemData;
-import example.tiny.pulltorefreshstickylistview.PullToRefreshListView;
-import example.tiny.pulltorefreshstickylistview.StickyListHeadersListView;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Created by tiny on 15-8-19.
@@ -38,8 +39,9 @@ public class LiveFragment extends Fragment {
 
     StickyListHeadersListView liveList = null;
     StickyListAdapter liveListAdapter = null;
-    RequestRefreshListener freshListener = null;
     ArrayList<LiveItemData> dataList = null;
+    PtrFrameLayout mFrameLiveRefresh = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,38 +49,44 @@ public class LiveFragment extends Fragment {
         MainActivity parent = (MainActivity) getActivity();
         liveListAdapter = new StickyListAdapter(parent);
         BasketSQLite sql = parent.getBasketSQLite();
-        ArrayList<LiveItemData> dataInSQL ;
-        if (sql != null) {
-            dataInSQL = sql.onGetAllInLive();
-            if (dataInSQL != null) {
-                for (LiveItemData data : dataInSQL) {
-                    liveListAdapter.getCompetitionData().add(0, data);
-                }
-            } else {
-                Toast.makeText(getActivity(), "没有数据加载", Toast.LENGTH_SHORT).show();
-                //此处应该请求数据
+        Log.e(LOG_TAG, "sql:" + sql);
+        ArrayList<LiveItemData> dataInSQL;
+        dataInSQL = sql.onGetAllInLive();
+        if (dataInSQL != null) {
+            for (LiveItemData data : dataInSQL) {
+                liveListAdapter.getCompetitionData().add(0, data);
             }
         } else {
-            Log.e(LOG_TAG, "getBasketSQLite为null");
+            Toast.makeText(getActivity(), "没有数据加载", Toast.LENGTH_SHORT).show();
+            RequestLiveData();
         }
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_live, container, false);
+        View view = inflater.inflate(R.layout.fragment_live_fix, container, false);
+        mFrameLiveRefresh = (PtrFrameLayout) view.findViewById(R.id.flayout_live_refresh);
         liveList = (StickyListHeadersListView) view.findViewById(R.id.list_live_competition);
-        liveList.setAdapter(liveListAdapter);
+        liveList.setAdapter(liveListAdapter );
+        liveListAdapter = (StickyListAdapter) liveList.getAdapter();
         liveList.setOnItemClickListener(new ItemClickListener());
-        if (freshListener == null)
-            freshListener = new RequestRefreshListener();
-        liveList.setOnRefreshListener(freshListener);
         dataList = liveListAdapter.getCompetitionData();
+        mFrameLiveRefresh.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, content, header);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
+                RequestLiveData();
+            }
+        });
 
 
         return view;
     }
-
 
 
     @Override
@@ -196,27 +204,24 @@ public class LiveFragment extends Fragment {
         }
     }
 
-    //监听手动下拉动作，执行数据请求
-    class RequestRefreshListener implements PullToRefreshListView.OnRefreshListener {
-        @Override
-        public void onRefresh() {
-            AVQuery<AVObject> query = new AVQuery<>("Competition");
-            query.orderByDescending("beginTime");
-            Date begin;
-            if (dataList != null && dataList.size() != 0)
-                begin = dataList.get(0).getBeginTime();
-            else
-                begin = new java.util.Date();
 
-            query.setLimit(LOAD_SIZE);
-            query.whereLessThanOrEqualTo("beginTime", begin);
-            query.include("scoreId");
-            query.include("teamAId");
-            query.include("teamBId");
-            query.include("gameId");
-            query.include("gameId.campusId");
-            query.findInBackground(new RequestCallBack());
-        }
+    private void RequestLiveData() {
+        AVQuery<AVObject> query = new AVQuery<>("Competition");
+        query.orderByDescending("beginTime");
+        Date begin;
+        if (dataList != null && dataList.size() != 0)
+            begin = dataList.get(0).getBeginTime();
+        else
+            begin = new java.util.Date();
+
+        query.setLimit(LOAD_SIZE);
+        query.whereLessThanOrEqualTo("beginTime", begin);
+        query.include("scoreId");
+        query.include("teamAId");
+        query.include("teamBId");
+        query.include("gameId");
+        query.include("gameId.campusId");
+        query.findInBackground(new RequestCallBack());
     }
 
     //监听ListView点击事件，执行页面跳转
@@ -276,7 +281,7 @@ public class LiveFragment extends Fragment {
                 Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
             }
 
-            liveList.onRefreshComplete();
+            mFrameLiveRefresh.refreshComplete();
         }
     }
 

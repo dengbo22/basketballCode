@@ -24,3 +24,6 @@
 修改LiveDetailActivity的TopView，创建CheckBox的响应逻辑
 添加从LiveFragment到LiveDetailFragment的数据请求以及Intent返回
 
+2015.8.31
+修改LiveFragment的逻辑，删除原用的StickyHeaderListView+PullToRefresh
+改用Ultra-Pull-To-Refresh框架结构

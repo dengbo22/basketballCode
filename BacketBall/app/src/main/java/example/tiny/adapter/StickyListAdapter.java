@@ -24,7 +24,7 @@ import java.util.Date;
 
 import example.tiny.data.LiveItemData;
 import example.tiny.backetball.R;
-import example.tiny.pulltorefreshstickylistview.StickyListHeadersAdapter;
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * Created by tiny on 15-8-19.

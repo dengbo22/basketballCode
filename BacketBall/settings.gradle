@@ -1,2 +1,2 @@
-include ':app', ':pulltorefreshstickylistview'
+include ':app'
 include ':PullToRefresh'
