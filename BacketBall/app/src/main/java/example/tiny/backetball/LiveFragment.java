@@ -43,35 +43,17 @@ public class LiveFragment extends Fragment {
     PtrFrameLayout mFrameLiveRefresh = null;
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        MainActivity parent = (MainActivity) getActivity();
-        liveListAdapter = new StickyListAdapter(parent);
-        BasketSQLite sql = parent.getBasketSQLite();
-        Log.e(LOG_TAG, "sql:" + sql);
-        ArrayList<LiveItemData> dataInSQL;
-        dataInSQL = sql.onGetAllInLive();
-        if (dataInSQL != null) {
-            for (LiveItemData data : dataInSQL) {
-                liveListAdapter.getCompetitionData().add(0, data);
-            }
-        } else {
-            Toast.makeText(getActivity(), "没有数据加载", Toast.LENGTH_SHORT).show();
-            RequestLiveData();
-        }
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_live_fix, container, false);
+
         mFrameLiveRefresh = (PtrFrameLayout) view.findViewById(R.id.flayout_live_refresh);
         liveList = (StickyListHeadersListView) view.findViewById(R.id.list_live_competition);
-        liveList.setAdapter(liveListAdapter );
+        liveList.setAdapter(new StickyListAdapter(getActivity()) );
         liveListAdapter = (StickyListAdapter) liveList.getAdapter();
         liveList.setOnItemClickListener(new ItemClickListener());
-        dataList = liveListAdapter.getCompetitionData();
+
         mFrameLiveRefresh.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View content, View header) {
@@ -84,10 +66,34 @@ public class LiveFragment extends Fragment {
             }
         });
 
-
         return view;
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //加载数据部分，首先先加载数据库中的内容
+        BasketSQLite sql = ((MainActivity)getActivity()).getBasketSQLite();
+        ArrayList<LiveItemData> mData = sql.onGetAllInLive();
+        if(mData != null && mData.size() != 0) {
+            //数据库中本身就有数据，将其加载
+            for(LiveItemData item : mData) {
+                liveListAdapter.getCompetitionData().add(item);
+            }
+            Collections.sort(liveListAdapter.getCompetitionData());
+
+        } else {
+            //数据为null，自动请求服务器并且加载数据
+            mFrameLiveRefresh.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mFrameLiveRefresh.autoRefresh(true);
+                }
+            }, 150);
+        }
+        dataList = liveListAdapter.getCompetitionData();
+    }
 
     @Override
     public void onDestroy() {
@@ -186,20 +192,10 @@ public class LiveFragment extends Fragment {
                 if (addFlag)
                     dataList.add(data);
 
-
-                //执行排序，保证列表不被打乱
-                Collections.sort(dataList, new Comparator<LiveItemData>() {
-                    @Override
-                    public int compare(LiveItemData lhs, LiveItemData rhs) {
-                        if (lhs.getBeginTime().after(rhs.getBeginTime()))
-                            return 1;
-                        else
-                            return -1;
-
-                    }
-                });
-                liveListAdapter.notifyDataSetChanged();
             }
+            Collections.sort(dataList);
+
+            liveListAdapter.notifyDataSetChanged();
             return true;
         }
     }

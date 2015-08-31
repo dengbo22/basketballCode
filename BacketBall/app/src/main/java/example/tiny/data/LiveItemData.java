@@ -6,8 +6,7 @@ import java.util.Date;
 /**
  * Created by tiny on 15-8-20.
  */
-public class LiveItemData {
-
+public class LiveItemData implements Comparable<LiveItemData>{
 
     String mObjectId;
     String mCampusData;
@@ -127,7 +126,6 @@ public class LiveItemData {
         this.mCampusData = mCampusData;
     }
 
-
     @Override
     public String toString() {
         String str = mObjectId
@@ -143,5 +141,16 @@ public class LiveItemData {
         +"\t"+ mTeamBScoreData
         +"\t"+ mBeginTime;
         return str;
+    }
+
+
+    @Override
+    public int compareTo(LiveItemData another) {
+        if(this.mBeginTime.after(another.mBeginTime))
+            return 1;
+        else if(this.mBeginTime.before(another.mBeginTime))
+            return -1;
+        else
+            return 0;
     }
 }

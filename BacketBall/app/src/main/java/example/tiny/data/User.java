@@ -16,16 +16,75 @@ public class User {
     private String mobilePhoneNumber;
     private String username;
     private String password;
-    private String mobilePhoneVerified;
+    private boolean mobilePhoneVerified;
 
 
-    public User() {
-        super();
-        avatorUrl = "";
-        gender = 0;
-        nickname = "Tiny";
 
+    public String getObjectId() {
+        return objectId;
     }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public String getWechatId() {
+        return wechatId;
+    }
+
+    public void setWechatId(String wechatId) {
+        this.wechatId = wechatId;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
+    }
+
+    public String getMobilePhoneNumber() {
+        return mobilePhoneNumber;
+    }
+
+    public void setMobilePhoneNumber(String mobilePhoneNumber) {
+        this.mobilePhoneNumber = mobilePhoneNumber;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean getMobilePhoneVerified() {
+        return mobilePhoneVerified;
+    }
+
+    public void setMobilePhoneVerified(boolean mobilePhoneVerified) {
+        this.mobilePhoneVerified = mobilePhoneVerified;
+    }
+
+
 
     public static User FromJSon(JSONObject obj) {
         User user = new User();
@@ -35,7 +94,7 @@ public class User {
         user.avatorUrl = obj.getString("avatorUrl");
         user.emailVerified = obj.getBoolean("emailVerified");
         user.gender = obj.getInteger("gender");
-        user.mobilePhoneVerified = obj.getString("mobilePhoneVerified");
+        user.mobilePhoneVerified = obj.getBoolean("mobilePhoneVerified");
         return user;
     }
 

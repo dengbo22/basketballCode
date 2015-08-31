@@ -194,4 +194,7 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
     class HeaderViewHolder {
         TextView mHeaderText;
     }
+
+
+    //-------------------数据操作------------------
 }

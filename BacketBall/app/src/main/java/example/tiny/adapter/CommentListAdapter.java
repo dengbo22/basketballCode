@@ -87,19 +87,7 @@ public class CommentListAdapter extends BaseAdapter implements StickyListHeaders
         if (commentData == null)
             commentData = new ArrayList<>();
         //如果添加的数据没有objectID --> 说明该条数据是新添加
-        Comment commment = data.getComment();
-        Log.e("Comment", commment + "comment");
-        if (data.getComment().getObjectId() == null || "".equals(data.getComment().getObjectId())) {
-            return commentData.add(data);
-        }
-
-        for (int i = 0; i < commentData.size(); i++) {
-            if (data.getComment().getObjectId().equals(commentData.get(i).getComment().getObjectId())
-                    && !data.getComment().getObjectId().equals("")) {
-                //如果出现：新加入的数据id与之前存在的数据id一致，则删除旧的数据
-                commentData.remove(i);
-            }
-        }
+        Comment comment = data.getComment();
         return commentData.add(data);
     }
 

@@ -31,6 +31,7 @@ public class BasketBallApp extends Application {
     private String AppId = "n4ibkpr4z9d8tkdlg7k0j6xywwwb28k2jw8fzmj5vrxeve4c";
     private String AppKey = "ehsn3wgg56185yofd51sdh9ccifhb1cpa4m8s1stm4slrbef";
     private final int TIME_OUT = 5000;
+    private User mUser = null;
 
     @Override
     public void onCreate() {
@@ -57,21 +58,21 @@ public class BasketBallApp extends Application {
 
         ImageLoader.getInstance().init(config);
 
-        AVUser.logInInBackground("o6YjBt4nRvNnI1_uSVfTsyphN_TY", "o6YjBt4nRvNnI1_uSVfTsyphN_TY", new LogInCallback() {
-            public void done(AVUser user, AVException e) {
-                if (user != null) {
-                    // 登录成功
-                } else {
-                    Toast.makeText(getApplicationContext(), "登陆失败", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
 
     }
 
+
+    public void setUser(User mUser) {
+        if(mUser == null) {
+            //在sharedpreference中保存用户名和密码
+        }
+
+        this.mUser = mUser;
+    }
+
     public User getUser() {
-        User user = new User();
-        return user;
+        return mUser;
     }
 
 

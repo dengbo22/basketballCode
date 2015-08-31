@@ -8,13 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,14 +20,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FunctionCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import example.tiny.adapter.CommentListAdapter;
@@ -38,6 +33,7 @@ import example.tiny.data.Comment;
 import example.tiny.data.CommentGroup;
 import example.tiny.data.User;
 import example.tiny.utils.DateFormat;
+import example.tiny.widget.BasketBallApp;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -210,7 +206,8 @@ public class CommentFragment extends Fragment {
         public void onClick(View v) {
             CommentGroup newData = new CommentGroup();
             //设置当前用户
-            newData.setUser(new User());
+
+            newData.setUser(((BasketBallApp)getActivity().getApplication()).getUser());
             //设置Comment
             Comment comment = new Comment();
             Date cur = new Date();
@@ -237,6 +234,7 @@ public class CommentFragment extends Fragment {
             mCommentAdapter.notifyDataSetChanged();
             //收起键盘,删除editText的内容
             mEdtTxtCommentInfo.getText().clear();
+            mEdtTxtCommentInfo.setHint("");
             mEdtTxtCommentInfo.clearFocus();
         }
     }
