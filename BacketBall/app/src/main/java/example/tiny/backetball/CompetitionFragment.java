@@ -43,12 +43,17 @@ public class CompetitionFragment extends Fragment {
         MainActivity father = (MainActivity) getActivity();
         competitionListAdapter = new PullRefreshAdapter(father);
         //读取数据库,加载数据库中的数据
-        ArrayList<CompetitionItemData> dataInSQL = father.getBasketSQLite().onGetAllInCompetition();
-        for (CompetitionItemData data : dataInSQL) {
-            if (data.getIsFinished())
-                competitionListAdapter.getFinishedGameData().add(data);
-            else
-                competitionListAdapter.getUnfinishedGameData().add(data);
+        BasketSQLite sql = father.getBasketSQLite();
+        if(sql != null) {
+            ArrayList<CompetitionItemData> dataInSQL = sql.onGetAllInCompetition();
+            for (CompetitionItemData data : dataInSQL) {
+                if (data.getIsFinished())
+                    competitionListAdapter.getFinishedGameData().add(data);
+                else
+                    competitionListAdapter.getUnfinishedGameData().add(data);
+            }
+        } else {
+            //请求加载数据
         }
         //数据加载完毕
     }

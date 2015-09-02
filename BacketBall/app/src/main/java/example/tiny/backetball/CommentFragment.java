@@ -1,17 +1,21 @@
 package example.tiny.backetball;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,30 +51,35 @@ public class CommentFragment extends Fragment {
     private ImageView backImage;
     private TextView mTvCommentCount;
     private EditText mEdtTxtCommentInfo;
-    private TextView mTvComentSend;
     private int mClickItem = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /* getArguments() */
-        if (mCommentAdapter == null)
-            mCommentAdapter = new CommentListAdapter(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_comment, container, false);
         backImage = (ImageView) view.findViewById(R.id.background_image);
         StickyListHeadersListView mStickyListView = (StickyListHeadersListView) view.findViewById(R.id.id_stickynavlayout_innerscrollview);
         mTvCommentCount = (TextView) view.findViewById(R.id.tv_comment_count);
-        mCommentData = mCommentAdapter.getDataList();
-        mStickyListView.setAdapter(mCommentAdapter);
+
+        if(mCommentAdapter == null) {
+            mStickyListView.setAdapter(new CommentListAdapter(getActivity()));
+            mCommentAdapter = (CommentListAdapter) mStickyListView.getAdapter();
+            if(mCommentAdapter.getDataList() != null) {
+                mCommentData = mCommentAdapter.getDataList();
+            }
+        }
         mStickyListView.setOnScrollListener(new LoadMoreScrollListener());
         mStickyListView.setOnItemClickListener(new CommentItemClickListener());
         mEdtTxtCommentInfo = ((LiveDetailActivity)getActivity() ).getEdtTxtComment();
-        mTvComentSend = ((LiveDetailActivity)getActivity() ).getTvCommentSend();
-        mTvComentSend.setOnClickListener(new SendCommentClickListener());
+        TextView mTvCommentSend = ((LiveDetailActivity) getActivity()).getTvCommentSend();
+        mTvCommentSend.setOnClickListener(new SendCommentClickListener());
+
         RequestCommentData();
         return view;
     }
@@ -81,7 +90,7 @@ public class CommentFragment extends Fragment {
         Log.i(LOG_TAG, "onResume()");
     }
 
-    private void LoadMoreReuqest() {
+    private void LoadMoreRequest() {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("competitionId", ((LiveDetailActivity) getActivity()).objectId);
         parameters.put("count", 10);
@@ -173,7 +182,12 @@ public class CommentFragment extends Fragment {
             switch (scrollState) {
                 case SCROLL_STATE_IDLE:
                     if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                        LoadMoreReuqest();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                LoadMoreRequest();
+                            }
+                        }).start();
                     }
             }
         }
@@ -197,6 +211,7 @@ public class CommentFragment extends Fragment {
             int realPosition = (int) id;
             mClickItem = realPosition;
             CommentGroup obj = mCommentData.get(realPosition);
+            mEdtTxtCommentInfo.requestFocus();
             mEdtTxtCommentInfo.setHint("回复" + obj.getUser().getNickname() +" : ");
         }
     }
@@ -236,6 +251,7 @@ public class CommentFragment extends Fragment {
             mEdtTxtCommentInfo.getText().clear();
             mEdtTxtCommentInfo.setHint("");
             mEdtTxtCommentInfo.clearFocus();
+            Log.e(LOG_TAG, getActivity().getCurrentFocus() + "focus");
         }
     }
 

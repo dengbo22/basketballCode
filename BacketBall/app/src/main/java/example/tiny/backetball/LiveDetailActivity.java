@@ -80,7 +80,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
     private ImageView mImgCommentEmotion;
     private EditText mEdtTxtComment;
     private TextView mTvCommentSend;
-    String objectId;
+    public String objectId;
 
     public EditText getEdtTxtComment() {
         return mEdtTxtComment;

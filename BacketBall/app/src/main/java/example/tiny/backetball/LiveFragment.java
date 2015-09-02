@@ -114,7 +114,7 @@ public class LiveFragment extends Fragment {
     }
 
     //将获取的数据插入到当前数据集合中
-    private boolean insertDataIntoAdapter(List<AVObject> list) {
+    protected boolean insertDataIntoAdapter(List<AVObject> list) {
         //当前没有返回数据，返回插入失败
         if (list == null || list.size() == 0)
             return false;

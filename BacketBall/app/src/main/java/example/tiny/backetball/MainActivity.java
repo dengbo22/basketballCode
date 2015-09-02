@@ -7,6 +7,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -154,6 +156,7 @@ public class MainActivity extends Activity{
     }
 
 
+
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         ArrayList<Fragment> fragments = null;
 
@@ -166,7 +169,6 @@ public class MainActivity extends Activity{
             if(mCompetition == null)
                 mCompetition = new CompetitionFragment();
             fragments.add(FRAGMENT_COMPETITION, mCompetition );
-
 
             fragments.add(FRAGMENT_NEWS, new NewsFragment());
             fragments.add(FRAGMENT_ME, new MeFragment());
@@ -186,8 +188,8 @@ public class MainActivity extends Activity{
         public int getCount() {
             return fragments.size();
         }
-    }
 
+    }
 
 
     public class PageChangerListener implements ViewPager.OnPageChangeListener {
