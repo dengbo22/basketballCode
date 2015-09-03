@@ -30,6 +30,7 @@ import example.tiny.adapter.StatisticsListAdapter;
 public class StatisticsFragment extends Fragment {
     private static final String LOG_TAG = "StatisticsFragment";
     RecyclerView mRecycleView = null;
+    StatisticsListAdapter mSectionedAdapter;
 
 
     //请求数据，设置基本参数
@@ -45,7 +46,6 @@ public class StatisticsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
         mRecycleView = (RecyclerView) view.findViewById(R.id.recycler_statistics);
         mRecycleView.setLayoutManager(new GridLayoutManager(getActivity(), SimpleAdapter.mPlayerSpan * SimpleAdapter.mScoreSpan));
-
         //This is the code to provide a sectioned grid
         List<StatisticsListAdapter.Section> sections =
                 new ArrayList<StatisticsListAdapter.Section>();
@@ -58,46 +58,20 @@ public class StatisticsFragment extends Fragment {
 
         //Add your adapter to the sectionAdapter
         StatisticsListAdapter.Section[] dummy = new StatisticsListAdapter.Section[sections.size()];
-        StatisticsListAdapter mSectionedAdapter = new
-                StatisticsListAdapter(getActivity(), mRecycleView);
+        mSectionedAdapter = new StatisticsListAdapter(getActivity(), mRecycleView);
         mSectionedAdapter.setSections(sections.toArray(dummy));
-
         //Apply this adapter to the RecyclerView
         mRecycleView.setAdapter(mSectionedAdapter);
-
 
         return view;
     }
 
-    private void RequestStatisticsData() {
-        AVObject data = null;
-        AVQuery<AVObject> query = new AVQuery<>("Competition");
-        query.getInBackground(((LiveDetailActivity) getActivity()).objectId, new GetCallback<AVObject>() {
-            @Override
-            public void done(AVObject avObject, AVException e) {
-                if (e == null) {
-                    if (avObject != null) {
-                        String statisticsString = avObject.getString("statistics");
-
-                        JSONObject obj = JSON.parseObject(statisticsString);
-                        JSONArray statistics = obj.getJSONArray("statistics");
-                        JSONArray playerA = obj.getJSONArray("playerA");
-                        JSONArray playerB = obj.getJSONArray("playerB");
-                        SimpleAdapter.SCORE_HEIGHT = statistics.size();
-                        SimpleAdapter.PLAYER_A_HEIGHT = playerA.size();
-                        SimpleAdapter.PLAYER_B_HEIGHT = playerB.size();
-
-                        Log.e(LOG_TAG, "statistics:" + statistics.size() + "\t" + playerA.size() + "\t" + playerB.size());
-                    }
-                } else {
-                    Log.e(LOG_TAG, "Exception in Request");
-                }
-
-            }
-        });
-
-
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser) {
+            mSectionedAdapter.mStarted = true;
+            mSectionedAdapter.notifyDataSetChanged();
+        }
     }
-
-
 }

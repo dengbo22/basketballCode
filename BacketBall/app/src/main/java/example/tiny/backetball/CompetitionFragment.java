@@ -77,6 +77,21 @@ public class CompetitionFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         //在Fragment结束的时候将已有数据存入数据库中

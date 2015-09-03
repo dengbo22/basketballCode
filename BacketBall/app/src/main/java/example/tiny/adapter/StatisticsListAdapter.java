@@ -33,16 +33,13 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private final Context mContext;
     private static final int SECTION_TYPE = 0;
 
-    private boolean mValid = true;
+    public boolean mStarted = false;
     private RecyclerView.Adapter mBaseAdapter;
     private SparseArray<Section> mSections = new SparseArray<Section>();
     private RecyclerView mRecyclerView;
 
 
-
-
     public StatisticsListAdapter(Context context, RecyclerView recyclerView) {
-
         mContext = context;
         mBaseAdapter = new SimpleAdapter(mContext);
         mRecyclerView = recyclerView;
@@ -76,6 +73,7 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int typeView) {
+        Log.e(LOG_TAG, "onCreateViewHolder");
         if (typeView == SECTION_TYPE) {
             final View view = LayoutInflater.from(mContext).inflate(R.layout.layout_statistics_header, parent, false);
             return new SectionViewHolder(view,R.id.tv_statistics_header);
@@ -86,10 +84,10 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder sectionViewHolder, int position) {
+        Log.e(LOG_TAG, "onBindViewHolder->" + position);
         if (isSectionHeaderPosition(position)) {
             ((SectionViewHolder)sectionViewHolder).title.setText(mSections.get(position).title);
         }else{
-            Log.e(LOG_TAG, "position" + position + "\titem:" + sectionedPositionToPosition(position));
             mBaseAdapter.onBindViewHolder(sectionViewHolder,sectionedPositionToPosition(position));
         }
 
@@ -181,7 +179,7 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemCount() {
-        return (mValid ? mBaseAdapter.getItemCount() + mSections.size() : 0);
+        return (mStarted ? mBaseAdapter.getItemCount() + mSections.size() : 0);
     }
 
 

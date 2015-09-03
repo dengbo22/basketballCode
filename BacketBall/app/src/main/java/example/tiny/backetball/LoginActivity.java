@@ -25,7 +25,6 @@ public class LoginActivity extends Activity {
 
 
     public void startMain(View v) {
-
         AVUser.logInInBackground("test", "123456", new Login());
     }
 

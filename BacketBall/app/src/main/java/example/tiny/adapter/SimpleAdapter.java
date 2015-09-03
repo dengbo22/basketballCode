@@ -42,6 +42,7 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.SimpleView
         super();
         mContext = context;
         mItems = new ArrayList<>();
+        Log.e(LOG_TAG, "Request Data");
         RequestStatisticsData();
     }
 
@@ -60,9 +61,9 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.SimpleView
 
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
+        Log.e(LOG_TAG, "onBindViewHolder");
         if (mItems.size() != 0) {
             holder.title.setText(mItems.get(position));
-            Log.e("SimpleAdapter", "position:" + position);
         }
     }
 
@@ -110,6 +111,7 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.SimpleView
                             }
                         }
                         notifyDataSetChanged();
+                        Log.e(LOG_TAG, "Request Data Finished!");
                     }
                 } else {
                     Log.e("SimpleAdapter", "Exception in Request");
@@ -130,4 +132,5 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.SimpleView
 
 
     }
+
 }
