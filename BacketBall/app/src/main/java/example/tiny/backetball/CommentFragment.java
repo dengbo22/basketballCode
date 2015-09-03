@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -67,16 +68,16 @@ public class CommentFragment extends Fragment {
         StickyListHeadersListView mStickyListView = (StickyListHeadersListView) view.findViewById(R.id.id_stickynavlayout_innerscrollview);
         mTvCommentCount = (TextView) view.findViewById(R.id.tv_comment_count);
 
-        if(mCommentAdapter == null) {
+        if (mCommentAdapter == null) {
             mStickyListView.setAdapter(new CommentListAdapter(getActivity()));
             mCommentAdapter = (CommentListAdapter) mStickyListView.getAdapter();
-            if(mCommentAdapter.getDataList() != null) {
+            if (mCommentAdapter.getDataList() != null) {
                 mCommentData = mCommentAdapter.getDataList();
             }
         }
         mStickyListView.setOnScrollListener(new LoadMoreScrollListener());
         mStickyListView.setOnItemClickListener(new CommentItemClickListener());
-        mEdtTxtCommentInfo = ((LiveDetailActivity)getActivity() ).getEdtTxtComment();
+        mEdtTxtCommentInfo = ((LiveDetailActivity) getActivity()).getEdtTxtComment();
         TextView mTvCommentSend = ((LiveDetailActivity) getActivity()).getTvCommentSend();
         mTvCommentSend.setOnClickListener(new SendCommentClickListener());
 
@@ -97,11 +98,11 @@ public class CommentFragment extends Fragment {
         int lastDataIndex = mCommentAdapter.getDataList().size() - 1;
         CommentGroup lastData = (CommentGroup) mCommentAdapter.getDataList().get(lastDataIndex);
         Date date = lastData.getComment().getCreatedAt();
-        parameters.put("createdAt", DateFormat.toLeanCloudDateString(date) );
+        parameters.put("createdAt", DateFormat.toLeanCloudDateString(date));
         AVCloud.callFunctionInBackground("getOldComment", parameters, new FunctionCallback<Object>() {
             @Override
             public void done(Object o, AVException e) {
-                AddCommentDataIntoAdapter(o);
+                new AddDataTask().execute(o);
             }
         });
     }
@@ -114,9 +115,9 @@ public class CommentFragment extends Fragment {
         AVCloud.callFunctionInBackground("commentInit", parameters, new FunctionCallback<Object>() {
             @Override
             public void done(Object o, AVException e) {
-                if (e == null)
-                    AddCommentDataIntoAdapter(o);
-                else
+                if (e == null) {
+                    new AddDataTask().execute(o);
+                } else
                     Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
             }
 
@@ -150,13 +151,24 @@ public class CommentFragment extends Fragment {
             }
             Collections.sort(mCommentAdapter.getDataList());
             if (mCommentAdapter.getDataList().size() != 0) {
-                backImage.setVisibility(View.GONE);
-                mTvCommentCount.setVisibility(View.VISIBLE);
+                backImage.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        backImage.setVisibility(View.GONE);
+                    }
+                });
+
+                mTvCommentCount.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTvCommentCount.setVisibility(View.VISIBLE);
+                    }
+                });
+
             }
-            Toast.makeText(getActivity(), "评论加载完毕", Toast.LENGTH_SHORT).show();
-        }else if(JSON.toJSON(fastJson) instanceof JSONArray) {
+        } else if (JSON.toJSON(fastJson) instanceof JSONArray) {
             JSONArray oldCommentArray = (JSONArray) JSON.toJSON(fastJson);
-            if(oldCommentArray != null && oldCommentArray.size()!= 0 ) {
+            if (oldCommentArray != null && oldCommentArray.size() != 0) {
                 for (int i = 0; i < oldCommentArray.size(); i++) {
                     JSONObject commentObj = oldCommentArray.getJSONObject(i);
                     CommentGroup comment = CommentGroup.fromJson(commentObj);
@@ -164,15 +176,11 @@ public class CommentFragment extends Fragment {
                     comment.setRecent(true);
                     mCommentAdapter.add(comment);
                 }
-                Toast.makeText(getActivity(), "评论加载完毕", Toast.LENGTH_SHORT).show();
-            }else {
-                Toast.makeText(getActivity(), "没有更多", Toast.LENGTH_SHORT).show();
             }
-        }else {
+        } else {
             Log.e(LOG_TAG, "Unexpected Exception:" + fastJson);
         }
 
-        mCommentAdapter.notifyDataSetChanged();
 
     }
 
@@ -212,7 +220,7 @@ public class CommentFragment extends Fragment {
             mClickItem = realPosition;
             CommentGroup obj = mCommentData.get(realPosition);
             mEdtTxtCommentInfo.requestFocus();
-            mEdtTxtCommentInfo.setHint("回复" + obj.getUser().getNickname() +" : ");
+            mEdtTxtCommentInfo.setHint("回复" + obj.getUser().getNickname() + " : ");
         }
     }
 
@@ -222,7 +230,7 @@ public class CommentFragment extends Fragment {
             CommentGroup newData = new CommentGroup();
             //设置当前用户
 
-            newData.setUser(((BasketBallApp)getActivity().getApplication()).getUser());
+            newData.setUser(((BasketBallApp) getActivity().getApplication()).getUser());
             //设置Comment
             Comment comment = new Comment();
             Date cur = new Date();
@@ -238,7 +246,7 @@ public class CommentFragment extends Fragment {
 
 
             //是否有atUser字段, 如果有则添加
-            if(mClickItem != -1) {
+            if (mClickItem != -1) {
                 User atUser = mCommentData.get(mClickItem).getUser();
                 newData.setAtUser(atUser);
             }
@@ -255,4 +263,23 @@ public class CommentFragment extends Fragment {
         }
     }
 
+    class AddDataTask extends AsyncTask<Object, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            AddCommentDataIntoAdapter(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mCommentAdapter.notifyDataSetChanged();
+            Toast.makeText(getActivity(), "数据加载完成!", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
