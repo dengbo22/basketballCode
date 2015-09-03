@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tv_statistics_item"
     android:gravity="center"
-    android:background="#FFFFFF"
+    android:background="@drawable/shape_recycle_item"
     android:textSize="12sp"
     android:layout_width="wrap_content"
     android:layout_height="29.87dp">
