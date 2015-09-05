@@ -27,3 +27,8 @@
 2015.8.31
 修改LiveFragment的逻辑，删除原用的StickyHeaderListView+PullToRefresh
 改用Ultra-Pull-To-Refresh框架结构
+
+2015.9.5
+创建StatisticsFragment,使用RecyclerView创建
+修改对应的Adapter逻辑
+修复LiveDetailActivity的返回导致数据增加的BUG

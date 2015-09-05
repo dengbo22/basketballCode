@@ -71,8 +71,8 @@ public class LiveFragment extends Fragment {
 
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         //加载数据部分，首先先加载数据库中的内容
         BasketSQLite sql = ((MainActivity)getActivity()).getBasketSQLite();
         ArrayList<LiveItemData> mData = sql.onGetAllInLive();
@@ -93,7 +93,10 @@ public class LiveFragment extends Fragment {
             }, 150);
         }
         dataList = liveListAdapter.getCompetitionData();
+
+
     }
+
 
     @Override
     public void onDestroy() {

@@ -19,7 +19,7 @@
     
     
     <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-        android:id="@id/id_stickynavlayout_innerscrollview"
+        android:id="@+id/id_stickynavlayout_innerscrollview"
         android:layout_below="@id/tv_comment_count"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -16,14 +16,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.GetCallback;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.ArrayList;
 
 import example.tiny.backetball.LiveDetailActivity;
 import example.tiny.backetball.R;
-import example.tiny.backetball.StatisticsFragment;
 
 /**
  * Created by tiny on 15-9-1.
@@ -31,159 +28,255 @@ import example.tiny.backetball.StatisticsFragment;
 public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String LOG_TAG = "StatisticsListAdapter";
     private final Context mContext;
-    private static final int SECTION_TYPE = 0;
+
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_TITLE = 1;
+    private static final int TYPE_ITEM = 2;
+
+
+    public static int mPlayerPerLine = 6;
+    public static int mScorePerLine = 4;
+
+    public static int SCORE_HEIGHT = 3;
+    public static int PLAYER_A_HEIGHT = 4;
+    public static int PLAYER_B_HEIGHT = 4;
+
+    private ArrayList<String> mItems;
 
     public boolean mStarted = false;
-    private RecyclerView.Adapter mBaseAdapter;
-    private SparseArray<Section> mSections = new SparseArray<Section>();
     private RecyclerView mRecyclerView;
+    private ArrayList<Header> mHeaders;
+    private GridLayoutManager mLayoutManager;
+    private LayoutInflater mLayoutInflater;
 
 
     public StatisticsListAdapter(Context context, RecyclerView recyclerView) {
         mContext = context;
-        mBaseAdapter = new SimpleAdapter(mContext);
+        mLayoutInflater = LayoutInflater.from(context);
         mRecyclerView = recyclerView;
+        mItems = new ArrayList<>();
+        mHeaders = new ArrayList<>();
+        //在StatisticsLstAdatper创建的时候则请求数据,知道数据请求完成才开始继续创建
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RequestStatisticsData();
 
-        final GridLayoutManager layoutManager = (GridLayoutManager)(mRecyclerView.getLayoutManager());
-        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            }
+        });
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mLayoutManager = new GridLayoutManager(mContext, mPlayerPerLine * mScorePerLine);
+        mHeaders.add(new Header(0, "得分统计"));
+        mHeaders.add(new Header(mScorePerLine * SCORE_HEIGHT + 1, "11级A班球员数据") );
+        mHeaders.add(new Header(mScorePerLine * SCORE_HEIGHT + mPlayerPerLine * PLAYER_A_HEIGHT + 2, "11级B班球员数据"));
+
+        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if(isSectionHeaderPosition(position))
-                    return layoutManager.getSpanCount();
-                else {
-                    if( position <= SimpleAdapter.mPlayerSpan * SimpleAdapter.SCORE_HEIGHT)
-                        return SimpleAdapter.mScoreSpan;
-
-                    return SimpleAdapter.mPlayerSpan;
+                switch (getPositionType(position)) {
+                    case TYPE_HEADER:
+                        return mLayoutManager.getSpanCount();
+                    case TYPE_TITLE:
+                    case TYPE_ITEM:
+                        if (position <= SCORE_HEIGHT * mScorePerLine)
+                            return mPlayerPerLine;
+                        else
+                            return mScorePerLine;
+                    default:
+                        Log.e(LOG_TAG, "setSpanSize()异常:position不属于任何一类-->" + position);
+                        return 1;
                 }
             }
         });
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
     }
 
 
-    public static class SectionViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView title;
-
-        public SectionViewHolder(View view,int mTextResourceId) {
-            super(view);
-            title = (TextView) view.findViewById(mTextResourceId);
-        }
-    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int typeView) {
-        Log.e(LOG_TAG, "onCreateViewHolder");
-        if (typeView == SECTION_TYPE) {
-            final View view = LayoutInflater.from(mContext).inflate(R.layout.layout_statistics_header, parent, false);
-            return new SectionViewHolder(view,R.id.tv_statistics_header);
-        }else{
-            return mBaseAdapter.onCreateViewHolder(parent, typeView -1);
+        switch (typeView) {
+            case TYPE_HEADER:
+                View header_view = mLayoutInflater.inflate(R.layout.layout_statistics_header, parent, false);
+                return new HeaderViewHolder(header_view);
+            case TYPE_TITLE:
+                View title_view = mLayoutInflater.inflate(R.layout.layout_statistics_title, parent, false);
+                return new TitleViewHolder(title_view);
+            case TYPE_ITEM:
+                View item_view = mLayoutInflater.inflate(R.layout.layout_statistics_item, parent, false);
+                return new ItemViewHolder(item_view);
         }
+        Log.e(LOG_TAG, "Error Type in onCreateViewHolder-->type" + typeView);
+        return null;
+
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder sectionViewHolder, int position) {
-        Log.e(LOG_TAG, "onBindViewHolder->" + position);
-        if (isSectionHeaderPosition(position)) {
-            ((SectionViewHolder)sectionViewHolder).title.setText(mSections.get(position).title);
-        }else{
-            mBaseAdapter.onBindViewHolder(sectionViewHolder,sectionedPositionToPosition(position));
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        switch (getPositionType(position)) {
+            case TYPE_HEADER:
+                for(int i = 0 ; i < mHeaders.size(); i++) {
+                    if(mHeaders.get(i).position == position) {
+                        ((HeaderViewHolder) viewHolder).header.setText(mHeaders.get(i).title);
+                        return ;
+                    }
+                }
+                Log.e(LOG_TAG, "在mHeader中找不到position相符的内容");
+                break;
+            case TYPE_TITLE:
+                ((TitleViewHolder)viewHolder).title.setText(mItems.get(parsePositionToItem(position)));
+                break;
+            case TYPE_ITEM:
+                ((ItemViewHolder)viewHolder).item.setText(mItems.get(parsePositionToItem(position)));
+                break;
+            default:
+                Log.e(LOG_TAG, "onBindViewHolder异常,获取到非正常类型的position" + position);
+                break;
         }
+        return;
 
     }
 
     @Override
     public int getItemViewType(int position) {
-        return isSectionHeaderPosition(position)
-                ? SECTION_TYPE
-                : mBaseAdapter.getItemViewType(sectionedPositionToPosition(position)) +1 ;
+        return getPositionType(position);
     }
 
 
-    public static class Section {
-        int firstPosition;
-        int sectionedPosition;
+    private class Header {
+        int position;
         CharSequence title;
 
-        public Section(int firstPosition, CharSequence title) {
-            this.firstPosition = firstPosition;
+        Header(int firstPosition, CharSequence title) {
+            this.position = firstPosition;
             this.title = title;
         }
-
-        public CharSequence getTitle() {
-            return title;
-        }
     }
 
-
-    public void setSections(Section[] sections) {
-        mSections.clear();
-
-        Arrays.sort(sections, new Comparator<Section>() {
-            @Override
-            public int compare(Section o, Section o1) {
-                return (o.firstPosition == o1.firstPosition)
-                        ? 0
-                        : ((o.firstPosition < o1.firstPosition) ? -1 : 1);
+    //将position转化成item的Position
+    private int parsePositionToItem(int position) {
+        for(int i = 0; i < mHeaders.size(); i++) {
+            if(position == mHeaders.get(i).position) {
+                Log.e(LOG_TAG, "对HeaderPostion调用parsePosition-->" + position);
+                return RecyclerView.NO_POSITION;    //返回-1;
             }
-        });
-
-        int offset = 0; // offset positions for the headers we're adding
-        for (Section section : sections) {
-            section.sectionedPosition = section.firstPosition + offset;
-            mSections.append(section.sectionedPosition, section);
-            ++offset;
         }
-
-        notifyDataSetChanged();
-    }
-
-    public int positionToSectionedPosition(int position) {
+        //如果position参数并非header的位置,则进行正常转化:
+        //位置在0(1->1,2->2),13(14->13, 15->14),39(40->38, 41->39)
         int offset = 0;
-        for (int i = 0; i < mSections.size(); i++) {
-            if (mSections.valueAt(i).firstPosition > position) {
-                break;
+        for(int i = 0; i < mHeaders.size(); i++) {
+            if(position > mHeaders.get(i).position)
+                offset ++;
+        }
+        return position - offset;
+    }
+
+    //获取指定position位置的Type
+    private int getPositionType(int position) {
+        for(int i = 0; i < mHeaders.size(); i++) {
+            if(position == mHeaders.get(i).position)
+                return TYPE_HEADER;
+        }
+        //position是TYPE_TITLE的情况:第一行是得分行:
+        if(position <= mScorePerLine
+                || (position <= mHeaders.get(1).position + mScorePerLine && position > mHeaders.get(1).position)
+                || (position <= mHeaders.get(2).position + mScorePerLine && position > mHeaders.get(2).position))
+            return TYPE_TITLE;
+
+        else {
+            return TYPE_ITEM;
+        }
+
+    }
+
+
+    private void RequestStatisticsData() {
+        AVQuery<AVObject> query = new AVQuery<>("Competition");
+        AVObject avObject = null;
+        try {
+            avObject = query.get(((LiveDetailActivity) mContext).objectId);
+        } catch (AVException e) {
+            e.printStackTrace();
+        }
+        if (avObject != null) {
+            String statisticsString = avObject.getString("statistics");
+            JSONObject obj = JSON.parseObject(statisticsString);
+            JSONArray statistics = obj.getJSONArray("statistics");
+            JSONArray playerA = obj.getJSONArray("playerA");
+            JSONArray playerB = obj.getJSONArray("playerB");
+            //初始化各项参数
+            SCORE_HEIGHT = statistics.size();
+            PLAYER_A_HEIGHT = playerA.size();
+            PLAYER_B_HEIGHT = playerB.size();
+            JSONArray a = statistics.getJSONArray(0);
+            mScorePerLine = a.size();
+            JSONArray b = playerA.getJSONArray(0);
+            mPlayerPerLine = b.size();
+            //解析得分统计
+            for (int i = 0; i < SCORE_HEIGHT; i++) {
+                JSONArray array = statistics.getJSONArray(i);
+                for (int j = 0; j < array.size(); j++) {
+                    mItems.add(array.get(j).toString());
+                }
             }
-            ++offset;
-        }
-        return position + offset;
-    }
-
-    public int sectionedPositionToPosition(int sectionedPosition) {
-        if (isSectionHeaderPosition(sectionedPosition)) {
-            return RecyclerView.NO_POSITION;
-        }
-
-        int offset = 0;
-        for (int i = 0; i < mSections.size(); i++) {
-            if (mSections.valueAt(i).sectionedPosition >= sectionedPosition) {
-                break;
+            //解析球员数据
+            for (int i = 0; i < PLAYER_A_HEIGHT; i++) {
+                JSONArray array = playerA.getJSONArray(i);
+                for (int j = 0; j < array.size(); j++) {
+                    mItems.add(array.get(j).toString());
+                }
             }
-            --offset;
+            //解析球员数据
+            for (int i = 0; i < PLAYER_B_HEIGHT; i++) {
+                JSONArray array = playerB.getJSONArray(i);
+                for (int j = 0; j < array.size(); j++) {
+                    mItems.add(array.get(j).toString());
+                }
+            }
+            notifyDataSetChanged();
         }
-        return sectionedPosition + offset;
+
     }
 
-    public boolean isSectionHeaderPosition(int position) {
-        return mSections.get(position) != null;
-    }
-
-
-    @Override
-    public long getItemId(int position) {
-        return isSectionHeaderPosition(position)
-                ? Integer.MAX_VALUE - mSections.indexOfKey(position)
-                : mBaseAdapter.getItemId(sectionedPositionToPosition(position));
-    }
 
     @Override
     public int getItemCount() {
-        return (mStarted ? mBaseAdapter.getItemCount() + mSections.size() : 0);
+        return (mStarted ? mItems.size() + mHeaders.size() : 0);
     }
 
+    class HeaderViewHolder extends RecyclerView.ViewHolder {
 
+        public TextView header;
 
+        public HeaderViewHolder(View view) {
+            super(view);
+            header = (TextView) view.findViewById(R.id.tv_statistics_header);
+        }
+    }
 
+    class TitleViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView title ;
+
+        public TitleViewHolder(View itemView) {
+            super(itemView);
+            title = (TextView)itemView.findViewById(R.id.tv_statistics_title);
+        }
+    }
+
+    class ItemViewHolder extends RecyclerView.ViewHolder {
+        public TextView item;
+
+        public ItemViewHolder(View itemView) {
+            super(itemView);
+            item = (TextView) itemView.findViewById(R.id.tv_statistics_item);
+        }
+    }
 
 }

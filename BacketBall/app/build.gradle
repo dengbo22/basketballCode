@@ -37,7 +37,7 @@ dependencies {
     compile project(':PullToRefresh')
     compile 'com.makeramen:roundedimageview:2.1.2'
     //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.7'
     //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
     compile 'cn.leancloud.android:avoscloud-push:v3.+@aar'
     compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'

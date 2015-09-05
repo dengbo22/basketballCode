@@ -7,14 +7,14 @@
 
 
     <include
-        android:id="@id/id_stickynavlayout_topview"
+        android:id="@+id/id_stickynavlayout_topview"
         layout="@layout/include_detail_topview" />
 
     <example.tiny.widget.ViewPagerIndicator xmlns:tiny="http://schemas.android.com/apk/res-auto"
         android:id="@+id/id_stickynavlayout_indicator"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_below="@id/id_stickynavlayout_topview"
+        android:layout_below="@+id/id_stickynavlayout_topview"
         android:background="@drawable/rectangle_shadow"
         android:orientation="horizontal"
         tiny:item_count="3">

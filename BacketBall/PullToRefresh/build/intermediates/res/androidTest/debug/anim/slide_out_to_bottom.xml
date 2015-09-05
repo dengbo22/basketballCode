@@ -19,4 +19,4 @@
     android:duration="@android:integer/config_longAnimTime"
     android:fromYDelta="0"
     android:toYDelta="100%p" />
-<!-- From: file:/home/tiny/WorkStation/AndroidApp/BasketBall/basketballCode/BacketBall/PullToRefresh/src/main/res/anim/slide_out_to_bottom.xml --><!-- From: file:/home/tiny/WorkStation/AndroidApp/BasketBall/basketballCode/BacketBall/PullToRefresh/build/intermediates/bundles/debug/res/anim/slide_out_to_bottom.xml -->
+<!-- From: file:/home/tiny/WorkStation/basketballCode/BacketBall/PullToRefresh/src/main/res/anim/slide_out_to_bottom.xml --><!-- From: file:/home/tiny/WorkStation/basketballCode/BacketBall/PullToRefresh/build/intermediates/bundles/debug/res/anim/slide_out_to_bottom.xml -->

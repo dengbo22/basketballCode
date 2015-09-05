@@ -66,48 +66,6 @@ public class MainActivity extends Activity{
     }
 
 
-    @Override
-    protected void onStart() {
-        Log.v(LOG_TAG, "onStart()");
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        Log.v(LOG_TAG, "onResume()");
-        super.onResume();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        Log.v(LOG_TAG, "onSaveInstanceState()");
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.v(LOG_TAG, "onDestory()");
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onRestart() {
-        Log.v(LOG_TAG, "onRestart()");
-        super.onRestart();
-    }
-
-    @Override
-    protected void onPause() {
-        Log.v(LOG_TAG, "onPause()");
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        Log.v(LOG_TAG, "onStop()");
-        super.onStop();
-    }
-
     public void InitWidget() {
         mVpMainPager = (ViewPager) findViewById(R.id.vp_main_pager);
         mRdoGrpMainBottom = (RadioGroup) findViewById(R.id.rdoGrp_main_bottom);

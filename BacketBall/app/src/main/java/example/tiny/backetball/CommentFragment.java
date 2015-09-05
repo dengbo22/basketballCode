@@ -85,11 +85,7 @@ public class CommentFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(LOG_TAG, "onResume()");
-    }
+
 
     private void LoadMoreRequest() {
         Map<String, Object> parameters = new HashMap<>();
