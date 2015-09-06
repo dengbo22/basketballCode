@@ -1,31 +1,51 @@
 package example.tiny.backetball;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
+import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.modelbase.BaseResp;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 
 import example.tiny.data.User;
-import example.tiny.widget.BasketBallApp;
+import example.tiny.utils.NetworkUtils;
 
 /**
  * Created by tiny on 15-8-31.
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity  {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Button button = (Button) findViewById(R.id.btn_login_wx);
+        button.setOnClickListener(new startWxListener());
     }
 
 
     public void startMain(View v) {
-        AVUser.logInInBackground("test", "123456", new Login());
+        if(NetworkUtils.isOnline(this))
+            AVUser.logInInBackground("test", "123456", new Login());
+        else
+            Toast.makeText(LoginActivity.this, "网络状态不可用", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -48,6 +68,21 @@ public class LoginActivity extends Activity {
                 LoginActivity.this.finish();
             } else {
                 Toast.makeText(getApplicationContext(), "登陆失败！" + e, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+
+    class startWxListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            if(NetworkUtils.isOnline(LoginActivity.this)) {
+                SendAuth.Req req = new SendAuth.Req();
+                req.scope = "snsapi_userinfo";
+                BasketBallApp.api.sendReq(req);
+            }else {
+                Toast.makeText(LoginActivity.this, "网络状态不可用！", Toast.LENGTH_SHORT).show();
             }
         }
     }

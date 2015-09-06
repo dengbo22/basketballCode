@@ -1,22 +1,16 @@
 package example.tiny.backetball;
 
-import android.app.ActionBar;
 import android.app.Fragment;
-import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +32,6 @@ import example.tiny.data.Comment;
 import example.tiny.data.CommentGroup;
 import example.tiny.data.User;
 import example.tiny.utils.DateFormat;
-import example.tiny.widget.BasketBallApp;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -275,7 +268,6 @@ public class CommentFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             mCommentAdapter.notifyDataSetChanged();
-            Toast.makeText(getActivity(), "数据加载完成!", Toast.LENGTH_SHORT).show();
         }
     }
 }

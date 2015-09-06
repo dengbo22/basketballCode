@@ -1,4 +1,4 @@
-package example.tiny.widget;
+package example.tiny.backetball;
 
 import android.app.Application;
 import android.graphics.Bitmap;
@@ -18,6 +18,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.io.File;
 
@@ -28,10 +30,14 @@ import example.tiny.data.User;
  * Created by tiny on 15-8-20.
  */
 public class BasketBallApp extends Application {
-    private String AppId = "n4ibkpr4z9d8tkdlg7k0j6xywwwb28k2jw8fzmj5vrxeve4c";
-    private String AppKey = "ehsn3wgg56185yofd51sdh9ccifhb1cpa4m8s1stm4slrbef";
+    private static final String AppId = "n4ibkpr4z9d8tkdlg7k0j6xywwwb28k2jw8fzmj5vrxeve4c";
+    private static final String AppKey = "ehsn3wgg56185yofd51sdh9ccifhb1cpa4m8s1stm4slrbef";
+    public static final String WxAppId = "wx900af100060a3a8e";
+    public static final String WxAppKey = "cfdfb2a20820feb0d35673ecf6454a9d";
+    public static IWXAPI api;
     private final int TIME_OUT = 5000;
     private User mUser = null;
+
 
     @Override
     public void onCreate() {
@@ -39,6 +45,9 @@ public class BasketBallApp extends Application {
 //        AVOSCloud.setNetworkTimeout(TIME_OUT);
 //        AVOSCloud.setDebugLogEnabled(true);
         AVOSCloud.initialize(this, AppId, AppKey);
+        api = WXAPIFactory.createWXAPI(this, WxAppId);
+        api.registerApp(WxAppId);
+
         File cacheDir = StorageUtils.getOwnCacheDirectory(getApplicationContext(), "imageloader/Cache"); //缓存文件的存放地址
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(getApplicationContext())

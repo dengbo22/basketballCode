@@ -54,5 +54,6 @@ dependencies {
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile 'in.srain.cube:ultra-ptr:1.0.10'
     compile 'com.android.support:recyclerview-v7:22.1.1'
-
+    compile files('libs/libammsdk.jar')
+    compile project(':volley')
 }

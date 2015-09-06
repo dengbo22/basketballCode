@@ -32,3 +32,6 @@
 创建StatisticsFragment,使用RecyclerView创建
 修改对应的Adapter逻辑
 修复LiveDetailActivity的返回导致数据增加的BUG
+
+2015.9.6
+添加微信登陆

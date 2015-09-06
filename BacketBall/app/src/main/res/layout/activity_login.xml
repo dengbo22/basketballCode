@@ -5,8 +5,18 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:onClick="startMain"
+        android:text="普通登陆"
         />
 
+    <Button
+        android:id="@+id/btn_login_wx"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:onClick="startWx"
+        android:text="微信登陆"
+        />
 </LinearLayout>

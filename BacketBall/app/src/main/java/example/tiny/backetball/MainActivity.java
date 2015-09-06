@@ -84,12 +84,7 @@ public class MainActivity extends Activity{
 
     }
 
-    //检查当前网络连接状态
-    public boolean isOnline () {
-        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo net = cm.getActiveNetworkInfo();
-        return net != null && net.isConnectedOrConnecting();
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

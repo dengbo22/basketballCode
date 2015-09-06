@@ -50,6 +50,7 @@ import example.tiny.widget.ViewPagerIndicator;
  * Created by tiny on 15-8-21.
  */
 public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedChangeListener {
+    public static final String BUNDLE_COMPETITION_KEY = "competitionId";
     public static final int DETAIL_FRAGMENT_COMMENT = 0;
     public static final int DETAIL_FRAGMENT_REPORT = 1;
     public static final int DETAIL_FRAGMENT_STATISTICS = 2;
@@ -118,9 +119,16 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
 
 
     private void initDatas() {
-        CommentFragment fragment = new CommentFragment();
-        mTabContents.add(fragment);
-        mTabContents.add(new ReportFragment());
+        CommentFragment comment = new CommentFragment();
+        ReportFragment report = new ReportFragment();
+        Bundle competitionId = new Bundle();
+        competitionId.putString(BUNDLE_COMPETITION_KEY, objectId);
+        comment.setArguments(competitionId);
+        report.setArguments(competitionId);
+
+
+        mTabContents.add(comment);
+        mTabContents.add(report);
         mTabContents.add(new StatisticsFragment());
 
         mAdapter = new FragmentPagerAdapter(getFragmentManager()) {

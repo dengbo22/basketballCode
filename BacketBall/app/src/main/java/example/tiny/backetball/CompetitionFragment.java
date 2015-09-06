@@ -23,6 +23,7 @@ import java.util.List;
 import example.tiny.adapter.PullRefreshAdapter;
 import example.tiny.data.BasketSQLite;
 import example.tiny.data.CompetitionItemData;
+import example.tiny.utils.NetworkUtils;
 
 /**
  * Created by tiny on 15-8-19.
@@ -207,7 +208,7 @@ public class CompetitionFragment extends Fragment {
     class CompetitionRequestRefreshListener implements PullToRefreshBase.OnRefreshListener {
         @Override
         public void onRefresh(PullToRefreshBase refreshView) {
-            if (((MainActivity) getActivity()).isOnline()) {
+            if (NetworkUtils.isOnline(getActivity())) {
                 requestCompetitionData();
             } else {
                 //如果网络状况异常，则在延迟1秒后提示并完成刷新
