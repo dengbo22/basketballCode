@@ -2,16 +2,16 @@ package example.tiny.backetball;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -20,9 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
@@ -32,6 +29,9 @@ import com.avos.avoscloud.FunctionCallback;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 
 
 import org.json.JSONException;
@@ -82,6 +82,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
     private EditText mEdtTxtComment;
     private TextView mTvCommentSend;
     public String objectId;
+    private SharePopupWindow mShareWindow;
 
     public EditText getEdtTxtComment() {
         return mEdtTxtComment;
@@ -115,6 +116,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         mViewPager.setOffscreenPageLimit(PAGE_NUMBER);
         mIndicator.setIndicatorChangeListener(new LiveDetailActivityDefaultViewPagerListener());
         mIndicator.setInnerViewPager(mViewPager, 0);
+        mImgTopShare.setOnClickListener(new ShareClickListener());
     }
 
 
@@ -179,6 +181,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         //
         mEdtTxtComment = (EditText) findViewById(R.id.edtTxt_comment_input);
         mTvCommentSend = (TextView)findViewById(R.id.tv_comment_send);
+
 
         //从Intent中获取信息并且加载内容：
         Intent intent = getIntent();
@@ -350,6 +353,15 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
 
         }
     }
+
+    class ShareClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(LiveDetailActivity.this, SharePopupWindow.class);
+            startActivity(intent);
+        }
+    }
+
 
 
 }

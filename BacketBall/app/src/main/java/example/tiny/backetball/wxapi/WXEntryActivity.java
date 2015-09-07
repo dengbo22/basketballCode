@@ -16,6 +16,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.SignUpCallback;
+import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
@@ -43,6 +44,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         setContentView(R.layout.activity_wxentry);
         mQueue = Volley.newRequestQueue(this);
         BasketBallApp.api.handleIntent(getIntent(), this);
+
     }
 
 
@@ -63,28 +65,36 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onResp(BaseResp baseResp) {
-        switch (baseResp.errCode) {
-            case BaseResp.ErrCode.ERR_OK:
-                dialog = new ProgressDialog(this);
-                dialog.setTitle("登陆");
-                dialog.setMessage("正在使用微信登陆,请稍后...");
-                dialog.show();
-                String URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + BasketBallApp.WxAppId + "&secret=" + BasketBallApp.WxAppKey +
-                        "&code=" + ((SendAuth.Resp)baseResp).code + "&grant_type=authorization_code";
-                StringRequest request = new StringRequest(URL, new WxLoginSuccessListener(), new WxLoginFailListener() );
-                mQueue.add(request);
-                break;
-            //用户取消
-            case BaseResp.ErrCode.ERR_USER_CANCEL:
-                Toast.makeText(WXEntryActivity.this, "用户取消！", Toast.LENGTH_SHORT).show();
-                WXEntryActivity.this.finish();
-                break;
+        if(baseResp.getType() == ConstantsAPI.COMMAND_SENDAUTH) {
+            switch (baseResp.errCode) {
+                case BaseResp.ErrCode.ERR_OK:
+                    dialog = new ProgressDialog(this);
+                    dialog.setTitle("登陆");
+                    dialog.setMessage("正在使用微信登陆,请稍后...");
+                    dialog.show();
+                    String URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + BasketBallApp.WxAppId + "&secret=" + BasketBallApp.WxAppKey +
+                            "&code=" + ((SendAuth.Resp) baseResp).code + "&grant_type=authorization_code";
+                    StringRequest request = new StringRequest(URL, new WxLoginSuccessListener(), new WxLoginFailListener());
+                    mQueue.add(request);
+                    break;
+                //用户取消
+                case BaseResp.ErrCode.ERR_USER_CANCEL:
+                    Toast.makeText(WXEntryActivity.this, "用户取消！", Toast.LENGTH_SHORT).show();
+                    WXEntryActivity.this.finish();
+                    break;
 
-            //用户拒绝授权
-            case BaseResp.ErrCode.ERR_AUTH_DENIED:
-                Toast.makeText(WXEntryActivity.this, "用户拒绝授权！", Toast.LENGTH_SHORT).show();
-                WXEntryActivity.this.finish();
-                break;
+                //用户拒绝授权
+                case BaseResp.ErrCode.ERR_AUTH_DENIED:
+                    Toast.makeText(WXEntryActivity.this, "用户拒绝授权！", Toast.LENGTH_SHORT).show();
+                    WXEntryActivity.this.finish();
+                    break;
+            }
+        } else if(baseResp.getType() == ConstantsAPI.COMMAND_SENDMESSAGE_TO_WX) {
+            //分享请求
+            Log.i(LOG_TAG, "onResp回调分享");
+            WXEntryActivity.this.finish();
+        }else {
+            Log.e(LOG_TAG, "未知的onResp调用" + baseResp);
         }
     }
 

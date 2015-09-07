@@ -13,7 +13,7 @@
         android:layout_marginLeft="8.52dp"
         android:layout_marginTop="7.25dp"
         android:layout_marginRight="9.4dp"
-        android:src="@drawable/avator"
+        android:src="@drawable/default_team_logo"
         android:layout_alignParentTop="true"
         />
 
