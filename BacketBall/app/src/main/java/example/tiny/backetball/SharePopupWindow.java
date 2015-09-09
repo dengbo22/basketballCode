@@ -56,7 +56,6 @@ public class SharePopupWindow extends Activity {
         super.onAttachedToWindow();
         View view = getWindow().getDecorView();
         WindowManager.LayoutParams lp = (WindowManager.LayoutParams) view.getLayoutParams();
-        Log.e("SharePopupWindow", "x:" + lp.x + "y:" + lp.y);
         lp.y = ScreenUtils.getScreenHeight(this) / 2 ;
         getWindowManager().updateViewLayout(view, lp);
 

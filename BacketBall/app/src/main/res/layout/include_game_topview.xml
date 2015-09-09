@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+    <ImageView
+        android:id="@+id/img_topview_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        />
+
+    <TextView
+        android:id="@+id/tv_game_topview_gamename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="80dp"
+        android:text="金球杯"
+        />
+
+    <TextView
+        android:id="@+id/tv_game_topview_college"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_game_topview_gamename"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF"
+        android:text="软件学院"
+        android:layout_marginBottom="20dp"
+        />
+
+    <View
+        android:id="@+id/img_topview_game_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#FFFFFF"
+        android:layout_below="@id/tv_game_topview_college"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
+        />
+
+    <ImageView
+        android:id="@+id/img_topview_game_award"
+        android:layout_width="85.3dp"
+        android:layout_height="21.3dp"
+        android:src="@drawable/bg_topview_award"
+        android:layout_below="@id/img_topview_game_line"
+        android:layout_marginTop="12dp"
+        android:layout_centerHorizontal="true"
+        />
+
+
+
+
+    <include
+        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:id="@+id/ll_topview_game_location"
+        android:layout_marginLeft="17dp"
+        android:layout_alignTop="@id/img_topview_game_award"
+        layout="@layout/include_topview_location"/>
+    
+    
+    <CheckBox
+        android:id="@+id/chk_topview_game_follow"
+        android:layout_width="59.73dp"
+        android:layout_height="21.3dp"
+        android:layout_alignTop="@id/img_topview_game_award"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="17dp"
+        android:background="@drawable/drawable_chkbox_follow"
+        android:button="@null"
+        />
+
+</RelativeLayout>

@@ -37,6 +37,7 @@
             android:exported="true">
         </activity>
         <activity android:name=".SharePopupWindow" android:theme="@style/PopupWindowDialogTheme" />
+        <activity android:name=".GameDetailActivity" />
 
 
     </application>

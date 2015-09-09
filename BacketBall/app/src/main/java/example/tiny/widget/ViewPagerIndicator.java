@@ -3,6 +3,7 @@ package example.tiny.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -39,6 +40,8 @@ public class ViewPagerIndicator extends LinearLayout {
     private final int DIMENSION_TRIANGEL_WIDTH = (int) (getScreenWidth() / 3 * RADIO_TRIANGEL);
     //-----------------------------------------
     private int mTabVisibleCount = 3;
+    int mColorGray = Color.parseColor("#808080");
+    int mColorPink = Color.parseColor("#CB1A48");
 
 
     private ViewPager mViewPager;
@@ -61,6 +64,7 @@ public class ViewPagerIndicator extends LinearLayout {
             mTabVisibleCount = COUNT_DEFAULT_TAB;
         a.recycle();
         mTrianglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTrianglePaint.setColor(Color.parseColor("#CB1A48"));
         mTrianglePaint.setPathEffect(new CornerPathEffect(3));
 
         //
@@ -155,19 +159,20 @@ public class ViewPagerIndicator extends LinearLayout {
 
         switch (position) {
             case 0:
-                commentView.setImageResource(R.drawable.btn_comment_active);
-                reportView.setImageResource(R.drawable.btn_report);
-                statisticsView.setImageResource(R.drawable.btn_statics);
+                commentView.setColorFilter(mColorPink);
+                reportView.setColorFilter(mColorGray);
+                statisticsView.setColorFilter(mColorGray);
                 break;
             case 1:
-                commentView.setImageResource(R.drawable.btn_comment);
-                reportView.setImageResource(R.drawable.btn_report_active);
-                statisticsView.setImageResource(R.drawable.btn_statics);
+                commentView.setColorFilter(mColorGray);
+                reportView.setColorFilter(mColorPink);
+                statisticsView.setColorFilter(mColorGray);
                 break;
             case 2:
-                commentView.setImageResource(R.drawable.btn_comment);
-                reportView.setImageResource(R.drawable.btn_report);
-                statisticsView.setImageResource(R.drawable.btn_statics_active);
+                commentView.setColorFilter(mColorGray);
+                reportView.setColorFilter(mColorGray);
+                statisticsView.setColorFilter(mColorPink);
+                break;
         }
     }
 

@@ -10,5 +10,18 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_width="match_parent"
+        android:visibility="gone"
     />
+
+    <ImageView
+        android:id="@+id/background_image"
+        android:layout_width="115dp"
+        android:layout_height="106dp"
+        android:src="@drawable/empty_statistics"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        android:visibility="gone"
+        />
+
+
 </LinearLayout>

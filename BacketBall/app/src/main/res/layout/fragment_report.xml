@@ -9,4 +9,13 @@
         android:layout_height="match_parent">
 
     </WebView>
+
+    <ImageView
+        android:id="@+id/background_image"
+        android:layout_width="115dp"
+        android:layout_height="106dp"
+        android:src="@drawable/empty_report"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        />
 </LinearLayout>

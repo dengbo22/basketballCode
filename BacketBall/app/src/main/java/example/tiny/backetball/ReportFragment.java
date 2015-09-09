@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
@@ -25,6 +26,8 @@ public class ReportFragment extends Fragment {
     private static final String LOG_TAG = "ReportFragment";
     private String mContent = null;
     private WebView mWebReportShow ;
+    private boolean mHasReport = false;
+    private ImageView mBackground;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class ReportFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_report, container, false);
         mWebReportShow = (WebView) view.findViewById(R.id.web_report_show);
 //        mWebReportShow.getSettings().setJavaScriptEnabled(true);
+        mBackground = (ImageView) view.findViewById(R.id.background_image);
         return view;
     }
 
@@ -67,6 +71,7 @@ public class ReportFragment extends Fragment {
                             AVObject report = list.get(0).getAVObject("reportId");
                             mContent = report.getString("content");
                             mWebReportShow.loadData(mContent,"text/html;charset=UTF-8",null);
+                            mHasReport = true;
                         }
                     }
                 }
@@ -74,4 +79,19 @@ public class ReportFragment extends Fragment {
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(!isVisibleToUser)
+            return;
+        if(mHasReport) {
+            mBackground.setVisibility(View.GONE);
+            mWebReportShow.setVisibility(View.VISIBLE);
+        }else {
+            mBackground.setVisibility(View.VISIBLE);
+            mWebReportShow.setVisibility(View.GONE);
+        }
+
+
+    }
 }

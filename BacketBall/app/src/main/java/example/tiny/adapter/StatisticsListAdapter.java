@@ -72,7 +72,7 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
         mLayoutManager = new GridLayoutManager(mContext, mPlayerPerLine * mScorePerLine);
         mHeaders.add(new Header(0, "得分统计"));
-        mHeaders.add(new Header(mScorePerLine * SCORE_HEIGHT + 1, "11级A班球员数据") );
+        mHeaders.add(new Header(mScorePerLine * SCORE_HEIGHT + 1, "11级A班球员数据"));
         mHeaders.add(new Header(mScorePerLine * SCORE_HEIGHT + mPlayerPerLine * PLAYER_A_HEIGHT + 2, "11级B班球员数据"));
 
         mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -97,6 +97,9 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     }
 
+    public int getDataSize() {
+        return mItems.size();
+    }
 
 
     @Override
@@ -119,21 +122,22 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+
         switch (getPositionType(position)) {
             case TYPE_HEADER:
-                for(int i = 0 ; i < mHeaders.size(); i++) {
-                    if(mHeaders.get(i).position == position) {
+                for (int i = 0; i < mHeaders.size(); i++) {
+                    if (mHeaders.get(i).position == position) {
                         ((HeaderViewHolder) viewHolder).header.setText(mHeaders.get(i).title);
-                        return ;
+                        return;
                     }
                 }
                 Log.e(LOG_TAG, "在mHeader中找不到position相符的内容");
                 break;
             case TYPE_TITLE:
-                ((TitleViewHolder)viewHolder).title.setText(mItems.get(parsePositionToItem(position)));
+                ((TitleViewHolder) viewHolder).title.setText(mItems.get(parsePositionToItem(position)));
                 break;
             case TYPE_ITEM:
-                ((ItemViewHolder)viewHolder).item.setText(mItems.get(parsePositionToItem(position)));
+                ((ItemViewHolder) viewHolder).item.setText(mItems.get(parsePositionToItem(position)));
                 break;
             default:
                 Log.e(LOG_TAG, "onBindViewHolder异常,获取到非正常类型的position" + position);
@@ -161,8 +165,8 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     //将position转化成item的Position
     private int parsePositionToItem(int position) {
-        for(int i = 0; i < mHeaders.size(); i++) {
-            if(position == mHeaders.get(i).position) {
+        for (int i = 0; i < mHeaders.size(); i++) {
+            if (position == mHeaders.get(i).position) {
                 Log.e(LOG_TAG, "对HeaderPostion调用parsePosition-->" + position);
                 return RecyclerView.NO_POSITION;    //返回-1;
             }
@@ -170,21 +174,21 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         //如果position参数并非header的位置,则进行正常转化:
         //位置在0(1->1,2->2),13(14->13, 15->14),39(40->38, 41->39)
         int offset = 0;
-        for(int i = 0; i < mHeaders.size(); i++) {
-            if(position > mHeaders.get(i).position)
-                offset ++;
+        for (int i = 0; i < mHeaders.size(); i++) {
+            if (position > mHeaders.get(i).position)
+                offset++;
         }
         return position - offset;
     }
 
     //获取指定position位置的Type
     private int getPositionType(int position) {
-        for(int i = 0; i < mHeaders.size(); i++) {
-            if(position == mHeaders.get(i).position)
+        for (int i = 0; i < mHeaders.size(); i++) {
+            if (position == mHeaders.get(i).position)
                 return TYPE_HEADER;
         }
         //position是TYPE_TITLE的情况:第一行是得分行:
-        if(position <= mScorePerLine
+        if (position <= mScorePerLine
                 || (position <= mHeaders.get(1).position + mScorePerLine && position > mHeaders.get(1).position)
                 || (position <= mHeaders.get(2).position + mScorePerLine && position > mHeaders.get(2).position))
             return TYPE_TITLE;
@@ -204,42 +208,47 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         } catch (AVException e) {
             e.printStackTrace();
         }
+        Log.e(LOG_TAG, avObject + "");
         if (avObject != null) {
             String statisticsString = avObject.getString("statistics");
-            JSONObject obj = JSON.parseObject(statisticsString);
-            JSONArray statistics = obj.getJSONArray("statistics");
-            JSONArray playerA = obj.getJSONArray("playerA");
-            JSONArray playerB = obj.getJSONArray("playerB");
-            //初始化各项参数
-            SCORE_HEIGHT = statistics.size();
-            PLAYER_A_HEIGHT = playerA.size();
-            PLAYER_B_HEIGHT = playerB.size();
-            JSONArray a = statistics.getJSONArray(0);
-            mScorePerLine = a.size();
-            JSONArray b = playerA.getJSONArray(0);
-            mPlayerPerLine = b.size();
-            //解析得分统计
-            for (int i = 0; i < SCORE_HEIGHT; i++) {
-                JSONArray array = statistics.getJSONArray(i);
-                for (int j = 0; j < array.size(); j++) {
-                    mItems.add(array.get(j).toString());
+            if (statisticsString != null && !"".equals(statisticsString)) {
+                JSONObject obj = JSON.parseObject(statisticsString);
+                JSONArray statistics = obj.getJSONArray("statistics");
+                JSONArray playerA = obj.getJSONArray("playerA");
+                JSONArray playerB = obj.getJSONArray("playerB");
+                //初始化各项参数
+                SCORE_HEIGHT = statistics.size();
+                PLAYER_A_HEIGHT = playerA.size();
+                PLAYER_B_HEIGHT = playerB.size();
+                JSONArray a = statistics.getJSONArray(0);
+                mScorePerLine = a.size();
+                JSONArray b = playerA.getJSONArray(0);
+                mPlayerPerLine = b.size();
+                //解析得分统计
+                for (int i = 0; i < SCORE_HEIGHT; i++) {
+                    JSONArray array = statistics.getJSONArray(i);
+                    for (int j = 0; j < array.size(); j++) {
+                        mItems.add(array.get(j).toString());
+                    }
                 }
-            }
-            //解析球员数据
-            for (int i = 0; i < PLAYER_A_HEIGHT; i++) {
-                JSONArray array = playerA.getJSONArray(i);
-                for (int j = 0; j < array.size(); j++) {
-                    mItems.add(array.get(j).toString());
+                //解析球员数据
+                for (int i = 0; i < PLAYER_A_HEIGHT; i++) {
+                    JSONArray array = playerA.getJSONArray(i);
+                    for (int j = 0; j < array.size(); j++) {
+                        mItems.add(array.get(j).toString());
+                    }
                 }
-            }
-            //解析球员数据
-            for (int i = 0; i < PLAYER_B_HEIGHT; i++) {
-                JSONArray array = playerB.getJSONArray(i);
-                for (int j = 0; j < array.size(); j++) {
-                    mItems.add(array.get(j).toString());
+                //解析球员数据
+                for (int i = 0; i < PLAYER_B_HEIGHT; i++) {
+                    JSONArray array = playerB.getJSONArray(i);
+                    for (int j = 0; j < array.size(); j++) {
+                        mItems.add(array.get(j).toString());
+                    }
                 }
+                notifyDataSetChanged();
+            }else {
+                //获取到数据但是不包含statistics内容
             }
-            notifyDataSetChanged();
         }
 
     }
@@ -247,7 +256,10 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemCount() {
-        return (mStarted ? mItems.size() + mHeaders.size() : 0);
+        if(mStarted && mItems.size() != 0)
+            return mItems.size() + mHeaders.size();
+        else
+            return 0;
     }
 
     class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -262,11 +274,11 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     class TitleViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView title ;
+        public TextView title;
 
         public TitleViewHolder(View itemView) {
             super(itemView);
-            title = (TextView)itemView.findViewById(R.id.tv_statistics_title);
+            title = (TextView) itemView.findViewById(R.id.tv_statistics_title);
         }
     }
 

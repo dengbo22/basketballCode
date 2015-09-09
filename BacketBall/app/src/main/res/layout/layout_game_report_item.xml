@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:background="@drawable/shape_bottom_bg"
+    android:layout_height="80dp">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/img_game_report_img"
+        android:layout_width="68.3dp"
+        android:layout_height="51.2dp"
+        android:scaleType="centerCrop"
+        android:layout_margin="12.8dp"
+        app:riv_corner_radius="3.41dip"
+        />
+    
+    <TextView
+        android:id="@+id/tv_game_report_topic"
+        android:includeFontPadding="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/img_game_report_img"
+        android:layout_alignTop="@id/img_game_report_img"
+        android:textSize="13sp"
+        android:textColor="#535353"
+        android:text="alsdkjaslkdjsalkjljkhksdhflsjhasdsadsdsfsdfffdsfsdsfsdfdsfssfdfgskljdfsjh"
+        android:textStyle="bold"
+        android:paddingRight="21.3dp"
+        />
+
+    <include
+        android:id="@+id/ictxt_game_report_time"
+        layout="@layout/include_left_icon_with_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_game_report_topic"
+        android:layout_below="@id/tv_game_report_topic" />
+
+    <include
+        android:id="@+id/ictxt_game_report_author"
+        layout="@layout/include_left_icon_with_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_game_report_topic"
+        android:layout_toRightOf="@id/ictxt_game_report_time"
+        android:layout_marginLeft="10.24dp"
+        />
+
+</RelativeLayout>

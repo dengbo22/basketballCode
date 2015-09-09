@@ -37,6 +37,8 @@ public class BasketBallApp extends Application {
     public static IWXAPI api;
     private final int TIME_OUT = 5000;
     private User mUser = null;
+    static DisplayImageOptions options;
+    static DisplayImageOptions mTeamIconOptions;
 
 
     @Override
@@ -67,13 +69,40 @@ public class BasketBallApp extends Application {
 
         ImageLoader.getInstance().init(config);
 
-
-
     }
 
+    public static DisplayImageOptions getBackGroundOptions() {
+        if (options == null)
+            options = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.default_background)
+                .showImageForEmptyUri(R.drawable.default_background)
+                .showImageOnFail(R.drawable.default_background)
+                    .cacheInMemory(true)
+                    .cacheOnDisc(true)
+                    .imageScaleType(ImageScaleType.NONE)
+                    .bitmapConfig(Bitmap.Config.RGB_565)//设置为RGB565比起默认的ARGB_8888要节省大量的内存
+                    .delayBeforeLoading(100)//载入图片前稍做延时可以提高整体滑动的流畅度
+                    .build();
+        return options;
+    }
+
+    public static DisplayImageOptions getTeamIconOptions() {
+        if (mTeamIconOptions == null)
+            mTeamIconOptions = new DisplayImageOptions.Builder()
+                    .showStubImage(R.drawable.default_team_logo)
+                    .showImageForEmptyUri(R.drawable.default_team_logo)
+                    .showImageOnFail(R.drawable.default_team_logo)
+                    .cacheInMemory(true)
+                    .cacheOnDisc(true)
+                    .imageScaleType(ImageScaleType.NONE)
+                    .bitmapConfig(Bitmap.Config.RGB_565)//设置为RGB565比起默认的ARGB_8888要节省大量的内存
+                    .delayBeforeLoading(100)//载入图片前稍做延时可以提高整体滑动的流畅度
+                    .build();
+        return mTeamIconOptions;
+    }
 
     public void setUser(User mUser) {
-        if(mUser == null) {
+        if (mUser == null) {
             //在sharedpreference中保存用户名和密码
         }
 

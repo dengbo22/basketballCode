@@ -1,11 +1,13 @@
 package example.tiny.backetball;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
@@ -63,6 +65,28 @@ public class CompetitionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_competition, container, false);
         competitionList = (PullToRefreshListView) view.findViewById(R.id.list_competition_allcompetition);
+        competitionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), GameDetailActivity.class);
+                if (id == -1) {
+                    Toast.makeText(getActivity(), "你点击了Header/Footer!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                int realPosition = (int) id;
+                CompetitionItemData obj = dataList.get(realPosition);
+                intent.putExtra("GameId", obj.getID());
+                intent.putExtra("Name", obj.getName());
+                intent.putExtra("College", obj.getCollege());
+                intent.putExtra("Campus", obj.getCampus());
+                intent.putExtra("CoverUrl", obj.getCoverUrl());
+                intent.putExtra("FollowNumber", obj.getFollowNumber());
+                intent.putExtra("Type", obj.getType());
+                intent.putExtra("IsFinished", obj.getIsFinished());
+
+                startActivity(intent);
+            }
+        });
         competitionList.setAdapter(competitionListAdapter);
         mIsFinishStatus = competitionListAdapter.getFinishState();
         if (mIsFinishStatus)

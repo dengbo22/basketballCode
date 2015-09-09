@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="43dp">
+
+    <TextView
+        android:id="@+id/tv_teams_sequence"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="12sp"
+        android:layout_marginLeft="12.8dp"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_teams_icon"
+        android:layout_width="25.6dp"
+        android:layout_height="25.6dp"
+        android:src="@drawable/troop_a"
+        app:border_width="2dp"
+        app:border_color="#FFC9CFD8"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="32dp"
+        />
+
+
+
+    <TextView
+        android:id="@+id/tv_teams_name"
+        android:layout_toRightOf="@id/img_teams_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:gravity="center"
+        />
+    
+</RelativeLayout>
