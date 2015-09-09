@@ -30,11 +30,14 @@ import example.tiny.utils.NetworkUtils;
  * Created by tiny on 15-8-31.
  */
 public class LoginActivity extends Activity  {
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        progress = new ProgressDialog(this);
+        progress.setCancelable(false);
 
         Button button = (Button) findViewById(R.id.btn_login_wx);
         button.setOnClickListener(new startWxListener());
@@ -42,8 +45,12 @@ public class LoginActivity extends Activity  {
 
 
     public void startMain(View v) {
-        if(NetworkUtils.isOnline(this))
+        progress.setTitle("登陆");
+        progress.setMessage("正在登陆中..");
+        progress.show();
+        if(NetworkUtils.isOnline(this)) {
             AVUser.logInInBackground("test", "123456", new Login());
+        }
         else
             Toast.makeText(LoginActivity.this, "网络状态不可用", Toast.LENGTH_SHORT).show();
     }
@@ -69,6 +76,7 @@ public class LoginActivity extends Activity  {
             } else {
                 Toast.makeText(getApplicationContext(), "登陆失败！" + e, Toast.LENGTH_SHORT).show();
             }
+            progress.dismiss();
         }
     }
 
@@ -78,6 +86,9 @@ public class LoginActivity extends Activity  {
         @Override
         public void onClick(View view) {
             if(NetworkUtils.isOnline(LoginActivity.this)) {
+                progress.setTitle("登陆");
+                progress.setMessage("正在等待微信响应...");
+                progress.show();
                 SendAuth.Req req = new SendAuth.Req();
                 req.scope = "snsapi_userinfo";
                 BasketBallApp.api.sendReq(req);
@@ -85,5 +96,12 @@ public class LoginActivity extends Activity  {
                 Toast.makeText(LoginActivity.this, "网络状态不可用！", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        if(progress.isShowing())
+            progress.dismiss();
+        super.onStop();
     }
 }

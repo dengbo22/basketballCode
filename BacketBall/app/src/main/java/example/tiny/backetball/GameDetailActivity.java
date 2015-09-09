@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +53,7 @@ public class GameDetailActivity extends Activity {
         mImgBackground = (ImageView)findViewById(R.id.img_topview_background);
         mViewPager = (ViewPager) findViewById(R.id.vp_game_detail);
         mIndicator = (ViewPagerIndicator) findViewById(R.id.vpindicator_game_indicator);
+        mImgTopShare = (ImageView) findViewById(R.id.img_topview_share);
         mIndicator.setInnerViewPager(mViewPager, 0);
     }
 
@@ -84,7 +86,13 @@ public class GameDetailActivity extends Activity {
         };
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(mTabContents.size());
-
+        mImgTopShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GameDetailActivity.this, SharePopupWindow.class);
+                startActivity(intent);
+            }
+        });
 
 
     }

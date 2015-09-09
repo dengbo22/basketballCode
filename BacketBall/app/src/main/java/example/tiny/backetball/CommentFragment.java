@@ -252,6 +252,13 @@ public class CommentFragment extends Fragment {
         }
     }
 
+    class SendCommentOnlineClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            
+        }
+    }
+
     class AddDataTask extends AsyncTask<Object, Void, Void> {
         @Override
         protected void onPreExecute() {

@@ -6,4 +6,9 @@
     android:background="#00FF00"
     >
 
+    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+        android:id="@+id/list_schedule_competition"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </LinearLayout>

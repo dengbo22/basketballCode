@@ -208,7 +208,6 @@ public class StatisticsListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         } catch (AVException e) {
             e.printStackTrace();
         }
-        Log.e(LOG_TAG, avObject + "");
         if (avObject != null) {
             String statisticsString = avObject.getString("statistics");
             if (statisticsString != null && !"".equals(statisticsString)) {

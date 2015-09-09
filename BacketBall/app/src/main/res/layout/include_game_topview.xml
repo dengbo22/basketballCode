@@ -10,6 +10,17 @@
         android:scaleType="centerCrop"
         />
 
+    <ImageView
+        android:id="@+id/img_topview_share"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:src="@drawable/icon_share"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8.5dp"
+        android:layout_marginRight="17dp"
+    />
+
     <TextView
         android:id="@+id/tv_game_topview_gamename"
         android:layout_width="wrap_content"
@@ -53,7 +64,17 @@
         />
 
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/img_topview_game_award"
+        android:layout_alignStart="@+id/img_topview_game_award"
+        android:paddingLeft="8.5dp"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:text="￥ 123"
+        android:layout_alignTop="@+id/img_topview_game_award"
+        android:layout_alignBottom="@+id/img_topview_game_award" />
 
     <include
         android:layout_height="20dp"
