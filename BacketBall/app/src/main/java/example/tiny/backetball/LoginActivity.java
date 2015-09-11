@@ -68,7 +68,6 @@ public class LoginActivity extends Activity  {
                 user.setEmailVerified(avUser.getBoolean("emailVerified"));
                 user.setGender(avUser.getInt("gender"));
                 user.setMobilePhoneVerified(avUser.getBoolean("mobilePhoneVerified"));
-                ((BasketBallApp)getApplicationContext()).setUser(user);
                 Toast.makeText(getApplicationContext(), "登陆成功！", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);

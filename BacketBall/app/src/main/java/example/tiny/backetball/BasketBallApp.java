@@ -101,17 +101,17 @@ public class BasketBallApp extends Application {
         return mTeamIconOptions;
     }
 
-    public void setUser(User mUser) {
-        if (mUser == null) {
-            //在sharedpreference中保存用户名和密码
-        }
-
-        this.mUser = mUser;
-    }
-
-    public User getUser() {
-        return mUser;
-    }
+//    public void setUser(User mUser) {
+//        if (mUser == null) {
+//            //在sharedpreference中保存用户名和密码
+//        }
+//
+//        this.mUser = mUser;
+//    }
+//
+//    public User getUser() {
+//        return mUser;
+//    }
 
 
 }

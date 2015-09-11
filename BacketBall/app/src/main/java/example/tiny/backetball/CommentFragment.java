@@ -217,44 +217,7 @@ public class CommentFragment extends Fragment {
         }
     }
 
-    class SendCommentClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            CommentGroup newData = new CommentGroup();
-            //设置当前用户
 
-            newData.setUser(((BasketBallApp) getActivity().getApplication()).getUser());
-            //设置Comment
-            Comment comment = new Comment();
-            Date cur = new Date();
-            comment.setCreatedAt(cur);
-            comment.setUpdateAt(cur);
-            LiveDetailActivity activity = (LiveDetailActivity) getActivity();
-            comment.setCompetitionId(activity.objectId);
-            comment.setContent(mEdtTxtCommentInfo.getText().toString());
-            comment.setLikes(0);
-            newData.setComment(comment);
-            //设置recent
-            newData.setRecent(true);
-
-
-            //是否有atUser字段, 如果有则添加
-            if (mClickItem != -1) {
-                User atUser = mCommentData.get(mClickItem).getUser();
-                newData.setAtUser(atUser);
-            }
-
-            //发送信息
-            mCommentAdapter.add(newData);
-            Collections.sort(mCommentAdapter.getDataList());
-            mCommentAdapter.notifyDataSetChanged();
-            //收起键盘,删除editText的内容
-            mEdtTxtCommentInfo.getText().clear();
-            mEdtTxtCommentInfo.setHint("");
-            mEdtTxtCommentInfo.clearFocus();
-            Log.e(LOG_TAG, getActivity().getCurrentFocus() + "focus");
-        }
-    }
 
     class SendCommentOnlineClickListener implements View.OnClickListener {
         @Override
