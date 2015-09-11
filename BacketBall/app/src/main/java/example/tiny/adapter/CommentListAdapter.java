@@ -3,7 +3,6 @@ package example.tiny.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -185,7 +184,6 @@ public class CommentListAdapter extends BaseAdapter implements StickyListHeaders
         TextView mTvCommentTime;
         CheckBox mChkCommentLike;
         TextView mTvCommentLikeNumber;
-
     }
 
 }

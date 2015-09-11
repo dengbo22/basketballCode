@@ -19,7 +19,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FunctionCallback;
+import com.avos.avoscloud.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +36,7 @@ import example.tiny.data.Comment;
 import example.tiny.data.CommentGroup;
 import example.tiny.data.User;
 import example.tiny.utils.DateFormat;
+import example.tiny.utils.LeanCloudParser;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -72,12 +77,11 @@ public class CommentFragment extends Fragment {
         mStickyListView.setOnItemClickListener(new CommentItemClickListener());
         mEdtTxtCommentInfo = ((LiveDetailActivity) getActivity()).getEdtTxtComment();
         TextView mTvCommentSend = ((LiveDetailActivity) getActivity()).getTvCommentSend();
-        mTvCommentSend.setOnClickListener(new SendCommentClickListener());
+        mTvCommentSend.setOnClickListener(new SendCommentOnlineClickListener());
 
         RequestCommentData();
         return view;
     }
-
 
 
     private void LoadMoreRequest() {
@@ -255,7 +259,56 @@ public class CommentFragment extends Fragment {
     class SendCommentOnlineClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            
+            final AVObject comment = new AVObject("Comment");
+            comment.put("userId", AVUser.getCurrentUser() );
+            comment.put("content", mEdtTxtCommentInfo.getText().toString().trim() );
+            comment.put("likes", 0);
+            comment.put("competitionId", AVObject.createWithoutData("Competition", ((LiveDetailActivity)getActivity()).objectId ) );
+            if(mClickItem != -1) {
+                User atUser = mCommentData.get(mClickItem).getUser();
+                comment.put("atUser", AVObject.createWithoutData("_User", atUser.getObjectId()));
+            }
+            //Save
+            comment.setFetchWhenSave(true);
+            comment.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    //加入到列表中，此时已经有ObjectId了
+                    CommentGroup newData = new CommentGroup();
+                    //设置当前用户
+                    newData.setUser(LeanCloudParser.AVUserToUser(AVUser.getCurrentUser() ) );
+                    //设置Comment
+                    Comment local = new Comment();
+                    local.setCreatedAt(comment.getCreatedAt());
+                    local.setUpdateAt(comment.getUpdatedAt());
+
+                    LiveDetailActivity activity = (LiveDetailActivity) getActivity();
+                    local.setCompetitionId(activity.objectId);
+                    local.setContent(comment.getString("content"));
+                    local.setLikes(comment.getInt("likes"));
+                    newData.setComment(local);
+                    //设置recent
+                    newData.setRecent(true);
+                    //是否有atUser字段, 如果有则添加
+                    if (mClickItem != -1) {
+                        User atUser = mCommentData.get(mClickItem).getUser();
+                        newData.setAtUser(atUser);
+                    }
+                    //发送信息
+                    mCommentAdapter.add(newData);
+                    Collections.sort(mCommentAdapter.getDataList());
+                    mCommentAdapter.notifyDataSetChanged();
+                    //收起键盘,删除editText的内容
+                    mEdtTxtCommentInfo.getText().clear();
+                    mEdtTxtCommentInfo.setHint("");
+                    mEdtTxtCommentInfo.clearFocus();
+
+
+
+
+                }
+            });
+
         }
     }
 

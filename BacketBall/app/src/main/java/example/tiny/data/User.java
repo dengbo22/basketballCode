@@ -19,7 +19,6 @@ public class User {
     private boolean mobilePhoneVerified;
 
 
-
     public String getObjectId() {
         return objectId;
     }
@@ -85,9 +84,9 @@ public class User {
     }
 
 
-
     public static User FromJSon(JSONObject obj) {
         User user = new User();
+        user.objectId = obj.getString("objectId");
         user.wechatId = obj.getString("wechatId");
         user.nickname = obj.getString("nickname");
         user.username = obj.getString("username");
@@ -100,13 +99,14 @@ public class User {
 
     @Override
     public String toString() {
-        return "wechatId:"+ wechatId +
-         "\tnickname:" + nickname +
-         "\tusername" +username +
-        "\tavatorUrl" + avatorUrl +
-                "\temailVerified" +emailVerified +
+        return "objectId:" + objectId +
+                "\twechatId:" + wechatId +
+                "\tnickname:" + nickname +
+                "\tusername" + username +
+                "\tavatorUrl" + avatorUrl +
+                "\temailVerified" + emailVerified +
                 "\tgender" + gender
-        +"\tmobilePhoneVerified" +mobilePhoneVerified;
+                + "\tmobilePhoneVerified" + mobilePhoneVerified;
     }
 
     public String getAvatorUrl() {
