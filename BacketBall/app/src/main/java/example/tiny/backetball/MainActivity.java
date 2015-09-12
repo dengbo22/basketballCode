@@ -60,6 +60,7 @@ public class MainActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        LoginActivity.instance.finish();
         InitWidget();
         dbHelper = new BasketSQLite(this, "BasketApp.db", null, 1);
     }
@@ -84,6 +85,10 @@ public class MainActivity extends Activity{
     }
 
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

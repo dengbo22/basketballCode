@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/rl_registe_header"
+        layout="@layout/include_header"
+        android:layout_width="match_parent"
+        android:layout_height="37.5dp" />
+
+
+    <LinearLayout
+        android:layout_marginTop="51.2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="34dp"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:id="@+id/img_regist_phone_icon"
+            android:layout_width="15.36dp"
+            android:layout_height="15.36dp"
+            android:src="@drawable/icon_phone"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="7.5dp"
+            />
+
+        <EditText
+            android:id="@+id/edtTxt_regist_phone_number"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:inputType="phone"
+            android:textSize="14sp"
+            android:textColorHint="#C9CFD8"
+            android:hint="手机号码"/>
+        
+        
+        <ImageView
+            android:id="@+id/img_registe_getauth"
+            android:layout_width="68.26dp"
+            android:layout_height="21.33dp"
+            android:layout_marginRight="34.13dp"
+            android:src="@drawable/btn_get_auth"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="34.13dp"
+        android:layout_marginBottom="15.36dp"
+        android:layout_marginTop="15.36dp"
+        android:background="#C9CFD8" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="34dp"
+        >
+
+        <ImageView
+            android:id="@+id/img_regist_auth_icon"
+            android:layout_width="15.36dp"
+            android:layout_height="15.36dp"
+            android:src="@drawable/icon_auth"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="7.5dp"
+            />
+
+        <EditText
+            android:id="@+id/edtTxt_regist_auth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:inputType="number"
+            android:textSize="14sp"
+            android:textColorHint="#C9CFD8"
+            android:hint="验证码"/>
+    </LinearLayout>
+
+    <View
+
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="34.13dp"
+        android:layout_marginBottom="15.36dp"
+        android:layout_marginTop="15.36dp"
+        android:background="#C9CFD8" />
+
+    <!-- 分段  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="34dp"
+        >
+
+        <ImageView
+            android:id="@+id/img_regist_password_icon"
+            android:layout_width="15.36dp"
+            android:layout_height="15.36dp"
+            android:src="@drawable/icon_password"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="7.5dp"
+            />
+
+        <EditText
+            android:id="@+id/edtTxt_regist_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:inputType="textPassword"
+            android:textSize="14sp"
+            android:textColorHint="#C9CFD8"
+            android:hint="密码（6~20位）"/>
+    </LinearLayout>
+
+    <View
+
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="34.13dp"
+        android:layout_marginBottom="15.36dp"
+        android:layout_marginTop="15.36dp"
+        android:background="#C9CFD8" />
+    <!--  分段  -->
+
+    <!-- 分段  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="34dp"
+        >
+
+        <ImageView
+            android:id="@+id/img_regist_nick_icon"
+            android:layout_width="15.36dp"
+            android:layout_height="15.36dp"
+            android:src="@drawable/icon_nickname"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="7.5dp"
+            />
+
+        <EditText
+            android:id="@+id/edtTxt_regist_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:inputType="textPassword"
+            android:textSize="14sp"
+            android:textColorHint="#C9CFD8"
+            android:hint="昵称（不超过20位）"/>
+    </LinearLayout>
+
+    <View
+
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="34.13dp"
+        android:layout_marginBottom="15.36dp"
+        android:layout_marginTop="15.36dp"
+        android:background="#C9CFD8" />
+    <!--  分段  -->
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:id="@+id/img_regist_finish"
+        android:layout_width="213.33dp"
+        android:layout_height="38.4dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/icon_finish_register"
+        />
+
+    <TextView
+        android:id="@+id/tv_regist_login"
+        android:layout_width="213.33dp"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:text="登陆"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="21.33dp"
+        android:layout_marginTop="17dp"
+        />
+
+
+
+</LinearLayout>

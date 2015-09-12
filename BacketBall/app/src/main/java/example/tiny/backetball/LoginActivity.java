@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -31,28 +33,40 @@ import example.tiny.utils.NetworkUtils;
  */
 public class LoginActivity extends Activity  {
     ProgressDialog progress;
+    public static LoginActivity instance ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        instance = this;
         progress = new ProgressDialog(this);
         progress.setCancelable(false);
 
-        Button button = (Button) findViewById(R.id.btn_login_wx);
+        ImageView button = (ImageView) findViewById(R.id.btn_login_wx);
         button.setOnClickListener(new startWxListener());
+        TextView noUserLogin = (TextView) findViewById(R.id.tv_login_nouser);
+        noUserLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
     public void startMain(View v) {
-        progress.setTitle("登陆");
-        progress.setMessage("正在登陆中..");
-        progress.show();
-        if(NetworkUtils.isOnline(this)) {
-            AVUser.logInInBackground("test", "123456", new Login());
-        }
-        else
-            Toast.makeText(LoginActivity.this, "网络状态不可用", Toast.LENGTH_SHORT).show();
+//        progress.setTitle("登陆");
+//        progress.setMessage("正在登陆中..");
+//        progress.show();
+//        if(NetworkUtils.isOnline(this)) {
+//            AVUser.logInInBackground("test", "123456", new Login());
+//        }
+//        else
+//            Toast.makeText(LoginActivity.this, "网络状态不可用", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(LoginActivity.this, PhoneLoginActivity.class);
+        startActivity(intent);
     }
 
 
@@ -69,9 +83,8 @@ public class LoginActivity extends Activity  {
                 user.setGender(avUser.getInt("gender"));
                 user.setMobilePhoneVerified(avUser.getBoolean("mobilePhoneVerified"));
                 Toast.makeText(getApplicationContext(), "登陆成功！", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, PhoneLoginActivity.class);
                 startActivity(intent);
-                LoginActivity.this.finish();
             } else {
                 Toast.makeText(getApplicationContext(), "登陆失败！" + e, Toast.LENGTH_SHORT).show();
             }

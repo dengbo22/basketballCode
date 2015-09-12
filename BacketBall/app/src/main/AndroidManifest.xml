@@ -38,7 +38,9 @@
         </activity>
         <activity android:name=".SharePopupWindow" android:theme="@style/PopupWindowDialogTheme" />
         <activity android:name=".GameDetailActivity" />
-
+        <activity android:name=".PhoneLoginActivity" />
+        <activity android:name=".RegisteActivity" />
+        <activity android:name=".ResetPasswordActivity"/>
 
     </application>
 
