@@ -1,6 +1,5 @@
 package example.tiny.adapter;
 
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -22,16 +21,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import example.tiny.data.LiveItemData;
 import example.tiny.backetball.R;
+import example.tiny.data.LiveItemData;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
- * Created by tiny on 15-8-19.
+ * Created by tiny on 15-9-11.
  */
-public class StickyListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-
-    private static final String LOG_TAG = "StickyListAdapter";
+public class LiveListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+    private static final String LOG_TAG = "LiveListAdapter";
     private Context mContext ;
     private ImageLoader imageLoader;
     DisplayImageOptions options ;
@@ -42,7 +40,7 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
     private ArrayList<LiveItemData> mCompetitionData = null;
     private LayoutInflater inflater;
 
-    public StickyListAdapter(Context context) {
+    public LiveListAdapter(Context context) {
         inflater = LayoutInflater.from(context);
         mCompetitionData = new ArrayList<LiveItemData>();
         mContext = context;
@@ -66,7 +64,7 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
 
     @Override
     public Object getItem(int position) {
-        Log.d(LOG_TAG, "getItem:" +position);
+        Log.d(LOG_TAG, "getItem:" + position);
         return mCompetitionData.get(position);
     }
 
@@ -100,7 +98,6 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
             ((TextView)convertView.findViewById(R.id.tv_list_score_center)).setTypeface(type);
             holder.mTvCompetitionStatus = (TextView)convertView.findViewById(R.id.tv_list_competition_status);
             convertView.setTag(holder);
-
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
@@ -133,9 +130,8 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
         String competitionState = positionData.getCompetitionStatusData();
         if(competitionState.equals("未开始") ){
             String time = new SimpleDateFormat("HH:mm 开始").format(positionData.getBeginTime());
-//            String time = (String) android.text.format.DateFormat.format("HH:mm", positionData.getBeginTime());
             holder.mTvCompetitionStatus.setText(time);
-            holder.mTvCompetitionStatus.setTextColor(Color.rgb(246,177,57));
+            holder.mTvCompetitionStatus.setTextColor(Color.rgb(246, 177, 57));
         }else {
             holder.mTvCompetitionStatus.setText(positionData.getCompetitionStatusData());
             holder.mTvCompetitionStatus.setTextColor(Color.rgb(191, 191, 191));

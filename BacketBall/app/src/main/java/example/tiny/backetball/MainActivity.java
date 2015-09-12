@@ -33,7 +33,6 @@ import example.tiny.data.CompetitionItemData;
  */
 public class MainActivity extends Activity{
 
-
     private final String LOG_TAG = "MainActivity";
 
     static final int FRAGMENT_LIVE = 0;

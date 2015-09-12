@@ -9,20 +9,29 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVObject;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import example.tiny.backetball.BasketBallApp;
 import example.tiny.backetball.R;
+import example.tiny.data.Team;
 
 /**
  * Created by tiny on 15-9-9.
  */
 public class TeamRecyclerAdapter extends RecyclerView.Adapter {
     private Context mContext;
+    private List<Team> mTeamList;
+
 
     public TeamRecyclerAdapter(Context context) {
         super();
         mContext = context;
+        if(mTeamList == null)
+            mTeamList = new ArrayList<Team>();
     }
 
     @Override
@@ -34,8 +43,8 @@ public class TeamRecyclerAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((ItemViewHolder)holder).mTvItemTeamSeq.setText((position+1) + ".");
-        ((ItemViewHolder)holder).mTvItemTeamName.setText("11级A班");
-//        ImageLoader.getInstance().displayImage("url",((ItemViewHolder)holder).mImgItemTeamIcon, BasketBallApp.getTeamIconOptions());
+        ((ItemViewHolder)holder).mTvItemTeamName.setText(mTeamList.get(position).getName());
+        ImageLoader.getInstance().displayImage(mTeamList.get(position).getLogoUrl(),((ItemViewHolder)holder).mImgItemTeamIcon, BasketBallApp.getTeamIconOptions());
         if(position % 2 == 0)
         holder.itemView.setBackgroundColor(Color.WHITE);
 
@@ -43,9 +52,13 @@ public class TeamRecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return 20;
+        return mTeamList.size();
     }
 
+
+    public boolean add(Team data) {
+        return mTeamList.add(data);
+    }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView mTvItemTeamSeq;
@@ -59,4 +72,5 @@ public class TeamRecyclerAdapter extends RecyclerView.Adapter {
             mTvItemTeamName = (TextView) itemView.findViewById(R.id.tv_teams_name);
         }
     }
+
 }

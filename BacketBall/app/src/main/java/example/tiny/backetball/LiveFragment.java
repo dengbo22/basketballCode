@@ -21,7 +21,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import example.tiny.adapter.StickyListAdapter;
+import example.tiny.adapter.LiveListAdapter;
 import example.tiny.data.BasketSQLite;
 import example.tiny.data.LiveItemData;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -38,7 +38,7 @@ public class LiveFragment extends Fragment {
     private static final int LOAD_SIZE = 3;
 
     StickyListHeadersListView liveList = null;
-    StickyListAdapter liveListAdapter = null;
+    LiveListAdapter liveListAdapter = null;
     ArrayList<LiveItemData> dataList = null;
     PtrFrameLayout mFrameLiveRefresh = null;
 
@@ -50,8 +50,8 @@ public class LiveFragment extends Fragment {
 
         mFrameLiveRefresh = (PtrFrameLayout) view.findViewById(R.id.flayout_live_refresh);
         liveList = (StickyListHeadersListView) view.findViewById(R.id.list_live_competition);
-        liveList.setAdapter(new StickyListAdapter(getActivity()) );
-        liveListAdapter = (StickyListAdapter) liveList.getAdapter();
+        liveList.setAdapter(new LiveListAdapter(getActivity()) );
+        liveListAdapter = (LiveListAdapter) liveList.getAdapter();
         liveList.setOnItemClickListener(new ItemClickListener());
 
         mFrameLiveRefresh.setPtrHandler(new PtrHandler() {

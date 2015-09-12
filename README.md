@@ -46,3 +46,7 @@
 
 2015.9.11
 修改评论页面逻辑，完成Online功能
+
+2015.9.12
+添加ScheduleFragment页面，TeamFragment与服务器同步完成
+
