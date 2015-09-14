@@ -36,10 +36,16 @@ public class CountDownButton extends Button {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isCountDown)
-                    startCountDown();
-                else
-                    stopCountDown();
+                if (listener != null) {
+                    if (listener.onClick(v)) {
+                        if (!isCountDown)
+                            startCountDown();
+                        else
+                            stopCountDown();
+                    }
+
+                }
+
             }
         });
     }
@@ -49,7 +55,7 @@ public class CountDownButton extends Button {
         setEnabled(true);
         setBackgroundResource(R.drawable.btn_get_auth);
         setText("");
-        if(timer != null && task != null) {
+        if (timer != null && task != null) {
             task.cancel();
             timer.cancel();
             timer = null;
@@ -63,7 +69,7 @@ public class CountDownButton extends Button {
         setEnabled(false);
         setBackgroundResource(R.drawable.btn_auth_disabled);
         mCurrentTime = DEF_TIME;
-        if(timer == null)
+        if (timer == null)
             timer = new Timer();
         task = new TimerTask() {
             @Override
@@ -92,9 +98,9 @@ public class CountDownButton extends Button {
         @Override
         public void handleMessage(Message msg) {
             final CountDownButton button = mButton.get();
-            switch(msg.what) {
+            switch (msg.what) {
                 case MSG_COUNTING_DOWN:
-                    button.setText(button.mCurrentTime + "秒" );
+                    button.setText(button.mCurrentTime + "秒");
                     break;
                 case MSG_COUNTING_STOP:
                     mButton.get().stopCountDown();
@@ -104,5 +110,18 @@ public class CountDownButton extends Button {
             }
         }
     }
+
+    private CountDownButtonListener listener;
+
+    public interface CountDownButtonListener {
+        public boolean onClick(View view);
+
+    }
+
+
+    public void setCountDownClickListener(CountDownButtonListener listener) {
+        this.listener = listener;
+    }
+
 
 }
