@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import example.tiny.widget.CountDownButton;
+
 /**
  * Created by tiny on 15-9-12.
  */
@@ -16,7 +18,7 @@ public class RegisteActivity extends Activity {
     EditText mEdtTxtRegisterAuth;
     EditText mEdtTxtRegisterPassword;
     EditText mEdtTxtRegisterNickname;
-    ImageView mImgRegisterGetAuth;
+    CountDownButton mImgRegisterGetAuth;
     ImageView mImgRegisterFinish;
     TextView mTvLogin;
 
@@ -36,7 +38,7 @@ public class RegisteActivity extends Activity {
         mEdtTxtRegisterAuth = (EditText) findViewById(R.id.edtTxt_regist_auth);
         mEdtTxtRegisterPassword = (EditText) findViewById(R.id.edtTxt_regist_password);
         mEdtTxtRegisterNickname = (EditText)findViewById(R.id.edtTxt_regist_nickname);
-        mImgRegisterGetAuth = (ImageView) findViewById(R.id.img_registe_getauth);
+        mImgRegisterGetAuth = (CountDownButton) findViewById(R.id.img_registe_getauth);
         mImgRegisterFinish = (ImageView) findViewById(R.id.img_regist_finish);
         mTvLogin = (TextView) findViewById(R.id.tv_regist_login);
         RelativeLayout lHeader = (RelativeLayout) findViewById(R.id.rl_registe_header);

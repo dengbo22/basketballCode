@@ -31,7 +31,7 @@
             android:id="@+id/edtTxt_regist_phone_number"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@null"
             android:inputType="phone"
             android:textSize="14sp"
@@ -39,12 +39,14 @@
             android:hint="手机号码"/>
         
         
-        <ImageView
+        <example.tiny.widget.CountDownButton
             android:id="@+id/img_registe_getauth"
             android:layout_width="68.26dp"
             android:layout_height="21.33dp"
             android:layout_marginRight="34.13dp"
-            android:src="@drawable/btn_get_auth"
+            android:background="@drawable/btn_get_auth"
+            android:textSize="12sp"
+            android:textColor="#000000"
             />
     </LinearLayout>
 
