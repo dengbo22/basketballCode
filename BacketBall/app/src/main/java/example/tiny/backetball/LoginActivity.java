@@ -55,16 +55,13 @@ public class LoginActivity extends Activity  {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        instance = null;
+    }
 
     public void startMain(View v) {
-//        progress.setTitle("登陆");
-//        progress.setMessage("正在登陆中..");
-//        progress.show();
-//        if(NetworkUtils.isOnline(this)) {
-//            AVUser.logInInBackground("test", "123456", new Login());
-//        }
-//        else
-//            Toast.makeText(LoginActivity.this, "网络状态不可用", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(LoginActivity.this, PhoneLoginActivity.class);
         startActivity(intent);
     }

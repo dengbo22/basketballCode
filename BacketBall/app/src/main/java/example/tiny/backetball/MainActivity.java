@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVUser;
+
 import java.util.ArrayList;
 
 import example.tiny.data.BasketSQLite;
@@ -58,9 +60,13 @@ public class MainActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(LoginActivity.instance != null)
+            LoginActivity.instance.finish();
+        if(PhoneLoginActivity.instance != null)
+            PhoneLoginActivity.instance.finish();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        LoginActivity.instance.finish();
         InitWidget();
         dbHelper = new BasketSQLite(this, "BasketApp.db", null, 1);
     }

@@ -170,6 +170,7 @@ public class LiveFragment extends Fragment {
                     if (j.getObjectId().equals(objectId)) {
                         data = j;
                         addFlag = false;
+                        Log.e(LOG_TAG, "数据重复！");
                         break;
                     }
                 }
@@ -274,6 +275,7 @@ public class LiveFragment extends Fragment {
                     Toast.makeText(getActivity(), "没有更多数据！", Toast.LENGTH_SHORT).show();
                 else {
                     Toast.makeText(getActivity(), "获取数据成功！", Toast.LENGTH_SHORT).show();
+                    Log.e(LOG_TAG, "Data:" + list);
                     insertDataIntoAdapter(list);
                 }
             } else {

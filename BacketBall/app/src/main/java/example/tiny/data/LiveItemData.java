@@ -1,6 +1,8 @@
 package example.tiny.data;
 
 
+import com.avos.avoscloud.AVObject;
+
 import java.util.Date;
 
 /**
@@ -21,6 +23,12 @@ public class LiveItemData implements Comparable<LiveItemData>{
     int mTeamBScoreData;
     Date mBeginTime;
     String mCompetitionStatusData;
+
+    public static LiveItemData FromAVObject(AVObject avObject) {
+
+    }
+
+
 
     public String getObjectId() {
         return mObjectId;

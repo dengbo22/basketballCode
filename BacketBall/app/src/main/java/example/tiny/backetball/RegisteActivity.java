@@ -34,7 +34,7 @@ public class RegisteActivity extends Activity {
     ImageView mImgRegisterFinish;
     TextView mTvLogin;
     String mInnerPhoneNumber;
-    boolean mFirstVerifyRequest = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,28 +68,15 @@ public class RegisteActivity extends Activity {
                 if (phone.matches("[1][358]\\d{9}")) {
                     mInnerPhoneNumber = phone;
                     Toast.makeText(RegisteActivity.this, "输入正确，请求验证码！", Toast.LENGTH_SHORT).show();
-                    if (mFirstVerifyRequest) {
-                        AVOSCloud.requestSMSCodeInBackground(mInnerPhoneNumber, new RequestMobileCodeCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if(e == null)
-                                    Log.e("RegisteActivity", "请求验证码完成！");
-                                else
-                                    Toast.makeText(RegisteActivity.this, "Error:" + e, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        mFirstVerifyRequest = false;
-                    } else {
-                        AVUser.requestMobilePhoneVerifyInBackground(mInnerPhoneNumber, new RequestMobileCodeCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if(e == null)
-                                    Log.e("RegisteActivity", "再次请求完成");
-                                else
-                                    Toast.makeText(RegisteActivity.this, "Error:" + e, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
+                    AVOSCloud.requestSMSCodeInBackground(mInnerPhoneNumber, new RequestMobileCodeCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e == null)
+                                Log.e("RegisteActivity", "请求验证码完成！");
+                            else
+                                Toast.makeText(RegisteActivity.this, "Error:" + e, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     return true;
                 } else {
                     Toast.makeText(RegisteActivity.this, "错误的手机号码！", Toast.LENGTH_SHORT).show();
@@ -117,18 +104,18 @@ public class RegisteActivity extends Activity {
                                 user.setUsername(mInnerPhoneNumber);
                                 user.setPassword(mEdtTxtRegisterPassword.getText().toString());
                                 user.put("nickname", mEdtTxtRegisterNickname.getText().toString());
-                                user.saveInBackground(new SaveCallback() {
+                                user.signUpInBackground(new SignUpCallback() {
                                     @Override
                                     public void done(AVException e) {
                                         if (e == null)
-                                            Toast.makeText(RegisteActivity.this, "创建用户成功", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RegisteActivity.this, "注册成功！", Toast.LENGTH_SHORT).show();
+                                        else
+                                            Toast.makeText(RegisteActivity.this, "SignUp错误:" + e, Toast.LENGTH_SHORT).show();
                                     }
                                 });
-                                Intent intent = new Intent(RegisteActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                RegisteActivity.this.finish();
+                                finish();
                             } else {
-                                Toast.makeText(RegisteActivity.this, "错误：" + e, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisteActivity.this, "VerifySMSCode错误：" + e, Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -146,14 +133,11 @@ public class RegisteActivity extends Activity {
 
 
     private boolean ValidCheck() {
-
         String password = mEdtTxtRegisterPassword.getText().toString();
-//        Log.e("RegisteActivity", "pwd:" + password + "pwdSize:" + password.length() );
         if (password.length() < 6 || password.length() > 20) {
             Toast.makeText(RegisteActivity.this, "密码长度不正确，请重试！", Toast.LENGTH_SHORT).show();
             return false;
         }
-
         String nickname = mEdtTxtRegisterNickname.getText().toString().trim();
         if (nickname.contains(" ")) {
             Toast.makeText(RegisteActivity.this, "昵称不合法：包含空格！", Toast.LENGTH_SHORT).show();
