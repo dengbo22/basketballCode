@@ -2,57 +2,39 @@ package example.tiny.backetball;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.LogInCallback;
-import com.tencent.mm.sdk.modelbase.BaseReq;
-import com.tencent.mm.sdk.modelbase.BaseResp;
-import com.tencent.mm.sdk.modelmsg.SendAuth;
-import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 
-import example.tiny.data.User;
-import example.tiny.utils.NetworkUtils;
 
 /**
  * Created by tiny on 15-8-31.
  */
-public class LoginActivity extends Activity  {
+public class LoginActivity extends Activity {
+    private static final String LOG_TAG = "LoginActivity";
+    MainLoginFragment mMainFragment;
+
     ProgressDialog progress;
-    public static LoginActivity instance ;
+    public static LoginActivity instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        if(mMainFragment == null)
+            mMainFragment = new MainLoginFragment();
+        getFragmentManager().beginTransaction().add(R.id.fragment_main_login, mMainFragment).commit();
+        Log.e(LOG_TAG, "add Finish");
         instance = this;
         progress = new ProgressDialog(this);
         progress.setCancelable(false);
+    }
 
-        ImageView button = (ImageView) findViewById(R.id.btn_login_wx);
-        button.setOnClickListener(new startWxListener());
-        TextView noUserLogin = (TextView) findViewById(R.id.tv_login_nouser);
-        noUserLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
+    @Override
+    protected void onStop() {
+        if (progress.isShowing())
+            progress.dismiss();
+        super.onStop();
     }
 
     @Override
@@ -61,56 +43,20 @@ public class LoginActivity extends Activity  {
         instance = null;
     }
 
-    public void startMain(View v) {
-        Intent intent = new Intent(LoginActivity.this, PhoneLoginActivity.class);
-        startActivity(intent);
-    }
 
-
-    private class Login extends LogInCallback {
-        @Override
-        public void done(AVUser avUser, AVException e) {
-            if(avUser != null) {
-                User user = new User();
-                user.setObjectId(avUser.getObjectId());
-                user.setWechatId(avUser.getString("wechatId"));
-                user.setNickname(avUser.getString("nickname"));
-                user.setAvatorUrl(avUser.getString("avatorUrl"));
-                user.setEmailVerified(avUser.getBoolean("emailVerified"));
-                user.setGender(avUser.getInt("gender"));
-                user.setMobilePhoneVerified(avUser.getBoolean("mobilePhoneVerified"));
-                Toast.makeText(getApplicationContext(), "登陆成功！", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, PhoneLoginActivity.class);
-                startActivity(intent);
-            } else {
-                Toast.makeText(getApplicationContext(), "登陆失败！" + e, Toast.LENGTH_SHORT).show();
-            }
-            progress.dismiss();
+    void ShowDialog() {
+        if (progress == null) {
+            progress = new ProgressDialog(this);
+            progress.setCancelable(false);
         }
+        progress.setTitle("登陆");
+        progress.setMessage("正在请求登陆...");
+        progress.show();
+    }
+
+    void DismissDialog() {
+        progress.dismiss();
     }
 
 
-
-    class startWxListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            if(NetworkUtils.isOnline(LoginActivity.this)) {
-                progress.setTitle("登陆");
-                progress.setMessage("正在等待微信响应...");
-                progress.show();
-                SendAuth.Req req = new SendAuth.Req();
-                req.scope = "snsapi_userinfo";
-                BasketBallApp.api.sendReq(req);
-            }else {
-                Toast.makeText(LoginActivity.this, "网络状态不可用！", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        if(progress.isShowing())
-            progress.dismiss();
-        super.onStop();
-    }
 }

@@ -62,8 +62,7 @@ public class MainActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         if(LoginActivity.instance != null)
             LoginActivity.instance.finish();
-        if(PhoneLoginActivity.instance != null)
-            PhoneLoginActivity.instance.finish();
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="128dp"
+        android:src="@drawable/logo"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:id="@+id/tv_login_nouser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="随便看看"
+        android:textSize="15sp"
+        android:textColor="#535353"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="22dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        />
+
+
+    <ImageView
+        android:id="@+id/img_login_phone"
+        android:layout_width="213.3dp"
+        android:layout_height="38.4dp"
+        android:clickable="true"
+        android:onClick="startMain"
+        android:src="@drawable/btn_phone"
+        android:layout_above="@id/tv_login_nouser"
+        android:layout_marginTop="17dp"
+        android:layout_centerHorizontal="true"
+        />
+
+
+    <ImageView
+        android:id="@+id/btn_login_wx"
+        android:layout_width="213.3dp"
+        android:layout_height="38.4dp"
+        android:onClick="startWx"
+        android:clickable="true"
+        android:src="@drawable/btn_weixin"
+        android:layout_above="@id/img_login_phone"
+        android:layout_centerHorizontal="true"
+        />
+
+
+</RelativeLayout>
