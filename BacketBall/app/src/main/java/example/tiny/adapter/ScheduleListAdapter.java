@@ -56,7 +56,6 @@ public class ScheduleListAdapter extends BaseAdapter implements StickyListHeader
 
     @Override
     public long getHeaderId(int position) {
-        Log.e("ScheduleListAdapter", "getHeaderId()执行");
         LiveItemData data = mScheduleData.get(position);
         if("总决赛".equals(data.getCompetitionTypeData()))
             return 0;

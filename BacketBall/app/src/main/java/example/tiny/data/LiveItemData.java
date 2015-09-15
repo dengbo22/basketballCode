@@ -1,6 +1,8 @@
 package example.tiny.data;
 
 
+import android.util.Log;
+
 import com.avos.avoscloud.AVObject;
 
 import java.util.Date;
@@ -8,7 +10,7 @@ import java.util.Date;
 /**
  * Created by tiny on 15-8-20.
  */
-public class LiveItemData implements Comparable<LiveItemData>{
+public class LiveItemData implements Comparable<LiveItemData> {
 
     String mObjectId;
     String mCampusData;
@@ -25,9 +27,42 @@ public class LiveItemData implements Comparable<LiveItemData>{
     String mCompetitionStatusData;
 
     public static LiveItemData FromAVObject(AVObject avObject) {
+        LiveItemData data = new LiveItemData();
+        data.mObjectId = avObject.getObjectId();
+        data.mBeginTime = avObject.getDate("beginTime");
+        AVObject teamA = avObject.getAVObject("teamAId");
+        AVObject teamB = avObject.getAVObject("teamBId");
+        data.mTeamANameData = teamA.getString("name");
+        data.mTeamAIconData = teamA.getString("logoUrl");
+        data.mTeamBNameData = teamB.getString("name");
+        data.mTeamBIconData = teamB.getString("logoUrl");
+        AVObject game = avObject.getAVObject("gameId");
+        String gameName = "";
+        String campus = "";
+        //执行异常检测
+        if (game != null) {
+            gameName = game.getString("name");
+            AVObject c = game.getAVObject("campusId");
+            if (c != null) {
+                campus = c.getString("name");
+            }
+        }
+        data.mGameNameData = gameName;
+        data.mCampusData = campus;
+        AVObject score = avObject.getAVObject("scoreId");
+        int teamAScore = 0;
+        int teamBScore = 0;
+        if (score != null) {
+            teamAScore = score.getInt("scoreA");
+            teamBScore = score.getInt("scoreB");
+        }
+        data.mTeamAScoreData = teamAScore;
+        data.mTeamBScoreData = teamBScore;
+        data.mCompetitionTypeData = avObject.getString("type");
+        data.mCompetitionStatusData = avObject.getString("status");
 
+        return data;
     }
-
 
 
     public String getObjectId() {
@@ -137,26 +172,26 @@ public class LiveItemData implements Comparable<LiveItemData>{
     @Override
     public String toString() {
         String str = mObjectId
-        +"\t"+ mCampusData
-        +"\t"+ mCompetitionTypeData
-        +"\t"+ mCompetitionTypeIconData
-        +"\t"+ mTeamAIconData
-        +"\t"+ mTeamANameData
-        +"\t"+ mTeamBIconData
-        +"\t"+ mTeamBNameData
-        +"\t"+ mGameNameData
-        +"\t"+ mTeamAScoreData
-        +"\t"+ mTeamBScoreData
-        +"\t"+ mBeginTime;
+                + "\t" + mCampusData
+                + "\t" + mCompetitionTypeData
+                + "\t" + mCompetitionTypeIconData
+                + "\t" + mTeamAIconData
+                + "\t" + mTeamANameData
+                + "\t" + mTeamBIconData
+                + "\t" + mTeamBNameData
+                + "\t" + mGameNameData
+                + "\t" + mTeamAScoreData
+                + "\t" + mTeamBScoreData
+                + "\t" + mBeginTime;
         return str;
     }
 
 
     @Override
     public int compareTo(LiveItemData another) {
-        if(this.mBeginTime.after(another.mBeginTime))
+        if (this.mBeginTime.after(another.mBeginTime))
             return 1;
-        else if(this.mBeginTime.before(another.mBeginTime))
+        else if (this.mBeginTime.before(another.mBeginTime))
             return -1;
         else
             return 0;

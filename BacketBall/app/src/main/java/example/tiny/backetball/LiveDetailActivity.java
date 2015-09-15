@@ -24,6 +24,7 @@ import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.FunctionCallback;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -127,7 +128,6 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         competitionId.putString(BUNDLE_COMPETITION_KEY, objectId);
         comment.setArguments(competitionId);
         report.setArguments(competitionId);
-
 
         mTabContents.add(comment);
         mTabContents.add(report);
@@ -257,8 +257,6 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
             mTvTopLeftFollowNumber.setText(likesA + "");
             mTvTopRightFollowNumber.setText(likesB + "");
             mTvTopAward.setText("￥ " + award);
-            Toast.makeText(LiveDetailActivity.this, "TopView 更新完成！", Toast.LENGTH_SHORT).show();
-
         } else {
             Log.e(LOG_TAG, "一个ObjectId有多个对象,返回超过1个内容！");
         }

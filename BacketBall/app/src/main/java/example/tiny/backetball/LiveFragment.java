@@ -122,83 +122,18 @@ public class LiveFragment extends Fragment {
         if (list == null || list.size() == 0)
             return false;
         else {
-            for (AVObject i : list) {
-                //对列表中的每一个数据进行如下操作：
-                boolean addFlag = true;
-                //获取每一项数据内容：
-                String objectId = i.getObjectId();
-                Date date = i.getDate("beginTime");
-                AVObject teamA = i.getAVObject("teamAId");
-                AVObject teamB = i.getAVObject("teamBId");
-                String teamA_name = teamA.getString("name");
-                String teamA_logo = teamA.getString("logoUrl");
-                String teamB_name = teamB.getString("name");
-                String teamB_logo = teamB.getString("logoUrl");
-                AVObject game = i.getAVObject("gameId");
-                String gameName = " ";
-                String campus = "";
-                //执行异常检测
-                if (game != null) {
-                    gameName = game.getString("name");
-                    AVObject c = game.getAVObject("campusId");
-                    if (c != null) {
-                        campus = c.getString("name");
-                    } else {
-                        Log.e(LOG_TAG, "Campus数据为NULL");
-                    }
-                } else {
-                    Log.e(LOG_TAG, "game = null");
-                }
-
-                AVObject score = i.getAVObject("scoreId");
-                int teamAScore = 0;
-                int teamBScore = 0;
-                if (score != null) {
-                    teamAScore = score.getInt("scoreA");
-                    teamBScore = score.getInt("scoreB");
-                } else {
-                    Log.e(LOG_TAG, "Score:" + score);
-                }
-                String type = i.getString("type");
-                String status = i.getString("status");
-
-
-                LiveItemData data = null;
-
-                //数据比对，查看dataList中是否已经含有该条数据，如果有则addFlag设为false表示该条数据不插入
-                for (LiveItemData j : dataList) {
-                    if (j.getObjectId().equals(objectId)) {
-                        data = j;
-                        addFlag = false;
-                        Log.e(LOG_TAG, "数据重复！");
-                        break;
+            for(int i = 0; i < list.size(); i++) {
+                LiveItemData item = LiveItemData.FromAVObject(list.get(i));
+                for(int j = 0; j < dataList.size(); j++) {
+                    LiveItemData listItem = dataList.get(j);
+                    if(listItem.getObjectId().equals(item.getObjectId())) {
+                        //具有相同Id的数据，此处采用的操作是：删除之前数据，将新数据插入
+                        dataList.remove(listItem);
                     }
                 }
-
-                if (data == null)
-                    data = new LiveItemData();
-
-
-                //Set Data
-                data.setObjectId(objectId);
-                data.setCampusData(campus);
-                data.setBeginTime(date);
-                data.setCompetitionTypeData(type);
-                data.setTeamAIconData(teamA_logo);
-                data.setTeamANameData(teamA_name);
-                data.setTeamBIconData(teamB_logo);
-                data.setTeamBNameData(teamB_name);
-                data.setCompetitionStatusData(status);
-                data.setGameNameData(gameName);
-                data.setTeamAScoreData(teamAScore);
-                data.setTeamBScoreData(teamBScore);
-
-                if (addFlag)
-                    dataList.add(data);
-
+                dataList.add(0, item);
             }
             Collections.sort(dataList);
-
             liveListAdapter.notifyDataSetChanged();
             return true;
         }
@@ -246,7 +181,6 @@ public class LiveFragment extends Fragment {
             intent.putExtra("mTeamAScoreData", obj.getTeamAScoreData());
             intent.putExtra("mTeamBScoreData", obj.getTeamBScoreData());
             intent.putExtra("mCompetitionStatusData", obj.getCompetitionStatusData());
-
             startActivityForResult(intent, realPosition);
         }
     }
@@ -275,11 +209,10 @@ public class LiveFragment extends Fragment {
                     Toast.makeText(getActivity(), "没有更多数据！", Toast.LENGTH_SHORT).show();
                 else {
                     Toast.makeText(getActivity(), "获取数据成功！", Toast.LENGTH_SHORT).show();
-                    Log.e(LOG_TAG, "Data:" + list);
                     insertDataIntoAdapter(list);
                 }
             } else {
-                Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Error"+ e, Toast.LENGTH_SHORT).show();
             }
 
             mFrameLiveRefresh.refreshComplete();
