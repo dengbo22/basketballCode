@@ -60,7 +60,6 @@ public class MainLoginFragment extends Fragment {
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 mInnerLogin = new PhoneLoginFragment();
                 transaction.add(R.id.fragment_main_login, mInnerLogin, "Tag");
-
                 transaction.hide(((LoginActivity) getActivity()).mMainFragment);
                 transaction.addToBackStack("TAG");
                 transaction.commit();
@@ -74,6 +73,8 @@ public class MainLoginFragment extends Fragment {
                     @Override
                     public void done(AVUser avUser, AVException e) {
                         Toast.makeText(getActivity(), "匿名登陆！", Toast.LENGTH_SHORT).show();
+                        LoginActivity.instance.setLoginState(true);
+                        getActivity().finish();
                     }
                 });
             }

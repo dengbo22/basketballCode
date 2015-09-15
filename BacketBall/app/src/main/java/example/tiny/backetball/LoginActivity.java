@@ -13,6 +13,7 @@ import android.util.Log;
 public class LoginActivity extends Activity {
     private static final String LOG_TAG = "LoginActivity";
     MainLoginFragment mMainFragment;
+    private boolean mIsLogin = false;
 
     ProgressDialog progress;
     public static LoginActivity instance;
@@ -28,6 +29,18 @@ public class LoginActivity extends Activity {
         instance = this;
         progress = new ProgressDialog(this);
         progress.setCancelable(false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mIsLogin)
+            finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
@@ -58,5 +71,8 @@ public class LoginActivity extends Activity {
         progress.dismiss();
     }
 
+    public void setLoginState(boolean isLogin) {
+        this.mIsLogin = isLogin;
+    }
 
 }

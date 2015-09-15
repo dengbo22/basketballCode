@@ -74,8 +74,11 @@ public class PhoneLoginFragment extends Fragment {
                     AVUser.logInInBackground(user, password, new LogInCallback<AVUser>() {
                         @Override
                         public void done(AVUser avUser, AVException e) {
-                            if (e == null)
+                            if (e == null) {
                                 Toast.makeText(getActivity(), "登陆成功", Toast.LENGTH_SHORT).show();
+                                LoginActivity.instance.setLoginState(true);
+                                getActivity().finish();
+                            }
                             else
                                 Toast.makeText(getActivity(), "登陆错误：" + e, Toast.LENGTH_SHORT).show();
                         }

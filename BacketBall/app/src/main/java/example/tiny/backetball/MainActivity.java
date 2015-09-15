@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -60,16 +61,23 @@ public class MainActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(LoginActivity.instance != null)
-            LoginActivity.instance.finish();
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         InitWidget();
         dbHelper = new BasketSQLite(this, "BasketApp.db", null, 1);
+
+        //如果尚未登陆，则跳转到登陆界面
+        if(AVUser.getCurrentUser() == null) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AVUser.logOut();
+    }
 
     public void InitWidget() {
         mVpMainPager = (ViewPager) findViewById(R.id.vp_main_pager);

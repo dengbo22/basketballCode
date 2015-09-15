@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import example.tiny.backetball.BasketBallApp;
+import example.tiny.backetball.LoginActivity;
 import example.tiny.backetball.MainActivity;
 import example.tiny.backetball.R;
 import example.tiny.data.ChineseStringRequest;
@@ -158,7 +159,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                                         //登陆成功
                                         Intent intent = new Intent(WXEntryActivity.this, MainActivity.class);
                                         dialog.dismiss();
-                                        startActivity(intent);
+                                        LoginActivity.instance.setLoginState(true);
                                         WXEntryActivity.this.finish();
                                     }else {
                                         Log.e(LOG_TAG, "用户名已存在，但是使用以存在的用户名登陆错误");
