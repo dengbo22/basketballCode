@@ -2,23 +2,20 @@ package example.tiny.backetball;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
@@ -26,39 +23,30 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.FunctionCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 
 
-import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import example.tiny.data.Comment;
-import example.tiny.data.CommentGroup;
 import example.tiny.widget.ViewPagerIndicator;
 
 /**
  * Created by tiny on 15-8-21.
  */
-public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedChangeListener {
+public class LiveDetailActivity extends Activity {
     public static final String BUNDLE_COMPETITION_KEY = "competitionId";
     public static final int DETAIL_FRAGMENT_COMMENT = 0;
     public static final int DETAIL_FRAGMENT_REPORT = 1;
     public static final int DETAIL_FRAGMENT_STATISTICS = 2;
     public static final int PAGE_NUMBER = 3;
     private static final String LOG_TAG = "LiveDetailActivity";
-
+    private ProgressDialog mProgress;
     private List<Fragment> mTabContents = new ArrayList<Fragment>();
     private FragmentPagerAdapter mAdapter;
     private ViewPager mViewPager;
@@ -108,6 +96,9 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
                 .delayBeforeLoading(100)//载入图片前稍做延时可以提高整体滑动的流畅度
                 .build();
 
+        mProgress = new ProgressDialog(this);
+        mProgress.setMessage("正在加载数据...");
+        mProgress.setTitle("请求数据");
 
         objectId = getIntent().getStringExtra("objectId");
         //使用获取到的objectId来请求数据
@@ -121,7 +112,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         mViewPager.setOffscreenPageLimit(PAGE_NUMBER);
         mIndicator.setIndicatorChangeListener(new LiveDetailActivityDefaultViewPagerListener());
         mIndicator.setInnerViewPager(mViewPager, 0);
-        mImgTopShare.setOnClickListener(new ShareClickListener());
+
     }
 
 
@@ -180,9 +171,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         mTvTopRightFollowNumber = (TextView) rUpvote.findViewById(R.id.tv_follow_follownumber);
         LinearLayout awardLayout = (LinearLayout) findViewById(R.id.layout_topview_award);
         mTvTopAward = (TextView) awardLayout.findViewById(R.id.tv_topview_award);
-//        mChkTopLeftUpvote.setOnCheckedChangeListener(this);
-//        mChkTopRightUpvote.setOnCheckedChangeListener(this);
-        //
+
         mEdtTxtComment = (EditText) findViewById(R.id.edtTxt_comment_input);
         mTvCommentSend = (TextView) findViewById(R.id.tv_comment_send);
 
@@ -216,7 +205,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
                 if (AVUser.getCurrentUser() == null || AVUser.getCurrentUser().isAnonymous()) {
                     Intent intent = new Intent(LiveDetailActivity.this, LoginActivity.class);
                     startActivity(intent);
-                    mChkTopLeftUpvote.setChecked( !mChkTopLeftUpvote.isChecked() );
+                    mChkTopLeftUpvote.setChecked(!mChkTopLeftUpvote.isChecked());
                     return;
                 }
 
@@ -225,9 +214,9 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
                     mChkTopRightUpvote.setChecked(false);
                     ChangeVote(mTvTopRightFollowNumber, mChkTopRightUpvote.isChecked());
                 }
-                if(mChkTopLeftUpvote.isChecked())
+                if (mChkTopLeftUpvote.isChecked())
                     mSupport = 1;
-                else if( mChkTopRightUpvote.isChecked())
+                else if (mChkTopRightUpvote.isChecked())
                     mSupport = 2;
                 else
                     mSupport = 0;
@@ -249,7 +238,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
                 if (AVUser.getCurrentUser() == null || AVUser.getCurrentUser().isAnonymous()) {
                     Intent intent = new Intent(LiveDetailActivity.this, LoginActivity.class);
                     startActivity(intent);
-                    mChkTopRightUpvote.setChecked( !mChkTopRightUpvote.isChecked() );
+                    mChkTopRightUpvote.setChecked(!mChkTopRightUpvote.isChecked());
                     return;
                 }
 
@@ -259,9 +248,9 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
                     ChangeVote(mTvTopLeftFollowNumber, mChkTopLeftUpvote.isChecked());
                 }
 
-                if(mChkTopLeftUpvote.isChecked())
+                if (mChkTopLeftUpvote.isChecked())
                     mSupport = 1;
-                else if( mChkTopRightUpvote.isChecked())
+                else if (mChkTopRightUpvote.isChecked())
                     mSupport = 2;
                 else
                     mSupport = 0;
@@ -276,6 +265,15 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
 
             }
         });
+
+
+        mImgTopShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LiveDetailActivity.this, SharePopupWindow.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -285,6 +283,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
 
     //用于启动以后开始请求数据
     private void RequestTopViewData(String objId) {
+        mProgress.show();
         AVQuery<AVObject> query = new AVQuery<>("Competition");
         query.whereEqualTo("objectId", objId);
         query.include("reportId");
@@ -295,17 +294,18 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
             public void done(List<AVObject> list, AVException e) {
                 if (e == null) {
                     for (AVObject i : list) {
-                        UpdateData(list);
+                        UpdateTopViewData(list);
                     }
                 }
 
             }
         });
+
     }
 
 
-    //用于请求数据完成后将数据展示出来
-    private void UpdateData(List<AVObject> list) {
+    //用户加载请求后的TopView数据
+    private void UpdateTopViewData(List<AVObject> list) {
         if (list.size() == 1) {
             AVObject item = list.get(0);
             mCompetitionEntity = item;
@@ -331,6 +331,26 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
             mTvTopLeftFollowNumber.setText(likesA + "");
             mTvTopRightFollowNumber.setText(likesB + "");
             mTvTopAward.setText("￥ " + award);
+            //获取支持状态
+            AVQuery<AVObject> query = new AVQuery<AVObject>("TeamFollow");
+            query.whereEqualTo("userId", AVUser.getCurrentUser());
+            query.whereEqualTo("competitionId", mCompetitionEntity);
+            query.findInBackground(new FindCallback<AVObject>() {
+                                       @Override
+                                       public void done(List<AVObject> list, AVException e) {
+                                           if (list.size() == 1 && e == null) {
+                                               int support = list.get(0).getInt("team");
+                                               if(support == 1)
+                                                   mChkTopLeftUpvote.setChecked(true);
+                                               if(support == 2)
+                                                   mChkTopRightUpvote.setChecked(true);
+                                           }
+                                           mProgress.dismiss();
+                                       }
+                                   }
+            );
+
+
         } else {
             Log.e(LOG_TAG, "一个ObjectId有多个对象,返回超过1个内容！");
         }
@@ -342,6 +362,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
     text 需要修改内容的textView
     isAdd true表示需要+1,false表示需要-1
     */
+
     private void ChangeVote(TextView text, boolean isAdd) {
         String lText = (String) text.getText();
         int textVote = Integer.parseInt(lText.trim());
@@ -353,33 +374,43 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         text.setText(textVote + "");
     }
 
-    private boolean SaveSupportData() {
-        String userId = AVUser.getCurrentUser().getObjectId();
-        AVQuery<AVObject> query = new AVQuery<AVObject>("TeamFollow");
-        query.whereEqualTo("userId", AVUser.getCurrentUser());
-        query.whereEqualTo("competitionId", mCompetitionEntity);
+    private void SaveSupportData() {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("competitionId", objectId);
+        parameters.put("team", mSupport);
         try {
-            List<AVObject> result = query.find();
-            if (result.size() == 0) {
-                Log.e(LOG_TAG, "create");
-                final AVObject post = new AVObject("TeamFollow");
-                post.put("userId", AVUser.getCurrentUser());
-                post.put("team", mSupport);
-                post.put("competitionId", mCompetitionEntity);
-                post.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(AVException e) {
-                    }
-                });
-
-            } else {
-                result.get(0).put("team",mSupport);
-                result.get(0).saveInBackground();
-            }
+            Object result = AVCloud.callFunction("teamfollow", parameters);
+            Log.e(LOG_TAG, "result:" + result);
         } catch (AVException e) {
             e.printStackTrace();
         }
-        return true;
+
+//        String userId = AVUser.getCurrentUser().getObjectId();
+//        AVQuery<AVObject> query = new AVQuery<AVObject>("TeamFollow");
+//        query.whereEqualTo("userId", AVUser.getCurrentUser());
+//        query.whereEqualTo("competitionId", mCompetitionEntity);
+//        try {
+//            List<AVObject> result = query.find();
+//            if (result.size() == 0) {
+//                Log.e(LOG_TAG, "create");
+//                final AVObject post = new AVObject("TeamFollow");
+//                post.put("userId", AVUser.getCurrentUser());
+//                post.put("team", mSupport);
+//                post.put("competitionId", mCompetitionEntity);
+//                post.saveInBackground(new SaveCallback() {
+//                    @Override
+//                    public void done(AVException e) {
+//                    }
+//                });
+//
+//            } else {
+//                result.get(0).put("team",mSupport);
+//                result.get(0).saveInBackground();
+//            }
+//        } catch (AVException e) {
+//            e.printStackTrace();
+//        }
+
     }
 
 
@@ -400,26 +431,6 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         setResult(RESULT_OK, intent);
 
         super.onBackPressed();
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-        if (AVUser.getCurrentUser() == null || AVUser.getCurrentUser().isAnonymous()) {
-            Intent intent = new Intent(LiveDetailActivity.this, LoginActivity.class);
-            startActivity(intent);
-            buttonView.setChecked(!isChecked);
-            return;
-        }
-
-
-        //联网请求保存数据
-        new Thread() {
-            @Override
-            public void run() {
-                SaveSupportData();
-            }
-        }.start();
     }
 
     class LiveDetailActivityDefaultViewPagerListener implements ViewPagerIndicator.IndicatorChangeListener {
@@ -446,14 +457,6 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         @Override
         public void onPageScrollStateChanged(int state) {
 
-        }
-    }
-
-    class ShareClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(LiveDetailActivity.this, SharePopupWindow.class);
-            startActivity(intent);
         }
     }
 
