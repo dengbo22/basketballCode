@@ -2,6 +2,7 @@ package example.tiny.backetball;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -22,6 +23,7 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Log.e(LOG_TAG, "from:" + getIntent().getStringExtra("from"));
         if(mMainFragment == null)
             mMainFragment = new MainLoginFragment();
         getFragmentManager().beginTransaction().add(R.id.fragment_main_login, mMainFragment).commit();
@@ -37,10 +39,7 @@ public class LoginActivity extends Activity {
             finish();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
+
 
     @Override
     protected void onStop() {
@@ -52,9 +51,17 @@ public class LoginActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        instance = null;
     }
 
+    @Override
+    public void onBackPressed() {
+        instance = null;
+        Intent result = new Intent();
+        result.putExtra("login", mIsLogin);
+        setResult(RESULT_OK, result);
+        super.onBackPressed();
+
+    }
 
     void ShowDialog() {
         if (progress == null) {

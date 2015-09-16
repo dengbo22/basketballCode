@@ -41,6 +41,8 @@ public class LiveFragment extends Fragment {
     LiveListAdapter liveListAdapter = null;
     ArrayList<LiveItemData> dataList = null;
     PtrFrameLayout mFrameLiveRefresh = null;
+    private int mSkip;
+    private Date mFirstDate;
 
 
 
@@ -134,6 +136,7 @@ public class LiveFragment extends Fragment {
                 dataList.add(0, item);
             }
             Collections.sort(dataList);
+
             liveListAdapter.notifyDataSetChanged();
             return true;
         }
@@ -188,6 +191,9 @@ public class LiveFragment extends Fragment {
     //从Detail界面返回，更新对应列的数据
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == MainActivity.LOGIN_CODE)
+            return;
+
         int scoreA = data.getIntExtra("scoreA", -1);
         int scoreB = data.getIntExtra("scoreB", -1);
         String status = data.getStringExtra("status");

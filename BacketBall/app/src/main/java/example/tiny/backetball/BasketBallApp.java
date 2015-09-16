@@ -18,6 +18,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
@@ -49,8 +50,7 @@ public class BasketBallApp extends Application {
         AVOSCloud.initialize(this, AppId, AppKey);
         api = WXAPIFactory.createWXAPI(this, WxAppId);
         api.registerApp(WxAppId);
-
-        File cacheDir = StorageUtils.getOwnCacheDirectory(getApplicationContext(), "imageloader/Cache"); //缓存文件的存放地址
+        CrashReport.initCrashReport(this, "900009188", false);
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(getApplicationContext())
                 .memoryCacheExtraOptions(480, 800) // max width, max height

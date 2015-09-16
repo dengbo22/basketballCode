@@ -72,7 +72,6 @@ public class MainLoginFragment extends Fragment {
                 AVAnonymousUtils.logIn(new LogInCallback<AVUser>() {
                     @Override
                     public void done(AVUser avUser, AVException e) {
-                        Toast.makeText(getActivity(), "匿名登陆！", Toast.LENGTH_SHORT).show();
                         LoginActivity.instance.setLoginState(true);
                         getActivity().finish();
                     }

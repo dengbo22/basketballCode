@@ -35,9 +35,8 @@ import example.tiny.data.CompetitionItemData;
  * Created by tiny on 15-8-19.
  */
 public class MainActivity extends Activity{
-
     private final String LOG_TAG = "MainActivity";
-
+    public static final int LOGIN_CODE = 100000;
     static final int FRAGMENT_LIVE = 0;
     static final int FRAGMENT_COMPETITION = 1;
     static final int FRAGMENT_NEWS = 2;
@@ -69,7 +68,8 @@ public class MainActivity extends Activity{
         //如果尚未登陆，则跳转到登陆界面
         if(AVUser.getCurrentUser() == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
+            intent.putExtra("from", "MainActivity");
+            startActivityForResult(intent, LOGIN_CODE);
         }
     }
 
@@ -125,7 +125,15 @@ public class MainActivity extends Activity{
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == LOGIN_CODE && data != null ) {
+            Log.e(LOG_TAG, "data:" + data);
+            boolean loginResult = data.getBooleanExtra("login", true);
+            if(!loginResult)
+                finish();
+        }
+    }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         ArrayList<Fragment> fragments = null;
@@ -161,7 +169,6 @@ public class MainActivity extends Activity{
 
 
     }
-
 
     public class PageChangerListener implements ViewPager.OnPageChangeListener {
 

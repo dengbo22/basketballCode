@@ -67,13 +67,11 @@ public class LiveDetailActivity extends Activity {
     private TextView mTvTopRightFollowNumber;
     private TextView mTvTopAward;
     private LinearLayout mLlayoutComment;
-    DisplayImageOptions options;
     private ImageView mImgCommentEmotion;
     private EditText mEdtTxtComment;
     private TextView mTvCommentSend;
     public String objectId;
     private SharePopupWindow mShareWindow;
-    private AVObject mCompetitionEntity;
     private int mSupport;
 
     public EditText getEdtTxtComment() {
@@ -85,16 +83,7 @@ public class LiveDetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_detail);
         //设置加载图片的设置；
-        options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.default_team_logo)
-                .showImageForEmptyUri(R.drawable.default_team_logo)
-                .showImageOnFail(R.drawable.default_team_logo)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .imageScaleType(ImageScaleType.NONE)
-                .bitmapConfig(Bitmap.Config.RGB_565)//设置为RGB565比起默认的ARGB_8888要节省大量的内存
-                .delayBeforeLoading(100)//载入图片前稍做延时可以提高整体滑动的流畅度
-                .build();
+
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("正在加载数据...");
@@ -189,8 +178,8 @@ public class LiveDetailActivity extends Activity {
         mTvTopTeamBScore.setText(intent.getIntExtra("mTeamBScoreData", -1) + "");
         String teamALogo = intent.getStringExtra("mTeamAIconData");
         String teamBLogo = intent.getStringExtra("mTeamBIconData");
-        ImageLoader.getInstance().displayImage(teamALogo, mImgTopTeamAIcon, options);
-        ImageLoader.getInstance().displayImage(teamBLogo, mImgTopTeamBIcon, options);
+        ImageLoader.getInstance().displayImage(teamALogo, mImgTopTeamAIcon, BasketBallApp.getTeamIconOptions());
+        ImageLoader.getInstance().displayImage(teamBLogo, mImgTopTeamBIcon, BasketBallApp.getTeamIconOptions());
         //加载底部评论
         mLlayoutComment = (LinearLayout) findViewById(R.id.layout_detail_comment);
         mImgCommentEmotion = (ImageView) mLlayoutComment.findViewById(R.id.img_comment_emotion);
@@ -308,7 +297,6 @@ public class LiveDetailActivity extends Activity {
     private void UpdateTopViewData(List<AVObject> list) {
         if (list.size() == 1) {
             AVObject item = list.get(0);
-            mCompetitionEntity = item;
             String status = item.getString("status");
             AVObject score = item.getAVObject("scoreId");
             int scoreA = 0;
@@ -334,7 +322,7 @@ public class LiveDetailActivity extends Activity {
             //获取支持状态
             AVQuery<AVObject> query = new AVQuery<AVObject>("TeamFollow");
             query.whereEqualTo("userId", AVUser.getCurrentUser());
-            query.whereEqualTo("competitionId", mCompetitionEntity);
+            query.whereEqualTo("competitionId", item);
             query.findInBackground(new FindCallback<AVObject>() {
                                        @Override
                                        public void done(List<AVObject> list, AVException e) {
@@ -385,31 +373,7 @@ public class LiveDetailActivity extends Activity {
             e.printStackTrace();
         }
 
-//        String userId = AVUser.getCurrentUser().getObjectId();
-//        AVQuery<AVObject> query = new AVQuery<AVObject>("TeamFollow");
-//        query.whereEqualTo("userId", AVUser.getCurrentUser());
-//        query.whereEqualTo("competitionId", mCompetitionEntity);
-//        try {
-//            List<AVObject> result = query.find();
-//            if (result.size() == 0) {
-//                Log.e(LOG_TAG, "create");
-//                final AVObject post = new AVObject("TeamFollow");
-//                post.put("userId", AVUser.getCurrentUser());
-//                post.put("team", mSupport);
-//                post.put("competitionId", mCompetitionEntity);
-//                post.saveInBackground(new SaveCallback() {
-//                    @Override
-//                    public void done(AVException e) {
-//                    }
-//                });
-//
-//            } else {
-//                result.get(0).put("team",mSupport);
-//                result.get(0).saveInBackground();
-//            }
-//        } catch (AVException e) {
-//            e.printStackTrace();
-//        }
+        //Update奖金池内容
 
     }
 
