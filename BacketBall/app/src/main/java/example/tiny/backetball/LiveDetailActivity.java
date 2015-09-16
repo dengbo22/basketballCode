@@ -27,6 +27,7 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.FunctionCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -84,6 +85,8 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
     private TextView mTvCommentSend;
     public String objectId;
     private SharePopupWindow mShareWindow;
+    private AVObject mCompetitionEntity;
+    private int mSupport;
 
     public EditText getEdtTxtComment() {
         return mEdtTxtComment;
@@ -112,6 +115,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         //加载Fragment
         initView();
         initDatas();
+        initEvent();
 
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(PAGE_NUMBER);
@@ -176,11 +180,11 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         mTvTopRightFollowNumber = (TextView) rUpvote.findViewById(R.id.tv_follow_follownumber);
         LinearLayout awardLayout = (LinearLayout) findViewById(R.id.layout_topview_award);
         mTvTopAward = (TextView) awardLayout.findViewById(R.id.tv_topview_award);
-        mChkTopLeftUpvote.setOnCheckedChangeListener(this);
-        mChkTopRightUpvote.setOnCheckedChangeListener(this);
+//        mChkTopLeftUpvote.setOnCheckedChangeListener(this);
+//        mChkTopRightUpvote.setOnCheckedChangeListener(this);
         //
         mEdtTxtComment = (EditText) findViewById(R.id.edtTxt_comment_input);
-        mTvCommentSend = (TextView)findViewById(R.id.tv_comment_send);
+        mTvCommentSend = (TextView) findViewById(R.id.tv_comment_send);
 
 
         //从Intent中获取信息并且加载内容：
@@ -203,6 +207,75 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
         mImgCommentEmotion = (ImageView) mLlayoutComment.findViewById(R.id.img_comment_emotion);
         mEdtTxtComment = (EditText) mLlayoutComment.findViewById(R.id.edtTxt_comment_input);
 
+    }
+
+    private void initEvent() {
+        mChkTopLeftUpvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AVUser.getCurrentUser() == null || AVUser.getCurrentUser().isAnonymous()) {
+                    Intent intent = new Intent(LiveDetailActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    mChkTopLeftUpvote.setChecked( !mChkTopLeftUpvote.isChecked() );
+                    return;
+                }
+
+                ChangeVote(mTvTopLeftFollowNumber, mChkTopLeftUpvote.isChecked());
+                if (mChkTopRightUpvote.isChecked()) {
+                    mChkTopRightUpvote.setChecked(false);
+                    ChangeVote(mTvTopRightFollowNumber, mChkTopRightUpvote.isChecked());
+                }
+                if(mChkTopLeftUpvote.isChecked())
+                    mSupport = 1;
+                else if( mChkTopRightUpvote.isChecked())
+                    mSupport = 2;
+                else
+                    mSupport = 0;
+
+                //联网请求保存数据
+                new Thread() {
+                    @Override
+                    public void run() {
+                        SaveSupportData();
+                    }
+                }.start();
+
+            }
+        });
+
+        mChkTopRightUpvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AVUser.getCurrentUser() == null || AVUser.getCurrentUser().isAnonymous()) {
+                    Intent intent = new Intent(LiveDetailActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    mChkTopRightUpvote.setChecked( !mChkTopRightUpvote.isChecked() );
+                    return;
+                }
+
+                ChangeVote(mTvTopRightFollowNumber, mChkTopRightUpvote.isChecked());
+                if (mChkTopLeftUpvote.isChecked()) {
+                    mChkTopLeftUpvote.setChecked(false);
+                    ChangeVote(mTvTopLeftFollowNumber, mChkTopLeftUpvote.isChecked());
+                }
+
+                if(mChkTopLeftUpvote.isChecked())
+                    mSupport = 1;
+                else if( mChkTopRightUpvote.isChecked())
+                    mSupport = 2;
+                else
+                    mSupport = 0;
+
+                //联网请求保存数据
+                new Thread() {
+                    @Override
+                    public void run() {
+                        SaveSupportData();
+                    }
+                }.start();
+
+            }
+        });
     }
 
     @Override
@@ -235,6 +308,7 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
     private void UpdateData(List<AVObject> list) {
         if (list.size() == 1) {
             AVObject item = list.get(0);
+            mCompetitionEntity = item;
             String status = item.getString("status");
             AVObject score = item.getAVObject("scoreId");
             int scoreA = 0;
@@ -261,10 +335,13 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
             Log.e(LOG_TAG, "一个ObjectId有多个对象,返回超过1个内容！");
         }
 
-
     }
 
-    //修改投票情况
+    /*
+    修改投票情况
+    text 需要修改内容的textView
+    isAdd true表示需要+1,false表示需要-1
+    */
     private void ChangeVote(TextView text, boolean isAdd) {
         String lText = (String) text.getText();
         int textVote = Integer.parseInt(lText.trim());
@@ -274,6 +351,35 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
             --textVote;
 
         text.setText(textVote + "");
+    }
+
+    private boolean SaveSupportData() {
+        String userId = AVUser.getCurrentUser().getObjectId();
+        AVQuery<AVObject> query = new AVQuery<AVObject>("TeamFollow");
+        query.whereEqualTo("userId", AVUser.getCurrentUser());
+        query.whereEqualTo("competitionId", mCompetitionEntity);
+        try {
+            List<AVObject> result = query.find();
+            if (result.size() == 0) {
+                Log.e(LOG_TAG, "create");
+                final AVObject post = new AVObject("TeamFollow");
+                post.put("userId", AVUser.getCurrentUser());
+                post.put("team", mSupport);
+                post.put("competitionId", mCompetitionEntity);
+                post.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                    }
+                });
+
+            } else {
+                result.get(0).put("team",mSupport);
+                result.get(0).saveInBackground();
+            }
+        } catch (AVException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
 
@@ -299,30 +405,21 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        if (isChecked) {
-            if (buttonView == mChkTopLeftUpvote) {
-                //选定左侧按钮，左侧数字增加
-                ChangeVote(mTvTopLeftFollowNumber, true);
-                if (mChkTopRightUpvote.isChecked()) {
-                    //如果此时右侧按钮是Check状态，则关闭并数字降低
-                    mChkTopRightUpvote.setChecked(false);
-                }
-            } else {
-                //选定的是右侧按钮，右侧数字增加
-                ChangeVote(mTvTopRightFollowNumber, true);
-                if (mChkTopLeftUpvote.isChecked()) {
-                    //此时左侧按钮是Check状态，则关闭并降低数字
-                    mChkTopLeftUpvote.setChecked(false);
-                }
-            }
-        } else {
-            //关闭的情况，点击左侧则降低左侧，点击右侧则降低右侧
-            if (buttonView == mChkTopLeftUpvote) {
-                ChangeVote(mTvTopLeftFollowNumber, false);
-            } else {
-                ChangeVote(mTvTopRightFollowNumber, false);
-            }
+        if (AVUser.getCurrentUser() == null || AVUser.getCurrentUser().isAnonymous()) {
+            Intent intent = new Intent(LiveDetailActivity.this, LoginActivity.class);
+            startActivity(intent);
+            buttonView.setChecked(!isChecked);
+            return;
         }
+
+
+        //联网请求保存数据
+        new Thread() {
+            @Override
+            public void run() {
+                SaveSupportData();
+            }
+        }.start();
     }
 
     class LiveDetailActivityDefaultViewPagerListener implements ViewPagerIndicator.IndicatorChangeListener {
@@ -359,7 +456,6 @@ public class LiveDetailActivity extends Activity implements CheckBox.OnCheckedCh
             startActivity(intent);
         }
     }
-
 
 
 }

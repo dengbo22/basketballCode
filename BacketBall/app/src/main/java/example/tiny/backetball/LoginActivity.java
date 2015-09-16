@@ -25,7 +25,6 @@ public class LoginActivity extends Activity {
         if(mMainFragment == null)
             mMainFragment = new MainLoginFragment();
         getFragmentManager().beginTransaction().add(R.id.fragment_main_login, mMainFragment).commit();
-        Log.e(LOG_TAG, "add Finish");
         instance = this;
         progress = new ProgressDialog(this);
         progress.setCancelable(false);
